@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is gContactSync.
+   -
+   - The Initial Developer of the Original Code is
+   - Josh Geenen <gcontactsync@pirules.org>.
+   - Portions created by the Initial Developer are Copyright (C) 2008-2010
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://gContactSync/locale/overlay.dtd">
+
+<overlay id="gContactSync-GlobalOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/synonyms.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/StringBundle.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/SyncSummaryData.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Namespace.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GElement.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/gdata.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/AbManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GAbManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/AbListener.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Group.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Property.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/TBContact.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GContact.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/MailList.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GMailList.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Pref.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/FileIO.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Preferences.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Logger.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Overlay.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/AddressBook.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GAddressBook.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/ConverterElement.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/ContactConverter.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/onDrop.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Sync.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/HttpRequest.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GHttpRequest.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/LoginManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Import.js"/>
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="gContactSyncStringBundle"
+                  src="chrome://gContactSync/locale/gcontactsync.properties"/>
+  </stringbundleset>
+
+  <toolbarbutton id="button-sync"
+                 label="&sync.label;"
+                 tooltiptext="&sync.tooltip;"
+                 oncommand="com.gContactSync.Sync.begin(true, null);"
+                 class="gContactSync-Button toolbarbutton-1 chromeclass-toolbar-additional"/>
+
+  <statusbarpanel id="gContactSyncStatusText"
+                  onclick="com.gContactSync.showLog();"
+                  label="&initialStatus.label;"
+                  tooltiptext="&status.tooltip;"/>
+  <menu id="gContactSyncMenu"
+        label="&gContactSyncMenu.label;"
+        accesskey="&gContactSyncMenu.accesskey;">
+   <menupopup id="gContactSyncMenuPopup">
+     <menuitem id="syncMenuItem"
+               label="&syncMenuItem.label;"
+               accesskey="&syncMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.Sync.begin(true, null);"/>
+     <menuitem id="acctMenuItem"
+               label="&acctMenuItem.label;"
+               accesskey="&acctMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openAccounts();"/>
+     <menuitem id="prefMenuItem"
+               label="&prefMenuItem.label;"
+               accesskey="&prefMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openPreferences();"/>
+     <menuitem id="forumMenuItem"
+               label="&forumMenuItem.label;"
+               accesskey="&forumMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openURL('extensions.gContactSync.forumURL');"/>
+     <menuitem id="faqMenuItem"
+               label="&faqMenuItem.label;"
+               accesskey="&faqMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openURL('extensions.gContactSync.faqURL');"/>
+     <menuitem id="errorMenuItem"
+               label="&errorMenuItem.label;"
+               accesskey="&errorMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openURL('extensions.gContactSync.errorURL');"/>
+     <menuitem id="logMenuItem"
+               label="&logMenuItem.label;"
+               accesskey="&logMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.showLog();"/>
+     <menuitem id="gcMenuItem"
+               label="&gcMenuItem.label;"
+               accesskey="&gcMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openURL('extensions.gContactSync.googleContactsURL');"/>
+       <menuseparator/>
+       <menu id="gContactSyncImport"
+             label="&Import.label;"
+             accesskey="&Import.accesskey;">
+         <menupopup>
+           <menuitem label="&Facebook.label;"
+                     oncommand="com.gContactSync.Import.step1('facebook');"/>
+           <!-- Google shows duplicates (with different IDs), commented out to
+                avoid confusion over how to sync contacts -->
+           <!--<menuitem label="&Google.label;"
+                     oncommand="com.gContactSync.Import.step1('google');"/>-->
+           <!-- Not supported quite yet -->
+           <!--<menuitem label="&LinkedIn.label;"
+                     oncommand="com.gContactSync.Import.step1('linkedin');"/>-->
+           <menuitem label="&MozLabsContacts.label;"
+                     id="MozLabsContactsMenuitem"
+                     oncommand="com.gContactSync.Import.mozillaLabsContactsImporter();"/>
+           <menuitem label="&MySpace.label;"
+                     oncommand="com.gContactSync.Import.step1('myspace');"/>
+           <menuitem label="&Plaxo.label;"
+                     oncommand="com.gContactSync.Import.step1('plaxo');"/>
+           <menuitem label="&Twitter.label;"
+                     oncommand="com.gContactSync.Import.step1('twitter');"/>
+           <!-- Yahoo is commented out because of an "Internal Error" -->
+           <!--<menuitem label="&Yahoo.label;"
+                         oncommand="com.gContactSync.Import.step1('yahoo');"/>-->
+         </menupopup>
+       </menu>
+      <menuitem id="finishImport"
+                label="&FinishImport.label;"
+                oncommand="com.gContactSync.Import.step3();"/>
+   </menupopup>
+  </menu>
+  <menu id="gContactSyncAppMenu"
+        label="&gContactSyncMenu.label;"
+        accesskey="&gContactSyncMenu.accesskey;">
+   <menupopup id="gContactSyncMenuPopup">
+     <menuitem id="syncMenuItem"
+               label="&syncMenuItem.label;"
+               accesskey="&syncMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.Sync.begin(true, null);"/>
+     <menuitem id="acctMenuItem"
+               label="&acctMenuItem.label;"
+               accesskey="&acctMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openAccounts();"/>
+     <menuitem id="prefMenuItem"
+               label="&prefMenuItem.label;"
+               accesskey="&prefMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openPreferences();"/>
+     <menuitem id="forumMenuItem"
+               label="&forumMenuItem.label;"
+               accesskey="&forumMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openURL('extensions.gContactSync.forumURL');"/>
+     <menuitem id="faqMenuItem"
+               label="&faqMenuItem.label;"
+               accesskey="&faqMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openURL('extensions.gContactSync.faqURL');"/>
+     <menuitem id="errorMenuItem"
+               label="&errorMenuItem.label;"
+               accesskey="&errorMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openURL('extensions.gContactSync.errorURL');"/>
+     <menuitem id="logMenuItem"
+               label="&logMenuItem.label;"
+               accesskey="&logMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.showLog();"/>
+     <menuitem id="gcMenuItem"
+               label="&gcMenuItem.label;"
+               accesskey="&gcMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.openURL('extensions.gContactSync.googleContactsURL');"/>
+       <menuseparator/>
+       <menu id="gContactSyncImport"
+             label="&Import.label;"
+             accesskey="&Import.accesskey;">
+         <menupopup>
+           <menuitem label="&Facebook.label;"
+                     oncommand="com.gContactSync.Import.step1('facebook');"/>
+           <!-- Google shows duplicates (with different IDs), commented out to
+                avoid confusion over how to sync contacts -->
+           <!--<menuitem label="&Google.label;"
+                     oncommand="com.gContactSync.Import.step1('google');"/>-->
+           <!-- Not supported quite yet -->
+           <!--<menuitem label="&LinkedIn.label;"
+                     oncommand="com.gContactSync.Import.step1('linkedin');"/>-->
+           <menuitem label="&MozLabsContacts.label;"
+                     id="MozLabsContactsMenuitem"
+                     oncommand="com.gContactSync.Import.mozillaLabsContactsImporter();"/>
+           <menuitem label="&MySpace.label;"
+                     oncommand="com.gContactSync.Import.step1('myspace');"/>
+           <menuitem label="&Plaxo.label;"
+                     oncommand="com.gContactSync.Import.step1('plaxo');"/>
+           <menuitem label="&Twitter.label;"
+                     oncommand="com.gContactSync.Import.step1('twitter');"/>
+           <!-- Yahoo is commented out because of an "Internal Error" -->
+           <!--<menuitem label="&Yahoo.label;"
+                         oncommand="com.gContactSync.Import.step1('yahoo');"/>-->
+         </menupopup>
+       </menu>
+      <menuitem id="finishImport"
+                label="&FinishImport.label;"
+                oncommand="com.gContactSync.Import.step3();"/>
+   </menupopup>
+  </menu>
+</overlay>

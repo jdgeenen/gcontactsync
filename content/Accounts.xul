@@ -1,0 +1,201 @@
+<?xml version="1.0"?>
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is gContactSync.
+   -
+   - The Initial Developer of the Original Code is
+   - Josh Geenen <gcontactsync@pirules.org>.
+   - Portions created by the Initial Developer are Copyright (C) 2009-2010
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://gcontactsync/skin/Accounts.css" type="text/css"?>
+
+<!DOCTYPE prefwindow SYSTEM "chrome://gContactSync/locale/Accounts.dtd">
+
+<dialog id="gContactSyncAccounts"
+        title="&title.label;"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        buttons="accept"
+        buttonlabelaccept="&Close.label;"
+        ondialogaccept="com.gContactSync.Accounts.close();">
+
+  <hbox>
+    <vbox flex="1">
+      <tree flex="1" id="loginTree" seltype="single"
+            onselect="com.gContactSync.Accounts.selectedAbChange();">
+        <treecols>
+          <treecol id="addressBook" label="&addressBook.label;" flex="1" primary="true"/>
+          <splitter class="treesplitter"/>
+          <treecol id="synced"      label="&abSynced.label;"    flex="1"/>
+        </treecols>
+        <treechildren id="loginTreeChildren"/>
+      </tree>
+      <hbox id="globalButtons">
+        <button id="addAB"
+                label="&addAB.label;"
+                accesskey="&addAB.accesskey;"
+                oncommand="com.gContactSync.Accounts.newAddressBook();"/>
+        <button id="refreshTree"
+                label="&refreshTree.label;"
+                accesskey="&refreshTree.accesskey;"
+                oncommand="com.gContactSync.Accounts.fillAbTree();"/>
+      </hbox>
+    </vbox>
+    <vbox>
+      <groupbox id="BasicGroupbox">
+        <caption label="&Basic.label;"/>
+        <hbox>
+          <label control="Username" value="&Username.label;"/>
+          <label id="link-label"    value="&NewUsername.label;"
+                 onclick="com.gContactSync.Accounts.newUsername();"/>
+        </hbox>
+        <menulist id="Username"
+                  oncommand="com.gContactSync.Accounts.restoreGroups();
+                             com.gContactSync.Accounts.mUnsavedChange = true;">
+          <menupopup id="UsernamePopup">
+            <menuitem value="None" label="&NoUsername.label;"/>
+          </menupopup>
+        </menulist>
+        <spacer height="5px"/>
+        <label control="Groups" value="&Groups.label;"/>
+        <hbox id="GroupsBox">
+          <menulist id="Groups"
+                    oncommand="com.gContactSync.Accounts.mUnsavedChange = true;">
+            <menupopup id="GroupsPopup">
+              <menuitem class="default" value="All"        label="&AllGroups.label;"/>
+              <menuitem class="default" value="false"      label="&NoGroups.label;"/>
+              <menuitem class="default" value="contacts"   label="&Contacts.label;"/>
+              <menuitem class="default" value="coworkers"  label="&Coworkers.label;"/>
+              <menuitem class="default" value="family"     label="&Family.label;"/>
+              <menuitem class="default" value="friends"    label="&Friends.label;"/>
+            </menupopup>
+          </menulist>
+          <button id="GetGroups"
+                  oncommand="com.gContactSync.Accounts.getAllGroups();"
+                  label="&GetGroups.label;"
+                  accesskey="&GetGroups.accesskey;"/>
+        </hbox>
+        <spacer height="5px"/>
+        <checkbox id="disabled"
+                  label="&Disable.label;"
+                  tooltiptext="&Disable.tooltiptext;"
+                  oncommand="com.gContactSync.Accounts.mUnsavedChange = true;"/>        
+      </groupbox>
+      <checkbox id="showAdvanced" label="&showAdvanced.label;"
+                oncommand="com.gContactSync.Accounts.showAdvancedSettings(this.checked);"/>
+      <spacer height="5px"/>
+      <groupbox id="advancedGroupBox">
+        <label control="Plugin" value="&Plugin.label;" collapsed="true"/>
+        <menulist id="Plugin" collapsed="true"
+                  oncommand="com.gContactSync.Accounts.mUnsavedChange = true;">
+          <menupopup id="PluginPopup">
+            <menuitem id="google" value="Google" label="&Google.label;"/>
+          </menupopup>
+        </menulist>
+        <spacer height="5px" collapsed="true"/>
+        <caption label="&Advanced.label;"/>
+        <spacer height="5px"/>
+        <hbox>
+          <label control="SyncDirection"  value="&SyncDirection.label;"/>
+          <label id="link-label"    value="&DirectionHelp.label;"
+                 onclick="com.gContactSync.Accounts.directionPopup();"/>
+        </hbox>
+        <menulist id="SyncDirection"
+                  oncommand="com.gContactSync.Accounts.mUnsavedChange = true;">
+          <menupopup id="SyncDirectionPopup">
+            <menuitem value="Complete"  label="&Complete.label;"/>
+            <menuitem value="ReadOnly"  label="&ReadOnly.label;"/>
+            <menuitem value="WriteOnly" label="&WriteOnly.label;"/>
+          </menupopup>
+        </menulist>
+        <spacer height="5px"/>
+        <checkbox id="updateGoogleInConflicts"
+                  label="&updateG.label;"
+                  tooltiptext="&updateG.tooltiptext;"
+                  oncommand="com.gContactSync.Accounts.mUnsavedChange = true;"/>
+      </groupbox>
+      <spacer height="5px"/>
+      <hbox id="acctButtons" align="right">
+        <!--<button id="deleteAB" label="&deleteAB.label;" oncommand="com.gContactSync.Accounts.deleteSelectedAB();"/>-->
+        <!--<button id="removeLogin" label="&removeLogin.label;" oncommand="com.gContactSync.Accounts.removeSyncSettings();"/>-->
+        <button id="saveChanges"
+                label="&saveChanges.label;"
+                accesskey="&saveChanges.accesskey;"
+                oncommand="com.gContactSync.Accounts.saveSelectedAccount();"/>
+      </hbox>
+    </vbox>
+  </hbox>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/synonyms.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/LoginManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/StringBundle.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/TBContact.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/AddressBook.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GAddressBook.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/MailList.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GMailList.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/AbManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GAbManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/FileIO.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Logger.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Namespace.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GElement.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/gdata.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/HttpRequest.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GHttpRequest.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Pref.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Preferences.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Accounts.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Group.js"/>
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="gContactSyncStringBundle"
+                  src="chrome://gContactSync/locale/gcontactsync.properties"/>
+  </stringbundleset>
+</dialog>

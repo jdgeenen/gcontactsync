@@ -1,0 +1,98 @@
+/* button-sync
+ * TODO - some of this is probably no longer necessary now that the sync
+ * button is in the toolbarpalette */
+
+/* First - no mode or iconsize */
+#button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(0px 24px 24px 0px);
+}
+
+#button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(48px 24px 72px 0px) !important;
+}
+
+/* Second - iconsize only */
+toolbar[iconsize="large"] #button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(0px 24px 24px 0px);
+}
+
+toolbar[iconsize="large"] #button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(48px 24px 72px 0px) !important;
+}
+
+toolbar[iconsize="small"] #button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_16.png");
+  -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+toolbar[iconsize="small"] #button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_16.png");
+  -moz-image-region: rect(32px 16px 48px 0px) !important;
+}
+/* Third - mode only */
+toolbar[mode="full"] #button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(0px 24px 24px 0px);
+}
+
+toolbar[mode="full"] #button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(48px 24px 72px 0px) !important;
+}
+
+toolbar[mode="icon"] #button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(0px 24px 24px 0px);
+}
+
+toolbar[mode="icon"] #button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(48px 24px 72px 0px) !important;
+}
+
+/* Fourth mode & iconsize */
+toolbar[mode="full"][iconsize="large"] #button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(0px 24px 24px 0px);
+}
+
+toolbar[mode="full"][iconsize="large"] #button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(48px 24px 72px 0px) !important;
+}
+
+toolbar[mode="full"][iconsize="small"] #button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_16.png");
+  -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+toolbar[mode="full"][iconsize="small"] #button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_16.png");
+  -moz-image-region: rect(32px 16px 48px 0px) !important;
+}
+
+toolbar[mode="icon"][iconsize="large"] #button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(0px 24px 24px 0px);
+}
+
+toolbar[mode="icon"][iconsize="large"] #button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_24.png");
+  -moz-image-region: rect(48px 24px 72px 0px) !important;
+}
+
+toolbar[mode="icon"][iconsize="small"] #button-sync {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_16.png");
+  -moz-image-region: rect(0px 16px 16px 0px);
+}
+
+toolbar[mode="icon"][iconsize="small"] #button-sync[disabled] {
+  list-style-image:  url("chrome://gcontactsync/skin/logo_main_16.png");
+  -moz-image-region: rect(32px 16px 48px 0px) !important;
+}
+/* End of toolbar button CSS */
+

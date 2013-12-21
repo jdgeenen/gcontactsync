@@ -1,0 +1,44 @@
+<!ENTITY title.label "gContactSync Preferences">
+
+<!ENTITY main.tab                       "Main">
+<!ENTITY help.value                     "Help">
+<!ENTITY gettingStarted1.value          "Before you start synchronizing your contacts, please check these settings">
+<!ENTITY autoSync.value                 "Automatic Synchronization">
+<!ENTITY autoSync.label                 "Synchronize contacts automatically">
+<!ENTITY refreshInterval.value          "Synchronize Interval (minutes) [Default is 120 (2 hours)]">
+<!ENTITY initialDelayMinutes.value      "Initial sync delay (minutes) [Default is 5]">
+<!ENTITY abName.value                   "Name of the Address Book to sync with (should be new)">
+<!ENTITY syncBehavior.label             "Sync Behavior">
+<!ENTITY syncAddresses.label            "Synchronize postal addresses">
+<!ENTITY alertSummary.label             "Display a summary after every manual sync">
+<!ENTITY phoneTypes.label               "Add phone number type fields (ignore existing field names)">
+<!ENTITY accountDelay.value             "Delay between accounts (ms) [5000]">
+<!ENTITY logging.label                  "Logging">
+<!ENTITY enableLogging.label            "Enable Logging">
+<!ENTITY verboseLog.label               "Enable Verbose Logging (for debugging)">
+
+<!ENTITY interface.tab                  "Interface">
+<!ENTITY buttons.label                  "Buttons and Menus">
+<!ENTITY enableMenu.label               "Enable the gContactSync Menu">
+<!ENTITY enableMenuLinks.label          "Add some links (Wiki, FAQ, etc.) to the gContactSync Menu">
+<!ENTITY addReset.label                 "Add Replace to and Replace from Server links to the Address Book context menu">
+<!ENTITY abResults.label                "Contacts List">
+<!ENTITY phoneColLabels.label           "Rename the phone column labels">
+<!ENTITY newColLabels.label             "Add the new fields to the column labels">
+
+<!ENTITY advanced.tab                   "Advanced">
+<!ENTITY warning.value                  "Warning - this is intended for advanced users only">
+<!ENTITY backup.label                   "Address Book Backup Policy">
+<!ENTITY backupInterval.value           "Backup interval (days, -1 to disable) [14]">
+<!ENTITY other.label                    "Other">
+<!ENTITY chromeTime.value               "'Unresponsive Script' warning delay time (0 to disable)">
+<!ENTITY confirmDeleteThreshold.value   "Minimum number of contacts to delete before requesting permission [5]">
+<!ENTITY httpRequestTimeout.value       "HTTP Request Timeout (ms, 0 to disable) [0]">
+<!ENTITY resetAll.label                 "Reset All Synced ABs">
+<!ENTITY cleanOldPrefs.label            "Clean Old AB Preferences">
+<!ENTITY cleanOldPhotos.label           "Delete Old Contact Photos">
+
+<!-- FirstLogin.xul only -->
+<!ENTITY myContacts.label               "Only synchronize the 'My Contacts' group">
+<!ENTITY openAccounts.value             "Advanced Account Settings">
+<!ENTITY openPreferences.value          "Advanced Settings">

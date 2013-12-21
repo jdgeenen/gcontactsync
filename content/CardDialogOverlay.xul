@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is gContactSync.
+   -
+   - The Initial Developer of the Original Code is
+   - Josh Geenen <gcontactsync@pirules.org>.
+   - Portions created by the Initial Developer are Copyright (C) 2008-2009
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://gContactSync/locale/overlay.dtd">
+
+<overlay id="gContactSync-abEditCardDialogOverlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+         height="480" width="800">
+  <!-- since the tabbox doesn't have an ID, this overlay uses JavaScript to
+       add a tab -->
+  <script src="StringBundle.js"/>
+  <script src="synonyms.js"/>
+  <script src="FileIO.js"/>
+  <script src="Pref.js"/>
+  <script src="Preferences.js"/>
+  <script src="GElement.js"/>
+  <script src="AbManager.js"/>
+  <script src="GAbManager.js"/>
+  <script src="AddressBook.js"/>
+  <script src="GAddressBook.js"/>
+  <script src="TBContact.js"/>
+  <script src="MailList.js"/>
+  <script src="GMailList.js"/>
+  <script src="Namespace.js"/>
+  <script src="gdata.js"/>
+  <script src="Logger.js"/>
+  <script src="CardDialogOverlay.js"/>
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="gContactSyncStringBundle"
+                  src="chrome://gContactSync/locale/gcontactsync.properties"/>
+  </stringbundleset>
+  
+  <tabs id="abTabs">
+    <tab label="&gContactSyncTab.label;"     id="gContactSyncTab"/>
+  </tabs>
+
+  <tabpanels id="abTabPanels" flex="1">
+    <vbox flex="1">
+      <hbox>
+        <vbox>
+          <vbox id="gcontactSyncFields" class="alignBoxWithFieldset" align="left">
+            <groupbox flex="1" id="additionalEmailBox">
+            <caption label="&email.box;"/>
+            <hbox>
+              <spacer flex="1"/>
+              <hbox class="CardEditWidth">
+                <textbox id="ThirdEmail" flex="1" class="uri-element"/>
+              </hbox>
+            </hbox>
+            <hbox>
+              <spacer flex="1"/>
+              <hbox class="CardEditWidth">
+                <textbox id="FourthEmail" flex="1" class="uri-element"/>
+              </hbox>
+            </hbox>
+          </groupbox>
+          <!-- This groupbox is hidden because it is only used before Mailnews
+                 Bug 63941 was applied and reorganized the card dialog -->
+          <groupbox id="numbersGroupBox" flex="1" hidden="true">
+            <caption label="&numbers.box;"/>
+            <hbox>
+              <spacer flex="1"/>
+              <label control="HomeFaxNumber" value="&sixth.label;" class="CardEditLabel"/>
+              <hbox class="CardEditWidth">
+                <textbox id="HomeFaxNumber" flex="1"/>
+              </hbox>
+            </hbox>
+            <hbox>
+              <spacer flex="1"/>
+              <label control="OtherNumber" value="&seventh.label;" class="CardEditLabel"/>
+              <hbox class="CardEditWidth">
+                <textbox id="OtherNumber" flex="1"/>
+              </hbox>
+            </hbox>
+          </groupbox>
+        </vbox>
+      </vbox>
+      <vbox id="relationFields" hidden="true">
+          <vbox id="gcontactSyncFields2" class="alignBoxWithFieldset" align="left">
+            <groupbox flex="1">
+              <caption label="&relations.box;"/>
+              <hbox id="Relation0Box">
+                <spacer flex="1"/>
+                <hbox>
+                  <textbox id="Relation0" class="uri-element" width="180px"/>
+                </hbox>
+              </hbox>
+              <hbox id="Relation1Box">
+                <spacer flex="1"/>
+                <hbox>
+                  <textbox id="Relation1" class="uri-element" width="180px"/>
+                </hbox>
+              </hbox>
+              <hbox id="Relation2Box">
+                <spacer flex="1"/>
+                <hbox>
+                  <textbox id="Relation2"  class="uri-element" width="180px"/>
+                </hbox>
+              </hbox>
+              <hbox id="Relation3Box">
+                <spacer flex="1"/>
+                <hbox>
+                  <textbox id="Relation3" class="uri-element" width="180px"/>
+                </hbox>
+              </hbox>
+            </groupbox>
+          </vbox>
+      </vbox>
+      </hbox>
+    </vbox>
+  </tabpanels>
+</overlay>
