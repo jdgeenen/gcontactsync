@@ -73,6 +73,9 @@
       <preference id="verboseLog"
                   name="extensions.gContactSync.verboseLog"
                   type="bool"/>
+      <preference id="showInConsole"
+                  name="javascript.options.showInConsole"
+                  type="bool"/>
     </preferences>
     <groupbox flex="1">
       <!-- TODO - replace this link with one not on the wiki -->
@@ -146,6 +149,9 @@
         <checkbox preference="verboseLog"
                   id="verboseLog"
                   label="&verboseLog.label;"/>
+        <checkbox preference="showInConsole"
+                  id="showInConsole"
+                  label="&showInConsole.label;"/>
       </groupbox>
     </groupbox>
   </prefpane>

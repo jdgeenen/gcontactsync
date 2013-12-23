@@ -16,6 +16,7 @@
 <!ENTITY logging.label                  "Logging">
 <!ENTITY enableLogging.label            "Enable Logging">
 <!ENTITY verboseLog.label               "Enable Verbose Logging (for debugging)">
+<!ENTITY showInConsole.label            "Log errors in the Error Console (for debugging)">
 
 <!ENTITY interface.tab                  "Interface">
 <!ENTITY buttons.label                  "Buttons and Menus">
