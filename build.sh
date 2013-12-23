@@ -40,7 +40,7 @@ cd $SRC_DIR
 LOCALE_FILES=$(find locale/ -maxdepth 2 -type f ! -name CVS ! -name Repository ! -name Root ! -name Entries)
 
 # zip the source files
-zip -r $DEST content/*.* defaults/preferences/*.* $LOCALE_FILES skin/*.* install.rdf chrome.manifest
+zip -r $DEST content/*.* defaults/preferences/*.* $LOCALE_FILES skin/*.* install.rdf chrome.manifest -x \*.sw\*
 
 # quit if zip failed
 if [ "$?" != 0 ]; then
