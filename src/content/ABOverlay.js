@@ -327,6 +327,17 @@ com.gContactSync.ABOverlay = {
                                    visible, true);
       cvSetVisible(cvData.cvhPhone, visible);
       cvSetVisible(cvData.cvbPhone, visible);
+
+      // Add types to webpages
+      var webpageValues = ["WebPage1", "WebPage2"];
+      for (var i = 0; i < webpageValues.length; ++i) {
+        var value = contact.getValue(webpageValues[i]);
+        var type  = contact.getValue(webpageValues[i] + "Type");
+        var visible = value && type;
+        var elem = cvData["cv" + webpageValues[i] + "Type"];
+        cvSetVisible(cvData["cv" + webpageValues[i] + "Type"], visible);
+        elem.value = com.gContactSync.StringBundle.getStr(type);
+      }
     } catch(e) { 
         com.gContactSync.alertError("Error while modifying view pane: " + e);
         com.gContactSync.LOGGER.LOG_WARNING("Error while modifying the view pane.", e);
@@ -429,6 +440,15 @@ com.gContactSync.ABOverlay = {
     vbox.insertBefore(cvData.cvFourthEmailBox, document.getElementById("cvScreennameBox"));
     vbox.insertBefore(cvData.cvThirdEmailBox, cvData.cvFourthEmailBox);
 
+    // Home section
+    cvData.cvbHome.removeChild(cvData.cvHomeWebPageBox);
+    cvData.cvHomeWebPageHBox = document.createElement("hbox");
+    cvData.cvWebPage2Type = document.createElement("description");
+    cvData.cvWebPage2Type.setAttribute("id", "WebPage2Type");
+    cvData.cvHomeWebPageHBox.appendChild(cvData.cvHomeWebPageBox);
+    cvData.cvHomeWebPageHBox.appendChild(cvData.cvWebPage2Type);
+    cvData.cvbHome.appendChild(cvData.cvHomeWebPageHBox);
+
     // Work section
     cvData.cvJobDescription = com.gContactSync.ABOverlay.makeDescElement("JobDescription", "CardViewText");
     cvData.cvCompanySymbol  = com.gContactSync.ABOverlay.makeDescElement("CompanySymbol",  "CardViewText");
@@ -437,6 +457,14 @@ com.gContactSync.ABOverlay = {
     vbox.insertBefore(cvData.cvJobDescription, cvData.cvJobTitle.nextSibling);
     // Add the company symbol after the company name
     vbox.insertBefore(cvData.cvCompanySymbol, cvData.cvCompany.nextSibling);
+
+    cvData.cvbWork.removeChild(cvData.cvWorkWebPageBox);
+    cvData.cvWorkWebPageHBox = document.createElement("hbox");
+    cvData.cvWebPage1Type = document.createElement("description");
+    cvData.cvWebPage1Type.setAttribute("id", "WebPage1Type");
+    cvData.cvWorkWebPageHBox.appendChild(cvData.cvWorkWebPageBox);
+    cvData.cvWorkWebPageHBox.appendChild(cvData.cvWebPage1Type);
+    cvData.cvbWork.appendChild(cvData.cvWorkWebPageHBox);
 
     // Other section    
     vbox = document.getElementById("cvbOther");
