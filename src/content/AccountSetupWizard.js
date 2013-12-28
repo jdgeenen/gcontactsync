@@ -47,7 +47,7 @@ window.addEventListener("load",
 false);
 
 /**
- * Provides helper functions for the initial setup wizard.
+ * Provides helper functions for the new account wizard.
  */
 com.gContactSync.AccountSetupWizard = {
   NEW_ACCOUNT_IDS:      ["emailLabel", "email", "passwordLabel", "password"],
@@ -56,11 +56,15 @@ com.gContactSync.AccountSetupWizard = {
   mEmailAddress:        "",
   mAccounts:            [],
   /**
+   * Initializes the first page of the wizard.
    */
   init: function AccountSetupWizard_init() {
     this.updateAccountIDs();
     this.addAccounts();
   },
+  /**
+   * Adds IMAP, POP3, and gContactSync accounts from the login manager to the dropdown.
+   */
   addAccounts: function AccountSetupWizard_addAccounts() {
     com.gContactSync.LOGGER.VERBOSE_LOG("Adding accounts");
     this.mAccounts = [];
@@ -87,14 +91,21 @@ com.gContactSync.AccountSetupWizard = {
     }
     accountsMenuList.selectedIndex = 0;
   },
-  accountAlreadyExists: function AccountSetupWizard_accountAlreadyExists(username) {
-    username = username.toLowerCase();
+  /**
+   * Returns whether an account already exists for the given username.
+   * @param {string} aUsername The username to check.
+   * @return {boolean} Whether an account already exists for the given username.
+   */
+  accountAlreadyExists: function AccountSetupWizard_accountAlreadyExists(aUsername) {
+    aUsername = aUsername.toLowerCase();
     for (var i = 0; i < this.mAccounts.length; ++i) {
-      if (this.mAccounts[i].username.toLowerCase() === username) {return true;}
+      if (this.mAccounts[i].username.toLowerCase() === aUsername) {return true;}
     }
     return false;
   },
-
+  /**
+   * Updates the account-related elements to disable elements for the option not currently selected.
+   */
   updateAccountIDs: function AccountSetupWizard_updateAccountIDs() {
     var option = document.getElementById("accountOption");
     var disableIDs = this.EXISTING_ACCOUNT_IDS;
@@ -110,6 +121,12 @@ com.gContactSync.AccountSetupWizard = {
       document.getElementById(enableIDs[j]).disabled = false;
     }
   },
+  /**
+   * Gets an auth token for the selected username if necessary (and possible), then returns whether the page may
+   * advance now.  If this function must get an auth token it will advance the page upon successful completion
+   * of the HTTP request.
+   * @return {boolean} Whether the account page may advance now.
+   */
   advanceAccountPage: function AccountSetupWizard_advancedAccountPage() {
 
     // Try to get a token for the account
@@ -175,6 +192,12 @@ com.gContactSync.AccountSetupWizard = {
     // Don't let the page advance until a successful response is returned.
     return false;
   },
+  /**
+   * Initializes the account settings (address books and groups) and selects the AB with
+   * the name 'aSearch' if present.  If not found, creates an AB with the name this.mEmailAddress.
+   * Does not show ABs that are already being synchronized.
+   * @param {string} aSearch The AB to be highlighted.
+   */
   setupAccountSettings: function AccountSetupWizard_setupAccountSettings(aSearch) {
     var abNameElem = document.getElementById("abName");
     abNameElem.removeAllItems();
@@ -183,7 +206,8 @@ com.gContactSync.AccountSetupWizard = {
     var i = 0;
     aSearch = (aSearch || this.mEmailAddress).toLowerCase();
     for (var uri in abs) {
-      if (abs.hasOwnProperty(uri)) {
+      // Skip over address books that are already synchronized
+      if (abs.hasOwnProperty(uri) && !abs[uri].mPrefs.Username) {
         abNameElem.appendItem(abs[uri].getName(), uri);
         if (abs[uri].getName().toLowerCase() === aSearch) {
           selectedIndex = i;
@@ -192,14 +216,22 @@ com.gContactSync.AccountSetupWizard = {
       ++i;
     }
     if (selectedIndex === -1) {
-      abNameElem.insertItemAt(0, this.mEmailAddress, 0);
+      var name = aSearch;
+      // If an AB with the e-mail address doesn't already exist (or is synchronized) find
+      // the first AB of the form <email (#)> that 
+      for (var j = 1; true; ++j) {
+        var ab = com.gContactSync.GAbManager.getGAbByName(name, true);
+        if (!ab || !ab.mPrefs.Username) {break;}
+        name = this.mEmailAddress + " (" + j + ")";
+      }
+      abNameElem.insertItemAt(0, name, 0);
       selectedIndex = 0;
     }
     abNameElem.selectedIndex = selectedIndex;
     com.gContactSync.Accounts.restoreGroups();
   },
   /**
-   * Creates and returns a new address book after requesting a name for it.
+   * Creates and returns a new address book after requesting a name for it then updates the AB list.
    * If an AB of any type already exists this function will do nothing.
    */
   newAddressBook: function AccountSetupWizard_newAddressBook() {
@@ -207,8 +239,36 @@ com.gContactSync.AccountSetupWizard = {
     if (!name) {
       return;
     }
-    com.gContactSync.AbManager.getAbByName(name);
+    var ab = com.gContactSync.GAbManager.getGAbByName(name);
+    if (ab.mPrefs.Username) {
+      com.gContactSync.alertWarning(com.gContactSync.StringBundle.getStr("abAlreadySynchronized"));
+      return;
+    }
     this.setupAccountSettings(name);
+  },
+  /**
+   * Finishes the wizard by setting up the selected AB to sync with the selected account and group.
+   */
+  finish: function AccountSetupWizard_finish() {
+    var abName = document.getElementById("abName").label;
+    var group  = document.getElementById("Groups").value;
+    var syncGroups = String(group === "All"),
+        myContacts = String(group !== "All" && group !== "false");
+    // TODO combine with saveSelectedAccount
+    com.gContactSync.LOGGER.LOG("***Account Wizard is synchronizing " + abName + " with " + this.mEmailAddress + " / " + group + "***");
+    var ab = com.gContactSync.GAbManager.getGAbByName(abName);
+    ab.savePref("Username", this.mEmailAddress);
+    ab.savePref("Plugin", "Google");
+    ab.savePref("Disabled", "false");
+    ab.savePref("updateGoogleInConflicts", "true");
+    ab.savePref("Primary",  "true");
+    ab.savePref("syncGroups", syncGroups);
+    ab.savePref("myContacts", myContacts);
+    ab.savePref("myContactsName", group);
+    ab.savePref("writeOnly", "false");
+    ab.savePref("readOnly",  "false");
+    ab.setLastSyncDate(0);
+    return true;
   }
 };
 

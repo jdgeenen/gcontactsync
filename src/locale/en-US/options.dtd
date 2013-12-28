@@ -39,7 +39,6 @@
 <!ENTITY cleanOldPrefs.label            "Clean Old AB Preferences">
 <!ENTITY cleanOldPhotos.label           "Delete Old Contact Photos">
 
-<!-- FirstLogin.xul only -->
-<!ENTITY myContacts.label               "Only synchronize the 'My Contacts' group">
+<!-- FirstLogin.xul only TODO -->
 <!ENTITY openAccounts.value             "Advanced Account Settings">
 <!ENTITY openPreferences.value          "Advanced Settings">

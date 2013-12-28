@@ -124,6 +124,11 @@
                accesskey="&syncMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
                oncommand="com.gContactSync.Sync.begin(true, null);"/>
+     <menuitem id="newAcctMenuItem"
+               label="&newAcctMenuItem.label;"
+               accesskey="&newAcctMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.Overlay.openAccountWizard();"/>
      <menuitem id="acctMenuItem"
                label="&acctMenuItem.label;"
                accesskey="&acctMenuItem.accesskey;"
@@ -201,6 +206,11 @@
                accesskey="&syncMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
                oncommand="com.gContactSync.Sync.begin(true, null);"/>
+     <menuitem id="newAcctMenuItem"
+               label="&newAcctMenuItem.label;"
+               accesskey="&newAcctMenuItem.accesskey;"
+               class="menuitem-iconic icon-mail16 menu-iconic"
+               oncommand="com.gContactSync.Overlay.openAccountWizard();"/>
      <menuitem id="acctMenuItem"
                label="&acctMenuItem.label;"
                accesskey="&acctMenuItem.accesskey;"

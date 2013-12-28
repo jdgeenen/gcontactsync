@@ -2,8 +2,6 @@
 pref("extensions.gContactSync.refreshInterval", 120);
 // the delay between synchronizing individual accounts (in ms)
 pref("extensions.gContactSync.accountDelay", 5000);
-// the name of the address book to sync with
-pref("extensions.gContactSync.addressBookName", "Google Contacts");
 // the number of contacts supported.  Automatically raised, if necessary.
 pref("extensions.gContactSync.maxContacts", 10000);
 // set to true if Google should be updated when a contact changes in Thunderbird

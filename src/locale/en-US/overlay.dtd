@@ -38,10 +38,12 @@
 
 <!-- The gContactSync menu -->
 <!ENTITY gContactSyncMenu.label        "gContactSync">
-<!ENTITY gContactSyncMenu.accesskey    "g">
+<!ENTITY gContactSyncMenu.accesskey    "C">
 <!ENTITY syncMenuItem.label            "Sync">
 <!ENTITY syncMenuItem.accesskey        "S">
-<!ENTITY acctMenuItem.label            "Accounts">
+<!ENTITY newAcctMenuItem.label         "New Account">
+<!ENTITY newAcctMenuItem.accesskey     "N">
+<!ENTITY acctMenuItem.label            "Edit Accounts">
 <!ENTITY acctMenuItem.accesskey        "A">
 <!ENTITY prefMenuItem.label            "Preferences">
 <!ENTITY prefMenuItem.accesskey        "P">

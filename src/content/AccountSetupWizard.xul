@@ -41,10 +41,13 @@
   %initialSetupDTD;
   <!ENTITY % accountsDTD SYSTEM "chrome://gcontactsync/locale/Accounts.dtd">
   %accountsDTD;
+  <!ENTITY % optionsDTD SYSTEM "chrome://gcontactsync/locale/options.dtd">
+  %optionsDTD;
 ]>
 
 <wizard id="initialSetupWizard" title="&title.label;"
-          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        onwizardfinish="com.gContactSync.AccountSetupWizard.finish();">
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/synonyms.js"/>
   <script type="application/x-javascript"

@@ -57,6 +57,7 @@ com.gContactSync.Overlay = {
   mLastVersionMinor:   0,
   mLastVersionRelease: 0,
   mLastVersionSuffix:  "",
+  mAccountWizard:      false,
   /**
    * Called when the overlay is loaded and initializes everything and begins
    * the authentication check and sync or login prompt.
@@ -110,5 +111,51 @@ com.gContactSync.Overlay = {
     minutes     = minutes.length === 1 ?  "0" + minutes : minutes;
     seconds     = seconds.length === 1 ?  "0" + seconds : seconds;
     this.setStatusBarText(text + " " + hours + ":" + minutes + ":" + seconds);
+  },
+  /**
+   * Checks to see whether or not there is an authentication token in the login
+   * manager.  If so, it begins a sync.  If not, it shows the new account wizard.
+   */
+  checkAuthentication: function Overlay_checkAuthentication() {
+    if (com.gContactSync.gdata.isAuthValid()) {
+      this.updateVersion();  // Make sure the version has been updated
+      if (this.mAccountWizard) {
+        com.gContactSync.Sync.begin(true, null);
+      } else {
+        com.gContactSync.Sync.schedule(com.gContactSync.Preferences.mSyncPrefs.initialDelayMinutes.value * 60000);
+      }
+    } else {
+      this.setStatusBarText(com.gContactSync.StringBundle.getStr("notAuth"));
+      this.openAccountWizard();
+    }
+  },
+  /**
+   * Prompts the user to enter his or her Google username and password and then
+   * gets an authentication token to store and use.
+   */
+  openAccountWizard: function Overlay_openAccountWizard() {
+    var wizard = window.open("chrome://gcontactsync/content/AccountSetupWizard.xul",
+                             "SetupWindow",
+                             "chrome,resizable=yes,scrollbars=no,status=no");
+    this.mAccountWizard = true;
+    // when the setup window loads, set its onunload property to begin a sync
+    wizard.onload = function onloadListener() {
+      wizard.onunload = function onunloadListener() {
+        com.gContactSync.Overlay.checkAuthentication();
+      };
+    };
+  },
+  /**
+   * Updates the current version in the gContactSync preferences.
+   */
+  updateVersion: function MessengerOverlay_updateVersion() {
+    com.gContactSync.Preferences.setSyncPref("lastVersionMajor",
+                                             com.gContactSync.versionMajor);
+    com.gContactSync.Preferences.setSyncPref("lastVersionMinor",
+                                             com.gContactSync.versionMinor);
+    com.gContactSync.Preferences.setSyncPref("lastVersionRelease",
+                                             com.gContactSync.versionRelease);
+    com.gContactSync.Preferences.setSyncPref("lastVersionSuffix",
+                                             com.gContactSync.versionSuffix);
   }
 };

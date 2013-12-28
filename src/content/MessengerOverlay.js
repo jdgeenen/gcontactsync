@@ -91,21 +91,11 @@ com.gContactSync.MessengerOverlay = {
 
     com.gContactSync.Preferences.setSyncPref("synchronizing", false);
 
-    // On the first run display a login prompt
-    if (lastVersionMajor === lastVersionMinor === lastVersionRelease === 0) {
-      com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("notAuth"));
-      com.gContactSync.MessengerOverlay.promptLogin();
-    } else {
-
-      // If moving from 0.3.x or <0.4.0b1 then update the chat names
-      // The upgrade will take place during the next sync
-      if (((lastVersionMajor === 0) && (lastVersionMinor < 4)) ||
-          ((lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && (lastVersionSuffix.charAt(0) === "a"))) {
-        com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", true);
-      }
-
-      com.gContactSync.MessengerOverlay.updateVersion();
-      com.gContactSync.Sync.schedule(com.gContactSync.Preferences.mSyncPrefs.initialDelayMinutes.value * 60000);
+    // If moving from 0.3.x or <0.4.0b1 then update the chat names
+    // The upgrade will take place during the next sync
+    if (((lastVersionMajor === 0) && (lastVersionMinor < 4) && (lastVersionMajor > 0)) ||
+        ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && (lastVersionSuffix.charAt(0) === "a"))) {
+      com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", true);
     }
     if (com.gContactSync.Preferences.mSyncPrefs.overrideGetCardForEmail.value) {
       try {
@@ -113,6 +103,8 @@ com.gContactSync.MessengerOverlay = {
         getCardForEmail = com.gContactSync.MessengerOverlay.getCardForEmail;
       } catch (e) {}
     }
+    // Check for an auth token and either schedule a sync if at least one exists or show the new account wizard otherwise.
+    com.gContactSync.Overlay.checkAuthentication();
   },
   /**
    * Calls the original SetBusyCursor() function from mailCore.js wrapped in a
@@ -185,109 +177,5 @@ com.gContactSync.MessengerOverlay = {
       catch (ex) {}
     }
     return result;
-  },
-  /**
-   * Checks to see whether or not there is an authentication token in the login
-   * manager.  If so, it begins a sync.  If not, it shows the login prompt.
-   */
-  checkAuthentication: function MessengerOverlay_checkAuthentication() {
-    if (com.gContactSync.gdata.isAuthValid()) {
-      com.gContactSync.MessengerOverlay.updateVersion();  // Make sure the version has been updated
-      if (com.gContactSync.MessengerOverlay.mUsername) {
-        var name = com.gContactSync.Preferences.mSyncPrefs.addressBookName.value;
-        var ab   = com.gContactSync.GAbManager.getGAb(com.gContactSync.GAbManager.getAbByName(name));
-        ab.savePref("Username", com.gContactSync.MessengerOverlay.mUsername);
-        ab.setLastSyncDate(0);
-        com.gContactSync.Sync.begin(false, null);
-      } else {
-        com.gContactSync.Sync.schedule(com.gContactSync.Preferences.mSyncPrefs.initialDelayMinutes.value * 60000);
-      }
-    } else {
-      com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("notAuth"));
-      com.gContactSync.MessengerOverlay.promptLogin();
-    }
-  },
-  /**
-   * Updates the current version in the gContactSync preferences.
-   */
-  updateVersion: function MessengerOverlay_updateVersion() {
-    com.gContactSync.Preferences.setSyncPref("lastVersionMajor",
-                                             com.gContactSync.versionMajor);
-    com.gContactSync.Preferences.setSyncPref("lastVersionMinor",
-                                             com.gContactSync.versionMinor);
-    com.gContactSync.Preferences.setSyncPref("lastVersionRelease",
-                                             com.gContactSync.versionRelease);
-    com.gContactSync.Preferences.setSyncPref("lastVersionSuffix",
-                                             com.gContactSync.versionSuffix);
-  },
-  /**
-   * Prompts the user to enter his or her Google username and password and then
-   * gets an authentication token to store and use.
-   */
-  promptLogin: function MessengerOverlay_promptLogin() {
-    // TODO - open the initial login wizard
-    var prompt   = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
-                             .getService(Components.interfaces.nsIPromptService)
-                             .promptUsernameAndPassword;
-    var username = {};
-    var password = {};
-    // opens a username/password prompt
-    var ok = prompt(window, com.gContactSync.StringBundle.getStr("loginTitle"),
-                    com.gContactSync.StringBundle.getStr("loginText"), username, password, null,
-                    {value: false});
-    if (!ok)
-      return false;
-
-    // This is a primitive way of validating an e-mail address, but Google takes
-    // care of the rest.  It seems to allow getting an auth token w/ only the
-    // username, but returns an error when trying to do anything w/ that token
-    // so this makes sure it is a full e-mail address.
-    if (username.value.indexOf("@") < 1) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("invalidEmail"));
-      return com.gContactSync.MessengerOverlay.promptLogin();
-    }
-    
-    // fix the username before authenticating
-    username.value = com.gContactSync.fixUsername(username.value);
-    var body     = com.gContactSync.gdata.makeAuthBody(username.value, password.value);
-    var httpReq  = new com.gContactSync.GHttpRequest("authenticate", null, null, body);
-    // if it succeeds and Google returns the auth token, store it and then start
-    // a new sync
-    httpReq.mOnSuccess = function authSuccess(httpReq) {
-      com.gContactSync.MessengerOverlay.login(username.value,
-                                     httpReq.responseText.split("\n")[2]);
-    };
-    // if it fails, alert the user and prompt them to try again
-    httpReq.mOnError = function authError(httpReq) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr('authErr'));
-      com.gContactSync.LOGGER.LOG_ERROR('Authentication Error - ' +
-                                        httpReq.status,
-                                        httpReq.responseText);
-      com.gContactSync.MessengerOverlay.promptLogin();
-    };
-    // if the user is offline, alert them and quit
-    httpReq.mOnOffline = com.gContactSync.Sync.mOfflineFunction;
-    httpReq.send();
-    return true;
-  },
-  /**
-   * Stores the given auth token in the login manager and starts the setup
-   * window that will begin the first synchronization when closed.
-   * @param aAuthToken {string} The authentication token to store.
-   */
-  login: function MessengerOverlay_login(aUsername, aAuthToken) {
-    // TODO REMOVE
-    com.gContactSync.LoginManager.addAuthToken(aUsername, 'GoogleLogin ' + aAuthToken);
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("initialSetup"));
-    var setup = window.open("chrome://gcontactsync/content/FirstLogin.xul",
-                            "SetupWindow",
-                            "chrome,resizable=yes,scrollbars=no,status=no");
-    com.gContactSync.MessengerOverlay.mUsername = aUsername;
-    // when the setup window loads, set its onunload property to begin a sync
-    setup.onload = function onloadListener() {
-      setup.onunload = function onunloadListener() {
-        com.gContactSync.MessengerOverlay.checkAuthentication();
-      };
-    };
   }
 };

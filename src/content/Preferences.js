@@ -194,7 +194,6 @@ com.gContactSync.Preferences = {
     alertSummary:             new com.gContactSync.Pref("alertSummary",             "bool", true),
     statusBarText:            new com.gContactSync.Pref("statusBarText",            "char", ""),
     myContactsName:           new com.gContactSync.Pref("myContactsName",           "char", "My Contacts"),
-    addressBookName:          new com.gContactSync.Pref("addressBookName",          "char", "Google Contacts"),
     lastVersionMajor:         new com.gContactSync.Pref("lastVersionMajor",         "int",  0),
     lastVersionMinor:         new com.gContactSync.Pref("lastVersionMinor",         "int",  0),
     lastVersionRelease:       new com.gContactSync.Pref("lastVersionRelease",       "int",  0),
