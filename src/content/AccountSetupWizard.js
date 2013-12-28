@@ -209,6 +209,7 @@ com.gContactSync.AccountSetupWizard = {
       // Skip over address books that are already synchronized
       if (abs.hasOwnProperty(uri) && !abs[uri].mPrefs.Username) {
         abNameElem.appendItem(abs[uri].getName(), uri);
+        alert(abs[uri].getName());
         if (abs[uri].getName().toLowerCase() === aSearch) {
           selectedIndex = i;
         }
@@ -222,7 +223,7 @@ com.gContactSync.AccountSetupWizard = {
       for (var j = 1; true; ++j) {
         var ab = com.gContactSync.GAbManager.getGAbByName(name, true);
         if (!ab || !ab.mPrefs.Username) {break;}
-        name = this.mEmailAddress + " (" + j + ")";
+        name = aSearch + " (" + j + ")";
       }
       abNameElem.insertItemAt(0, name, 0);
       selectedIndex = 0;
@@ -239,8 +240,8 @@ com.gContactSync.AccountSetupWizard = {
     if (!name) {
       return;
     }
-    var ab = com.gContactSync.GAbManager.getGAbByName(name);
-    if (ab.mPrefs.Username) {
+    var ab = com.gContactSync.GAbManager.getGAbByName(name, true);
+    if (ab && ab.mPrefs.Username) {
       com.gContactSync.alertWarning(com.gContactSync.StringBundle.getStr("abAlreadySynchronized"));
       return;
     }
