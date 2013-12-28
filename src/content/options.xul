@@ -78,8 +78,7 @@
                   type="bool"/>
     </preferences>
     <groupbox flex="1">
-      <!-- TODO - replace this link with one not on the wiki -->
-      <label href="http://www.pirules.org/tikiwiki/tiki-index.php?page=gContactSync+Preferences"
+      <label href="http://pirules.org/addons/gcontactsync/preferences.php"
              class="text-link"
              value="&help.value;"/>
       <groupbox>
