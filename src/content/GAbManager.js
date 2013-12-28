@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2011
+ * Portions created by the Initial Developer are Copyright (C) 2008-2013
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
  * An object that can obtain address books by the name or URI, find the synced
@@ -201,6 +201,19 @@ com.gContactSync.GAbManager.getGAbByURI = function GAbManager_getGAbByURI(aURI) 
   // then get a GAddressBook object from that and add it to
   // com.gContactSync.GAbManager.mABs
   return com.gContactSync.GAbManager.getGAb(com.gContactSync.GAbManager.getAbByURI(aURI));
+};
+
+/**
+ * Returns the Address Book if it can be found.  If it cannot be found
+ * it tries once to make it and return the newly made address book.
+ * @param aDirName    {string} The name of the address book.
+ * @param aDontMakeAb {boolean} True if the address book shouldn't be created
+ *                              if not found.
+ * @returns {GAddressBook} The GAddressBook with the name given, null if not found and
+ *                          aDontMakeAb is true.
+ */
+com.gContactSync.GAbManager.getGAbByName = function GAbManager_getGAbByName(aDirName, aDontMakeAb) {
+  return this.getGAb(this.getAbByName(aDirName, aDontMakeAb));
 };
 
 /**
