@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 window.addEventListener("load",
   /** Initializes the Accounts class when the window has finished loading */
@@ -73,6 +73,9 @@ com.gContactSync.Accounts = {
    * filling in the usernames, hiding the advanced settings, etc.
    */
   initDialog:  function Accounts_initDialog() {
+    // This script is also included by the account setup wizard.
+    // Only run these initialization functions on the account dialog.
+    if (document.getElementById("showAdvanced") === null) {return;}
     try {
       this.fillAbTree();
       this.fillUsernames();
@@ -81,8 +84,6 @@ com.gContactSync.Accounts = {
     }
     catch (e) {
       com.gContactSync.LOGGER.LOG_WARNING("Error in Accounts.initDialog", e);
-      // TODO remove the alert
-      com.gContactSync.alertError(e);
     }
   },
   /**
@@ -408,33 +409,38 @@ com.gContactSync.Accounts = {
    * Restores the Groups menulist to contain only the default groups.
    */
   restoreGroups: function Accounts_restoreGroups() {
-    var groupElem = document.getElementById("GroupsPopup");
-    for (var i = groupElem.childNodes.length - 1; i > -1; i--) {
-      if (groupElem.childNodes[i].getAttribute("class") !== "default")
-        groupElem.removeChild(groupElem.childNodes[i]);
+    var groupElem = document.getElementById("Groups");
+    for (var i = 0; i < groupElem.itemCount;) {
+      if (groupElem.getItemAtIndex(i).getAttribute("class") != "default") {
+        groupElem.removeItemAt(i);
+      } else {
+        ++i;
+      }
+    }
+    var groupsElem = document.getElementById("Groups");
+    if (groupsElem.selectedIndex >= groupsElem.itemCount) {
+      groupsElem.selectedIndex = 2;
     }
   },
   /**
    * Fetch all groups for the selected account and add custom groups to the
    * menulist.
    */
-  getAllGroups: function Accounts_getAllGroups() {
-    var usernameElem  = document.getElementById("Username");
+  getAllGroups: function Accounts_getAllGroups(aUsername) {
     this.restoreGroups();
-    if (usernameElem.value === "none" || !usernameElem.value)
+    if (!aUsername || aUsername === "none")
       return false;
-    var token = com.gContactSync.LoginManager.getAuthTokens()[usernameElem.value];
+    var token = com.gContactSync.LoginManager.getAuthTokens()[aUsername];
     if (!token) {
-      com.gContactSync.LOGGER.LOG_WARNING("Unable to find the token for username " + usernameElem.value);
+      com.gContactSync.LOGGER.LOG_WARNING("Unable to find the token for username " + aUsername);
       return false;
     }
-    com.gContactSync.LOGGER.VERBOSE_LOG("Fetching groups for username: " + usernameElem.value);
+    com.gContactSync.LOGGER.VERBOSE_LOG("Fetching groups for username: " + aUsername);
     var httpReq = new com.gContactSync.GHttpRequest("getGroups", token, null,
-                                   null, usernameElem.value);
+                                   null, aUsername);
     httpReq.mOnSuccess = function getAllGroupsSuccess(httpReq) {
       com.gContactSync.LOGGER.VERBOSE_LOG(com.gContactSync.serializeFromText(httpReq.responseText));
-      com.gContactSync.Accounts.addGroups(httpReq.responseXML,
-                                          usernameElem.value);
+      com.gContactSync.Accounts.addGroups(httpReq.responseXML, aUsername);
     };
     httpReq.mOnError   = function getAllGroupsError(httpReq) {
       com.gContactSync.LOGGER.LOG_ERROR(httpReq.responseText);
@@ -458,7 +464,7 @@ com.gContactSync.Accounts = {
     if (!aAtom) {
       return false;
     }
-    if (usernameElem.value === "none" || usernameElem.value !== aUsername) {
+    if (usernameElem !== null && (usernameElem.value === "none" || usernameElem.value !== aUsername)) {
       return false;
     }
     arr = aAtom.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.ATOM.url, "entry");

@@ -10,6 +10,7 @@ overlay  chrome://messenger/content/addressbook/abEditCardDialog.xul  chrome://g
 overlay  chrome://messenger/content/addressbook/abNewCardDialog.xul   chrome://gcontactsync/content/CardDialogOverlay.xul
 
 style    chrome://gcontactsync/content/ABOverlay.xul                  chrome://gcontactsync/skin/overlay.css
+style    chrome://gcontactsync/content/AccountSetupWizard.xul         chrome://gcontactsync/skin/overlay.css
 style    chrome://gcontactsync/content/MessengerOverlay.xul           chrome://gcontactsync/skin/overlay.css
 style    chrome://global/content/customizeToolbar.xul                 chrome://gcontactsync/skin/overlay.css
 style    chrome://messenger/content/addressbook/addressbook.xul       chrome://gcontactsync/skin/overlay.css

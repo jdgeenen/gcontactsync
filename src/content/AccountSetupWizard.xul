@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<!-- ***** BEGIN LICENSE BLOCK *****
+   - Version: MPL 1.1/GPL 2.0/LGPL 2.1
+   -
+   - The contents of this file are subject to the Mozilla Public License Version
+   - 1.1 (the "License"); you may not use this file except in compliance with
+   - the License. You may obtain a copy of the License at
+   - http://www.mozilla.org/MPL/
+   -
+   - Software distributed under the License is distributed on an "AS IS" basis,
+   - WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+   - for the specific language governing rights and limitations under the
+   - License.
+   -
+   - The Original Code is gContactSync.
+   -
+   - The Initial Developer of the Original Code is
+   - Josh Geenen <gcontactsync@pirules.org>.
+   - Portions created by the Initial Developer are Copyright (C) 2013
+   - the Initial Developer. All Rights Reserved.
+   -
+   - Contributor(s):
+   -
+   - Alternatively, the contents of this file may be used under the terms of
+   - either the GNU General Public License Version 2 or later (the "GPL"), or
+   - the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),
+   - in which case the provisions of the GPL or the LGPL are applicable instead
+   - of those above. If you wish to allow use of your version of this file only
+   - under the terms of either the GPL or the LGPL, and not to allow others to
+   - use your version of this file under the terms of the MPL, indicate your
+   - decision by deleting the provisions above and replace them with the notice
+   - and other provisions required by the LGPL or the GPL. If you do not delete
+   - the provisions above, a recipient may use your version of this file under
+   - the terms of any one of the MPL, the GPL or the LGPL.
+   -
+   - ***** END LICENSE BLOCK ***** -->
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<!--<?xml-stylesheet href="chrome://gcontactsync/skin/AccountSetupWizard.css" type="text/css"?>-->
+<!DOCTYPE window [
+  <!ENTITY % initialSetupDTD SYSTEM "chrome://gcontactsync/locale/AccountSetupWizard.dtd">
+  %initialSetupDTD;
+  <!ENTITY % accountsDTD SYSTEM "chrome://gcontactsync/locale/Accounts.dtd">
+  %accountsDTD;
+]>
+
+<wizard id="initialSetupWizard" title="&title.label;"
+          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/synonyms.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/LoginManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/StringBundle.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/FileIO.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Logger.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Pref.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Namespace.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GElement.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/gdata.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Preferences.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/HttpRequest.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GHttpRequest.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/AddressBook.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GAddressBook.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/AbManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/GAbManager.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Group.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/Accounts.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/AccountSetupWizard.js"/>
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="gContactSyncStringBundle"
+                  src="chrome://gContactSync/locale/gcontactsync.properties"/>
+  </stringbundleset>
+  <wizardpage onpageadvanced="return com.gContactSync.AccountSetupWizard.advanceAccountPage();"
+              id="accountPage">
+    <description>
+      &account.description;
+    </description>
+
+    <radiogroup id="accountOption"
+                onselect="com.gContactSync.AccountSetupWizard.updateAccountIDs();">
+      <radio id="existingAccount"
+             label="&existingAccount.label;"
+             value="existing"
+             selected="true"/>
+      <menulist id="existingAccountList">
+        <menupopup id="existingAccountPopup"/>
+      </menulist>
+      <spacer height="5px"/>
+      <radio id="newAccount" label="&newAccount.label;" value="new"/>
+      <grid flex="1" id="newAccountGrid">
+        <columns>
+          <column/>
+          <column/>
+        </columns>
+        <rows>
+          <row align="center">
+            <label id="emailLabel" value="&email.value;" control="email"/>
+            <textbox id="email"/>
+          </row>
+          <row align="center">
+            <label id="passwordLabel" value="&password.value;" control="password"/>
+            <textbox id="password" type="password"/>
+          </row>
+        </rows>
+      </grid>
+    </radiogroup>
+  </wizardpage>
+
+  <wizardpage description="&accountSettings.description;"
+              onpagerewound="com.gContactSync.AccountSetupWizard.mAuthToken='';"
+              onpageshow="com.gContactSync.AccountSetupWizard.setupAccountSettings();">
+    <label control="abName" value="&abName.value;"/>
+    <hbox>
+      <menulist id="abName">
+        <menupopup id="abNamePopup"/>
+      </menulist>
+      <button id="newABButton"
+              label="&newABButton.label;"
+              accesskey="&newABButton.accesskey;"
+              oncommand="com.gContactSync.AccountSetupWizard.newAddressBook();"/>
+    </hbox>
+    <spacer height="5px"/>
+    <label control="Groups" value="&Groups.label;"/>
+    <hbox id="GroupsBox">
+      <menulist id="Groups">
+        <menupopup id="GroupsPopup">
+          <menuitem class="default" value="All"        label="&AllGroups.label;"/>
+          <menuitem class="default" value="false"      label="&NoGroups.label;"/>
+          <menuitem class="default" value="contacts"   label="&Contacts.label;" selected="true"/>
+          <menuitem class="default" value="coworkers"  label="&Coworkers.label;"/>
+          <menuitem class="default" value="family"     label="&Family.label;"/>
+          <menuitem class="default" value="friends"    label="&Friends.label;"/>
+        </menupopup>
+      </menulist>
+      <button id="GetGroups"
+              oncommand="com.gContactSync.Accounts.getAllGroups(com.gContactSync.AccountSetupWizard.mEmailAddress);"
+              label="&GetGroups.label;"
+              accesskey="&GetGroups.accesskey;"/>
+    </hbox>
+    <spacer flex="1"/>
+    <label align="end" value="&finish.value;"/>
+  </wizardpage>
+</wizard>

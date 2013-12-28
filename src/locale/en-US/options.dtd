@@ -1,4 +1,4 @@
-<!ENTITY title.label "gContactSync Preferences">
+<!ENTITY title.label                    "gContactSync Preferences">
 
 <!ENTITY main.tab                       "Main">
 <!ENTITY help.value                     "Help">
@@ -7,7 +7,7 @@
 <!ENTITY autoSync.label                 "Synchronize contacts automatically">
 <!ENTITY refreshInterval.value          "Synchronize Interval (minutes) [Default is 120 (2 hours)]">
 <!ENTITY initialDelayMinutes.value      "Initial sync delay (minutes) [Default is 5]">
-<!ENTITY abName.value                   "Name of the Address Book to sync with (should be new)">
+<!ENTITY abName.value                   "Address Book to synchronize">
 <!ENTITY syncBehavior.label             "Sync Behavior">
 <!ENTITY syncAddresses.label            "Synchronize postal addresses">
 <!ENTITY alertSummary.label             "Display a summary after every manual sync">
@@ -21,7 +21,7 @@
 <!ENTITY interface.tab                  "Interface">
 <!ENTITY buttons.label                  "Buttons and Menus">
 <!ENTITY enableMenu.label               "Enable the gContactSync Menu">
-<!ENTITY enableMenuLinks.label          "Add some links (Wiki, FAQ, etc.) to the gContactSync Menu">
+<!ENTITY enableMenuLinks.label          "Add some links (Error Report Form, FAQ, etc.) to the gContactSync Menu">
 <!ENTITY addReset.label                 "Add Replace to and Replace from Server links to the Address Book context menu">
 <!ENTITY abResults.label                "Contacts List">
 <!ENTITY phoneColLabels.label           "Rename the phone column labels">

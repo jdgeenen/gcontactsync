@@ -92,15 +92,15 @@ com.gContactSync.MessengerOverlay = {
     com.gContactSync.Preferences.setSyncPref("synchronizing", false);
 
     // On the first run display a login prompt
-    if (!lastVersionMinor) {
+    if (lastVersionMajor === lastVersionMinor === lastVersionRelease === 0) {
       com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("notAuth"));
       com.gContactSync.MessengerOverlay.promptLogin();
     } else {
 
       // If moving from 0.3.x or <0.4.0b1 then update the chat names
       // The upgrade will take place during the next sync
-      if (((lastVersionMajor == 0) && (lastVersionMinor < 4)) ||
-          ((lastVersionRelease == 0) && (lastVersionSuffix.length > 0) && (lastVersionSuffix.charAt(0) == "a"))) {
+      if (((lastVersionMajor === 0) && (lastVersionMinor < 4)) ||
+          ((lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && (lastVersionSuffix.charAt(0) === "a"))) {
         com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", true);
       }
 
@@ -225,6 +225,7 @@ com.gContactSync.MessengerOverlay = {
    * gets an authentication token to store and use.
    */
   promptLogin: function MessengerOverlay_promptLogin() {
+    // TODO - open the initial login wizard
     var prompt   = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                              .getService(Components.interfaces.nsIPromptService)
                              .promptUsernameAndPassword;
@@ -275,6 +276,7 @@ com.gContactSync.MessengerOverlay = {
    * @param aAuthToken {string} The authentication token to store.
    */
   login: function MessengerOverlay_login(aUsername, aAuthToken) {
+    // TODO REMOVE
     com.gContactSync.LoginManager.addAuthToken(aUsername, 'GoogleLogin ' + aAuthToken);
     com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("initialSetup"));
     var setup = window.open("chrome://gcontactsync/content/FirstLogin.xul",

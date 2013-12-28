@@ -98,7 +98,7 @@
             </menupopup>
           </menulist>
           <button id="GetGroups"
-                  oncommand="com.gContactSync.Accounts.getAllGroups();"
+                  oncommand="com.gContactSync.Accounts.getAllGroups(document.getElementById('Username').value);"
                   label="&GetGroups.label;"
                   accesskey="&GetGroups.accesskey;"/>
         </hbox>

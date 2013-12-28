@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2013
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
  * Stores and retrieves the authentication token from the login manager.
@@ -165,7 +165,7 @@ com.gContactSync.LoginManager = {
       aUsername = aUsername.toLowerCase();
       // Find user from returned array of nsILoginInfo objects
       for (var i = 0; i < logins.length; i++) {
-        if (logins[i].username.toLowerCase() == aUsername) {
+        if (logins[i].username.toLowerCase() === aUsername) {
           try {
             com.gContactSync.LOGGER.VERBOSE_LOG("Found the login to remove");
             loginManager.removeLogin(logins[i]);
@@ -201,7 +201,7 @@ com.gContactSync.LoginManager = {
           var pass = iter.getNext().QueryInterface(Components.interfaces.nsIPassword);
           if (pass.host.indexOf("imap://") === 0 || pass.host.indexOf("mailbox://") === 0) {
             if (!aPattern || aPattern.test(pass.user)) {
-              arr.push(pass.user);
+              arr.push({username: pass.user, hostname: pass.host, password: pass.password});
             }
           }
         } catch (e) {}
@@ -222,7 +222,7 @@ com.gContactSync.LoginManager = {
         hostname = logins[i].hostname;
         if (hostname.indexOf("imap://") === 0 || hostname.indexOf("mailbox://") === 0) {
           if (!aPattern || aPattern.test(logins[i].username)) {
-            arr.push(logins[i].username);
+            arr.push({username: logins[i].username, hostname: hostname, password: logins[i].password});
           }
         }
       }
