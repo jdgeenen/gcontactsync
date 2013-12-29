@@ -209,7 +209,6 @@ com.gContactSync.AccountSetupWizard = {
       // Skip over address books that are already synchronized
       if (abs.hasOwnProperty(uri) && !abs[uri].mPrefs.Username) {
         abNameElem.appendItem(abs[uri].getName(), uri);
-        alert(abs[uri].getName());
         if (abs[uri].getName().toLowerCase() === aSearch) {
           selectedIndex = i;
         }
