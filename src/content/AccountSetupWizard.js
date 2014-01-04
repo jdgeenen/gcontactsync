@@ -170,9 +170,11 @@ com.gContactSync.AccountSetupWizard = {
     var httpReq = new com.gContactSync.GHttpRequest("authenticate", null, null, body);
     // Move to the next page in the wizard upon successful authentication
     httpReq.mOnSuccess = function authSuccess(httpReq) {
+      com.gContactSync.LOGGER.VERBOSE_LOG(httpReq.responseText);
       com.gContactSync.AccountSetupWizard.mAuthToken = httpReq.responseText.split("\n")[2];
-      com.gContactSync.LoginManager.addAuthToken(aUsername, 'GoogleLogin ' + aAuthToken);
-      document.getElementById("initialSetupWizard").advance();
+      com.gContactSync.LoginManager.addAuthToken(com.gContactSync.AccountSetupWizard.mEmailAddress,
+		                                 'GoogleLogin ' + com.gContactSync.AccountSetupWizard.mAuthToken);
+      document.getElementById("newAccountWizard").advance();
     };
     // if it fails, alert the user and prompt them to try again
     httpReq.mOnError = function authError(httpReq) {

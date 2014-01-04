@@ -45,7 +45,7 @@
   %optionsDTD;
 ]>
 
-<wizard id="initialSetupWizard" title="&title.label;"
+<wizard id="newAccountWizard" title="&title.label;"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
         onwizardfinish="com.gContactSync.AccountSetupWizard.finish();">
   <script type="application/x-javascript"
