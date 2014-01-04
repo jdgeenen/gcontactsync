@@ -89,9 +89,9 @@ com.gContactSync.GAddressBook.prototype.prefPrefix = "gContactSync";
  * if any.
  */
 com.gContactSync.GAddressBook.prototype.getPrefs = function GAddressBook_getPrefs() {
-  com.gContactSync.LOGGER.VERBOSE_LOG("\nGetting Prefs for AB '" + this.getName() + "':");
+  com.gContactSync.LOGGER.LOG("\nGetting Prefs for AB '" + this.getName() + "':");
   for (var i in this.mPrefs) {
-    var isLastSync = (i === "lastSync")
+    var isLastSync = (i === "lastSync");
     // all prefs except lastSync have the prefPrefix in from of them
     var val = this.getStringPref(isLastSync ? i : this.prefPrefix + i);
     // getStringPref returns 0 iff the pref doesn't exist
@@ -109,10 +109,9 @@ com.gContactSync.GAddressBook.prototype.getPrefs = function GAddressBook_getPref
     else if (isLastSync && isNaN(val)) {
       val = 0;
     }
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * " + i + " = " + val);
+    com.gContactSync.LOGGER.LOG(" * " + i + " = " + val);
     this.mPrefs[i] = val;
   }
-  com.gContactSync.LOGGER.VERBOSE_LOG("\n");
 };
 
 /**
