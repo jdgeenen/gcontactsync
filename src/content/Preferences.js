@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2011
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -208,6 +208,7 @@ com.gContactSync.Preferences = {
     newContactPhotoDelay:     new com.gContactSync.Pref("newContactPhotoDelay",      "int", 0),
     remoteActionDelay:        new com.gContactSync.Pref("remoteActionDelay",         "int", 0),
     v04UpgradeNeeded:         new com.gContactSync.Pref("v04UpgradeNeeded",         "bool", false),
+    v04RCUpgradeNeeded:       new com.gContactSync.Pref("v04RCUpgradeNeeded",       "bool", false),
     httpRequestTimeout:       new com.gContactSync.Pref("httpRequestTimeout",        "int", 0)
   },
   /**

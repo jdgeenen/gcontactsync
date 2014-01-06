@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2009-2011
+ * Portions created by the Initial Developer are Copyright (C) 2009-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -75,8 +75,9 @@ com.gContactSync.TBContact.prototype = {
    * @returns {string} The value of the attribute, or null if not set.
    */
   getValue: function TBContact_getValue(aAttribute) {
-    if (!aAttribute)
+    if (!aAttribute) {
       throw "Error - invalid attribute sent to TBContact.getValue";
+    }
     if (aAttribute === "LastModifiedDate") {
       var ret = com.gContactSync.GAbManager.getCardValue(this.mContact, aAttribute);
       if (this.mAddressBook.mPrefs && this.mAddressBook.mPrefs.readOnly === "true") {
@@ -87,15 +88,19 @@ com.gContactSync.TBContact.prototype = {
         ret = 1;
       }
       return ret;
-    }
+    } else if (aAttribute === "HomeAddressMult" || aAttribute === "WorkAddressMult") {
+      var type = aAttribute.substring(0, 4);
+      var addr = com.gContactSync.GAbManager.getCardValue(this.mContact, type + "Address");
+      var line2 = com.gContactSync.GAbManager.getCardValue(this.mContact, type + "Address2");
+      if (line2) { addr += "\n" + line2; }
+      return addr;
     // Postbox stores additional e-mail addresses already
-    else if (this.mPostbox && (aAttribute === "ThirdEmail" || aAttribute === "FourthEmail")) {
+    } else if (this.mPostbox && (aAttribute === "ThirdEmail" || aAttribute === "FourthEmail")) {
       var arrLen   = {},
           emailArr = this.mContact.getAdditionalEmailAddresses(arrLen);
       if (aAttribute === "ThirdEmail" && emailArr.length > 0) {
         return emailArr[0];
-      }
-      else if (emailArr.length > 1) {
+      } else if (emailArr.length > 1) {
         return emailArr[1];
       }
       return null;
@@ -130,21 +135,22 @@ com.gContactSync.TBContact.prototype = {
           emailArr = this.mContact.getAdditionalEmailAddresses(arrLen);
       if (aAttribute === "ThirdEmail") {
         emailArr[0] = aValue;
-      }
-      // FourthEmail
-      else if (emailArr.length > 0) {
+      } else if (emailArr.length > 0) {
+        // FourthEmail
         emailArr[1] = aValue;
-      }
-      else {
+      } else {
         emailArr[0] = aValue;
       }
       this.mContact.setAdditionalEmailAddresses(emailArr.length, emailArr);
-    }
-    else {
+    } else if (aAttribute === "HomeAddressMult" || aAttribute === "WorkAddressMult") {
+      var type = aAttribute.substring(0, 4);
+      var values = aValue ? aValue.split("\n") : [aValue, aValue];
+      com.gContactSync.GAbManager.setCardValue(this.mContact, type + "Address", values[0]);
+      com.gContactSync.GAbManager.setCardValue(this.mContact, type + "Address2", values[1]);
+    } else {
       com.gContactSync.GAbManager.setCardValue(this.mContact, aAttribute, aValue);
     }
-    if (aUpdate)
-      return this.update();
+    if (aUpdate) { return this.update(); }
     return false;
   },
   /**

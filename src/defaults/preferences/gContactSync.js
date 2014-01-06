@@ -87,7 +87,9 @@ pref("extensions.gContactSync.newContactPhotoDelay", 2000);
 // delay after adding, deleting, or updating a contact.  Can help mitigate 503 errors.
 pref("extensions.gContactSync.remoteActionDelay", 0);
 // Stores whether an upgrade is required from <0.4.0b1 to version 0.4
-pref("extensions.gContactSync.v04UpgradeNeeded", true);
+pref("extensions.gContactSync.v04UpgradeNeeded", false);
+// Stores whether an upgrade is required from <0.4.0b5 and > 0.3.x to version 0.4
+pref("extensions.gContactSync.v04RCUpgradeNeeded", false);
 // Timeout in ms for HTTP requests, 0 means no timeout.
 pref("extensions.gContactSync.httpRequestTimeout", 0);
 // extended properties to sync

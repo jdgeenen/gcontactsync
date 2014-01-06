@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2010
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -137,7 +137,8 @@ com.gContactSync.Sync = {
     }
 
     // Upgrade checks
-    if (com.gContactSync.Preferences.mSyncPrefs.v04UpgradeNeeded.value) {
+    if (com.gContactSync.Preferences.mSyncPrefs.v04UpgradeNeeded.value ||
+        com.gContactSync.Preferences.mSyncPrefs.v04RCUpgradeNeeded.value) {
       com.gContactSync.version04Upgrade();
     }
 

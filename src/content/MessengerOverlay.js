@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Portions created by the Initial Developer are Copyright (C) 2010-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -91,11 +91,14 @@ com.gContactSync.MessengerOverlay = {
 
     com.gContactSync.Preferences.setSyncPref("synchronizing", false);
 
-    // If moving from 0.3.x or <0.4.0b1 then update the chat names
+    // If moving from 0.3.x or <0.4.0b1 then update the chat names and incorrect types
+    // Otherwise if coming from pre-0.4.0rc1 update the incorrect types
     // The upgrade will take place during the next sync
     if (((lastVersionMajor === 0) && (lastVersionMinor < 4) && (lastVersionMajor > 0)) ||
         ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && (lastVersionSuffix.charAt(0) === "a"))) {
       com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", true);
+    } else if ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && ((lastVersionSuffix.charAt(0) === "a") || (lastVersionSuffix.charAt(0) === "b"))) {
+      com.gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", true);
     }
     if (com.gContactSync.Preferences.mSyncPrefs.overrideGetCardForEmail.value) {
       try {

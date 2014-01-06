@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2011
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -51,7 +51,7 @@ com.gContactSync.versionMinor   = "4";
 /** The release for the current version of gContactSync (ie 1 in 0.3.1a7) */
 com.gContactSync.versionRelease = "0";
 /** The suffix for the current version of gContactSync (ie a7 for Alpha 7) */
-com.gContactSync.versionSuffix  = "b4";
+com.gContactSync.versionSuffix  = "rc1";
 /** The attribute where the dummy e-mail address is stored */
 com.gContactSync.dummyEmailName = "PrimaryEmail";
 
@@ -607,57 +607,73 @@ com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
   com.gContactSync.alert(com.gContactSync.StringBundle.getStr("version04UpgradeMessage"));
   com.gContactSync.LOGGER.LOG("***Upgrading Contacts***");
   var propertiesToReplace = ["_AimScreenName", "TalkScreenName", "ICQScreenName", "YahooScreenName", "MSNScreenName", "JabberScreenName"];
+  // Properties that should not have types, but were given types to contacts without an e-mail address.
+  var untypedProperties  = ["_GoogleTalk", "_ICQ", "_Yahoo", "_MSN", "_JabberId", "_Skype", "JobTitle", "Company", "Department",
+                            "JobDescription", "CompanySymbol", "HomeAddress", "HomeCity", "HomeState", "HomeZipCode", "HomeCountry",
+                            "WorkAddress", "WorkCity", "WorkState", "WorkZipCode", "WorkCountry"];
   var abs = com.gContactSync.GAbManager.getAllAddressBooks(2, true);
+  var updateScreenNames = com.gContactSync.Preferences.mSyncPrefs.v04UpgradeNeeded.value;
   // For each AB:
   //  Get all contacts
   //   Get all old screennames and move them to the new fields in TB
+  //   Remove types for untyped properties
   for (var i in abs) {
     if (abs[i] instanceof com.gContactSync.GAddressBook) {
       var contacts = abs[i].getAllContacts();
       com.gContactSync.LOGGER.LOG(abs[i].getName() + ": " + contacts.length);
       for (var j = 0, length = contacts.length; j < length; j++) {
         var contact = contacts[j];
+        var needsUpdate = false;
         com.gContactSync.LOGGER.VERBOSE_LOG("-" + contact.getName());
 
-        var typeToName = {
-          // Google Type  TB Field          TB Val
-          "AIM":         ["_AimScreenName", ""],
-          "GOOGLE_TALK": ["_GoogleTalk",    ""],
-          "YAHOO":       ["_Yahoo",         ""],
-          "SKYPE":       ["_Skype",         ""],
-          "QQ":          ["_QQ",            ""],
-          "MSN":         ["_MSN",           ""],
-          "ICQ":         ["_ICQ",           ""],
-          "JABBER":      ["_JabberId",      ""]
-        };
+        if (updateScreenNames) {
+          var typeToName = {
+            // Google Type  TB Field          TB Val
+            "AIM":         ["_AimScreenName", ""],
+            "GOOGLE_TALK": ["_GoogleTalk",    ""],
+            "YAHOO":       ["_Yahoo",         ""],
+            "SKYPE":       ["_Skype",         ""],
+            "QQ":          ["_QQ",            ""],
+            "MSN":         ["_MSN",           ""],
+            "ICQ":         ["_ICQ",           ""],
+            "JABBER":      ["_JabberId",      ""]
+          };
 
-        // Get all the existing screennames from the old gContactSync fields
-        for (var k = 0, propLength = propertiesToReplace.length; k < propLength; ++k) {
-          var type = contact.getValue(propertiesToReplace[k] + "Type");
-          if (type && typeToName[type] && typeToName[type][1] == "") {
-            typeToName[type][1] = contact.getValue(propertiesToReplace[k]);
-            com.gContactSync.LOGGER.VERBOSE_LOG(" * " + type + ": " + typeToName[type][1]);
+          // Get all the existing screennames from the old gContactSync fields
+          for (var k = 0, propLength = propertiesToReplace.length; k < propLength; ++k) {
+            var type = contact.getValue(propertiesToReplace[k] + "Type");
+            if (type && typeToName[type] && typeToName[type][1] == "") {
+              typeToName[type][1] = contact.getValue(propertiesToReplace[k]);
+              com.gContactSync.LOGGER.VERBOSE_LOG(" * " + type + ": " + typeToName[type][1]);
+            }
           }
-        }
 
-        var needsUpdate = false;
-        // Remove the AIM screenname if present, since it is both an old and new field
-        if (contact.getValue("_AimScreenName")) {
-          contact.setValue("_AimScreenName", "");
-          contact.setValue("_AimScreenNameType", "AIM");  // for backwards compatibility
-          needsUpdate = true;
-        }
-        // Now save any screennames to the new fields in TB
-        for (var prop in typeToName) {
-          if (typeToName[prop][1]) {
+          // Remove the AIM screenname if present, since it is both an old and new field
+          if (contact.getValue("_AimScreenName")) {
+            contact.setValue("_AimScreenName", "");
+            contact.setValue("_AimScreenNameType", "AIM");  // for backwards compatibility
             needsUpdate = true;
-            contact.setValue(typeToName[prop][0], typeToName[prop][1]);
-            com.gContactSync.LOGGER.VERBOSE_LOG(" * " + typeToName[prop][0] + ": " + typeToName[prop][1]);
+          }
+          // Now save any screennames to the new fields in TB
+          for (var prop in typeToName) {
+            if (typeToName[prop][1]) {
+              needsUpdate = true;
+              contact.setValue(typeToName[prop][0], typeToName[prop][1]);
+              com.gContactSync.LOGGER.VERBOSE_LOG(" * " + typeToName[prop][0] + ": " + typeToName[prop][1]);
+            }
           }
         }
-        if (needsUpdate) contact.update();
+        // Remove types for untyped properties
+        for (var l = 0, untypedPropLen = untypedProperties.length; l < untypedPropLen; ++l) {
+          if (contact.getValue(untypedProperties[l])) {
+            needsUpdate = true;
+            contact.setValue(untypedProperties[l], null);
+          }
+        }
+        if (needsUpdate) {contact.update();}
       }
     }
   }
   com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", false);
-}
+  com.gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", false);
+};

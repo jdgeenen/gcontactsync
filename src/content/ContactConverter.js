@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2010
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -145,17 +145,17 @@ com.gContactSync.ContactConverter = {
     // changed to true
     if (com.gContactSync.Preferences.mSyncPrefs.syncAddresses.value) {
       // Home address
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("street",   "HomeAddress", 0, "home"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("city",     "HomeCity",    0, "home"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("region",   "HomeState",   0, "home"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("postcode", "HomeZipCode", 0, "home"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("country",  "HomeCountry", 0, "home"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("street",   "HomeAddressMult", 0, "home"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("city",     "HomeCity",        0, "home"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("region",   "HomeState",       0, "home"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("postcode", "HomeZipCode",     0, "home"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("country",  "HomeCountry",     0, "home"));
       // Work address
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("street",   "WorkAddress", 0, "work"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("city",     "WorkCity",    0, "work"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("region",   "WorkState",   0, "work"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("postcode", "WorkZipCode", 0, "work"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("country",  "WorkCountry", 0, "work"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("street",   "WorkAddressMult", 0, "work"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("city",     "WorkCity",        0, "work"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("region",   "WorkState",       0, "work"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("postcode", "WorkZipCode",     0, "work"));
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("country",  "WorkCountry",     0, "work"));
     }
     this.mInitialized = true;
   },
@@ -363,13 +363,12 @@ com.gContactSync.ContactConverter = {
       throw "Invalid TBContact (no mAddressBook) sent to " +
             "ContactConverter.cardToAtomXML from " + this.caller;
     }
-    var arr = this.mConverterArr,
-        blankProp = new com.gContactSync.Property("", "");
+    var arr = this.mConverterArr;
     // get the regular properties from the array mConverterArr
     for (var i = 0, length = arr.length; i < length; i++) {
       var obj = arr[i],
           property = aGContact.getValue(obj.elementName, obj.index, obj.type);
-      property = property || blankProp;
+      property = property || new com.gContactSync.Property("", "");
       com.gContactSync.LOGGER.VERBOSE_LOG(obj.tbName + ": '" + property.value +
                                           "', type: '" + property.type + "'");
       // Thunderbird has problems with contacts who do not have an e-mail addr
@@ -377,7 +376,7 @@ com.gContactSync.ContactConverter = {
       // that is hidden from the user
       if (obj.tbName === com.gContactSync.dummyEmailName && !property.value) {
         property.value = com.gContactSync.makeDummyEmail(aGContact);
-        property.type  = "home";
+        property.type  = "other";
       }
       aTBContact.setValue(obj.tbName, property.value);
       // set the type, if it is an attribute with a type
