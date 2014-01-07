@@ -665,9 +665,9 @@ com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
         }
         // Remove types for untyped properties
         for (var l = 0, untypedPropLen = untypedProperties.length; l < untypedPropLen; ++l) {
-          if (contact.getValue(untypedProperties[l])) {
+          if (contact.getValue(untypedProperties[l] + "Type")) {
             needsUpdate = true;
-            contact.setValue(untypedProperties[l], null);
+            contact.setValue(untypedProperties[l] + "Type", null);
           }
         }
         if (needsUpdate) {contact.update();}
