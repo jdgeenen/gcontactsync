@@ -152,7 +152,7 @@ com.gContactSync.Import = {
     /** The user's profile image */
     profile_image_url: "TwitterImageURL",
     /** The user's homepage */
-    url:               "WebPage2",
+    expanded_url:      "WebPage2",
     /** The user's description */
     description:       "Notes"
   },
@@ -548,7 +548,7 @@ com.gContactSync.Import = {
         com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFailed'));
         return;
       }
-      var arr = obj.entry || obj.data || obj,
+      var arr = obj.entry || obj.data || obj.users || obj,
           abContacts = {};
       if (aMerge) {
         let abContactsArray = aAB.getAllContacts();
