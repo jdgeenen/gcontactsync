@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Portions created by the Initial Developer are Copyright (C) 2010-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
  * This class is used to import contacts using OAuth.
@@ -277,10 +277,10 @@ com.gContactSync.Import = {
    */
   step1: function Import_step1(aSource) {
     var imp      = com.gContactSync.Import,
-        callback = aSource == "facebook" ? imp.step2b : imp.step2a;
-    if (imp.mStarted) {
+        callback = aSource === "facebook" ? imp.step2b : imp.step2a;
+    //if (imp.mStarted) {
       // TODO warn the user and allow him or her to cancel
-    }
+    //}
     
     // Reset mOAuth
     imp.mOAuth.oauth_token        = "";
@@ -501,14 +501,14 @@ com.gContactSync.Import = {
       // Get all Personal/Mork DB Address Books (type == 2,
       // see mailnews/addrbook/src/nsDirPrefs.h)
       var abs = com.gContactSync.GAbManager.getAllAddressBooks(2, true);
-      for (i in abs) {
-        if (abs[i] instanceof com.gContactSync.GAddressBook) {
-          menu.appendItem(abs[i].getName(), i);
+      for (let uri in abs) {
+        if (abs[uri] instanceof com.gContactSync.GAddressBook) {
+          menu.appendItem(abs[uri].getName(), uri);
         }
       }
       menu.selectedIndex = 0;
       dialog.onunload = function onunloadListener() {
-        if (menu.selectedIndex == -1) {
+        if (menu.selectedIndex === -1) {
           com.gContactSync.LOGGER.LOG("***Import Canceled***");
           com.gContactSync.alert(com.gContactSync.StringBundle.getStr("importCanceled"),
                                  com.gContactSync.StringBundle.getStr("importCanceledTitle"),
@@ -552,26 +552,26 @@ com.gContactSync.Import = {
           abContacts = {};
       if (aMerge) {
         let abContactsArray = aAB.getAllContacts();
-        for (var i = 0, length = abContactsArray.length; i < length; i++) {
+        for (let i = 0, length = abContactsArray.length; i < length; i++) {
           let contact = abContactsArray[i];
           let displayName  = contact.getValue("DisplayName");
           let primaryEmail = contact.getValue("PrimaryEmail");
-          if (displayName)  abContacts[displayName.toLowerCase()]  = contact;
-          if (primaryEmail) abContacts[primaryEmail.toLowerCase()] = primaryEmail;
+          if (displayName)  {abContacts[displayName.toLowerCase()]  = contact;}
+          if (primaryEmail) {abContacts[primaryEmail.toLowerCase()] = primaryEmail;}
         }
       }
 
-      for (var i in arr) {
+      for (let i in arr) {
         var contact = arr[i],
             id = contact.id || contact.guid;
         if (id || contact.name || contact.displayName) {
           var newCard = aMerge ? this.searchForContact(contact, aAB, abContacts) : aAB.newContact(),
               attr    = "",
               srcId   = this.mSource + "_" + id;
-          if (!aMerge) ++com.gContactSync.Import.mNewContacts;
+          if (!aMerge) {++com.gContactSync.Import.mNewContacts;}
           // Download FB photos
           if (this.mSource === "facebook" && id) {
-            var file = com.gContactSync.writePhoto("https://graph.facebook.com/" + id + "/picture?type=large",
+            let file = com.gContactSync.writePhoto("https://graph.facebook.com/" + id + "/picture?type=large",
                                                    srcId + "_" + (new Date()).getTime());
             if (file) {
               // Thunderbird requires two copies of each photo.  A permanent copy must
@@ -590,7 +590,7 @@ com.gContactSync.Import = {
             }
           }
           // Iterate through each attribute in the JSON contact
-          for (var j in contact) {
+          for (let j in contact) {
             // If there is a map for just this source, check it for the
             // attribute first, otherwise just use the default map.
             if (this["mMap" + this.mSource])
@@ -602,7 +602,7 @@ com.gContactSync.Import = {
               // Download a photo of the user, if available.
               if (j === "picture" || j === "thumbnailUrl" || j === "photos" ||
                   j === "profile_image_url") {
-                var file = com.gContactSync.writePhoto((j === "photos" ? contact[j][0].value : contact[j]),
+                let file = com.gContactSync.writePhoto((j === "photos" ? contact[j][0].value : contact[j]),
                                                        srcId + "_" + (new Date()).getTime(),
                                                        0);
                 if (file) {
@@ -630,7 +630,7 @@ com.gContactSync.Import = {
                 // ]
                 // contact[j]    = emails[]
                 // contact[j][k] = emails[k]
-                for (var k = 0; k < contact[j].length; k++) {
+                for (let k = 0; k < contact[j].length; k++) {
                   // quit if k is too large/shouldn't be stored
                   if (!(k in attr)) {
                     break;
@@ -663,12 +663,12 @@ com.gContactSync.Import = {
               // if it is just a normal property (has a length property =>
               // string) check the map
               else if (attr.length) {
-                com.gContactSync.LOGGER.VERBOSE_LOG(" - (String): " + attr + "=" + contact[j])
+                com.gContactSync.LOGGER.VERBOSE_LOG(" - (String): " + attr + "=" + contact[j]);
                 newCard.setValue(attr, this.decode(contact[j]));
               }
               // else it is an object with subproperties
               else {
-                for (var k in contact[j]) {
+                for (let k in contact[j]) {
                   if (k in attr) {
                     com.gContactSync.LOGGER.VERBOSE_LOG(" - (Object): " + attr[k] + "/" + j + "=" + contact[j][k]);
                     newCard.setValue(attr[k], this.decode(contact[j][k]));
@@ -734,7 +734,7 @@ com.gContactSync.Import = {
       com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("importFailedMsg"));
       com.gContactSync.LOGGER.LOG_ERROR("Import failed: ", httpReq.responseText);
       com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFailed'));
-    }
+    };
     httpReq.send();
   },
   /**
@@ -742,9 +742,9 @@ com.gContactSync.Import = {
    * https://wiki.mozilla.org/Labs/Contacts/ContentAPI
    */
   mozillaLabsContactsImporter: function Import_mozLabsImporter() {
-    if (com.gContactSync.Import.mStarted) {
+    //if (com.gContactSync.Import.mStarted) {
       // TODO warn the user and allow him or her to cancel
-    }
+    //}
     
     com.gContactSync.Import.mSource = "mozLabsContacts";
     try {
@@ -762,7 +762,7 @@ com.gContactSync.Import = {
       }
       catch (e) {
         com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("importFailedMsg"));
-        com.gContactSync.LOGGER.LOG_ERROR("Import failed: ", aFeed);
+        com.gContactSync.LOGGER.LOG_ERROR("Import failed: ", json);
         com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFailed'));
         return;
       }
@@ -770,16 +770,16 @@ com.gContactSync.Import = {
       // Iterate through each person add add them to the JSON
       // This loop essentially just converts the people into a portable contacts
       // format for beginImport()
-      for (var i in people.data) {
+      for (let i in people.data) {
         var person = people.data[i].obj;
         if (person && person.documents) {
           var personInfo = {};
           
           // People can have the same info in multiple documents, this just
           // iterates through each document and copies the details over.
-          for (var j in person.documents) {
-            for (var k in person.documents[j]) {
-              for (var l in person.documents[j][k])
+          for (let j in person.documents) {
+            for (let k in person.documents[j]) {
+              for (let l in person.documents[j][k])
               personInfo[l] = person.documents[j][k][l];
               com.gContactSync.LOGGER.VERBOSE_LOG(j + "." + k + "." + l + " - " + person.documents[j][k][l])
             }
@@ -799,15 +799,14 @@ com.gContactSync.Import = {
     if (displayName && (displayName instanceof Array)) { // name may be complex
       displayName = displayName.displayName || displayName.formatted;
     }
-    if (!displayName)
-      displayName = aData.nickname;
+    if (!displayName) {displayName = aData.nickname;}
     var primaryEmail = aData.email;
-    if (primaryEmail && (primaryEmail instanceof Array)) primaryEmail = primaryEmail[0];
-    if (displayName) contact = aABContacts[displayName.toLowerCase()];
-    if (!contact && primaryEmail) contact = aABContacts[primaryEmail.toLowerCase()];
+    if (primaryEmail && (primaryEmail instanceof Array)) {primaryEmail = primaryEmail[0];}
+    if (displayName) {contact = aABContacts[displayName.toLowerCase()];}
+    if (!contact && primaryEmail) {contact = aABContacts[primaryEmail.toLowerCase()];}
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Display Name: " + displayName + ", Email: " + primaryEmail + " - AB Contact: " + (contact ? contact.getName() : "No match found"));
-    if (contact) ++com.gContactSync.Import.mMergedContacts;
-    else         ++com.gContactSync.Import.mNewContacts;
+    if (contact) {++com.gContactSync.Import.mMergedContacts;}
+    else         {++com.gContactSync.Import.mNewContacts;}
     return contact || aAB.newContact(); 
   }
 };
