@@ -63,9 +63,9 @@ com.gContactSync.Accounts = {
   mPrefElemIDs: [
     "Username",
     "Groups",
-    "showAdvanced",
     "Plugin",
     "SyncDirection",
+    "updateGoogleInConflicts",
     "disabled"
   ],
   /**
@@ -75,11 +75,10 @@ com.gContactSync.Accounts = {
   initDialog:  function Accounts_initDialog() {
     // This script is also included by the account setup wizard.
     // Only run these initialization functions on the account dialog.
-    if (document.getElementById("showAdvanced") === null) {return;}
+    if (document.getElementById("loginTree") === null) {return;}
     try {
       this.fillAbTree();
       this.fillUsernames();
-      this.showAdvancedSettings(document.getElementById("showAdvanced").checked);
       this.selectedAbChange();
     }
     catch (e) {
@@ -244,19 +243,6 @@ com.gContactSync.Accounts = {
       }
       elem.disabled = aEnable ? false : true;
     }
-  },
-  /**
-   * Show or hide the advanced settings and then call window.sizeToContent().
-   * @param aShow {boolean} Set to true to show the advanced settings or false
-   *                        to hide them.
-   * @returns {boolean} True if the advanced settings were shown or hidden.
-   */
-  showAdvancedSettings: function Accounts_showAdvanceDsettings(aShow) {
-    var elem = document.getElementById("advancedGroupBox");
-    if (!elem) return false;
-    elem.setAttribute("collapsed", aShow ? "false" : "true");
-    window.sizeToContent();
-    return true;
   },
   /**
    * Called when the selected address book changes in the accounts tree.

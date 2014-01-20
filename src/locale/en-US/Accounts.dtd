@@ -13,7 +13,6 @@
 <!-- Account labels and options -->
 
 <!-- Basic Settings -->
-<!ENTITY Basic.label             "Basic Settings">
 <!ENTITY Username.label          "Choose an Account">
 <!ENTITY Username.accesskey      "C">
 <!ENTITY NewUsername.label       "Add a New Account">
@@ -30,10 +29,6 @@
 <!ENTITY Friends.label           "Friends">
 <!ENTITY GetGroups.label         "Find all Groups">
 <!ENTITY GetGroups.accesskey     "F">
-
-<!-- Advanced Settings -->
-<!ENTITY showAdvanced.label      "Show Advanced Settings">
-<!ENTITY Advanced.label          "Advanced Settings">
 
 <!ENTITY Plugin.label            "Pick a Plugin to use">
 <!ENTITY Google.label            "Google">

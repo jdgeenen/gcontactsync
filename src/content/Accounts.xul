@@ -69,79 +69,71 @@
       </hbox>
     </vbox>
     <vbox>
-      <groupbox id="BasicGroupbox">
-        <caption label="&Basic.label;"/>
-        <hbox>
-          <label control="Username" value="&Username.label;" accesskey="&Username.accesskey;"/>
-          <label id="link-label"    value="&NewUsername.label;" accesskey="&NewUsername.accesskey;"
-                 onclick="com.gContactSync.Accounts.newUsername();"/>
-        </hbox>
-        <menulist id="Username"
-                  oncommand="com.gContactSync.Accounts.restoreGroups();
-                             com.gContactSync.Accounts.mUnsavedChange = true;">
-          <menupopup id="UsernamePopup">
-            <menuitem value="None" label="&NoUsername.label;"/>
-          </menupopup>
-        </menulist>
-        <spacer height="5px"/>
-        <label control="Groups" value="&Groups.label;" accesskey="&Groups.accesskey;"/>
-        <hbox id="GroupsBox">
-          <menulist id="Groups"
-                    oncommand="com.gContactSync.Accounts.mUnsavedChange = true;">
-            <menupopup id="GroupsPopup">
-              <menuitem class="default" value="All"        label="&AllGroups.label;"/>
-              <menuitem class="default" value="false"      label="&NoGroups.label;"/>
-              <menuitem class="default" value="contacts"   label="&Contacts.label;"/>
-              <menuitem class="default" value="coworkers"  label="&Coworkers.label;"/>
-              <menuitem class="default" value="family"     label="&Family.label;"/>
-              <menuitem class="default" value="friends"    label="&Friends.label;"/>
-            </menupopup>
-          </menulist>
-          <button id="GetGroups"
-                  oncommand="com.gContactSync.Accounts.getAllGroups(document.getElementById('Username').value);"
-                  label="&GetGroups.label;"
-                  accesskey="&GetGroups.accesskey;"/>
-        </hbox>
-        <spacer height="5px"/>
-        <checkbox id="disabled"
-                  label="&Disable.label;"
-                  accesskey="&Disable.accesskey;"
-                  tooltiptext="&Disable.tooltiptext;"
-                  oncommand="com.gContactSync.Accounts.mUnsavedChange = true;"/>        
-      </groupbox>
-      <checkbox id="showAdvanced" label="&showAdvanced.label;"
-                oncommand="com.gContactSync.Accounts.showAdvancedSettings(this.checked);"/>
+      <hbox>
+        <label control="Username" value="&Username.label;" accesskey="&Username.accesskey;"/>
+        <label id="link-label"    value="&NewUsername.label;" accesskey="&NewUsername.accesskey;"
+               onclick="com.gContactSync.Accounts.newUsername();"/>
+      </hbox>
+      <menulist id="Username"
+                oncommand="com.gContactSync.Accounts.restoreGroups();
+                           com.gContactSync.Accounts.mUnsavedChange = true;">
+        <menupopup id="UsernamePopup">
+          <menuitem value="None" label="&NoUsername.label;"/>
+        </menupopup>
+      </menulist>
       <spacer height="5px"/>
-      <groupbox id="advancedGroupBox">
-        <label control="Plugin" value="&Plugin.label;" collapsed="true"/>
-        <menulist id="Plugin" collapsed="true"
+      <label control="Groups" value="&Groups.label;" accesskey="&Groups.accesskey;"/>
+      <hbox id="GroupsBox">
+        <menulist id="Groups"
                   oncommand="com.gContactSync.Accounts.mUnsavedChange = true;">
-          <menupopup id="PluginPopup">
-            <menuitem id="google" value="Google" label="&Google.label;"/>
+          <menupopup id="GroupsPopup">
+            <menuitem class="default" value="All"        label="&AllGroups.label;"/>
+            <menuitem class="default" value="false"      label="&NoGroups.label;"/>
+            <menuitem class="default" value="contacts"   label="&Contacts.label;"/>
+            <menuitem class="default" value="coworkers"  label="&Coworkers.label;"/>
+            <menuitem class="default" value="family"     label="&Family.label;"/>
+            <menuitem class="default" value="friends"    label="&Friends.label;"/>
           </menupopup>
         </menulist>
-        <spacer height="5px" collapsed="true"/>
-        <caption label="&Advanced.label;"/>
-        <spacer height="5px"/>
-        <hbox>
-          <label control="SyncDirection"  value="&SyncDirection.label;" accesskey="&SyncDirection.accesskey;"/>
-          <label id="link-label"    value="&DirectionHelp.label;"
-                 onclick="com.gContactSync.Accounts.directionPopup();"/>
-        </hbox>
-        <menulist id="SyncDirection"
-                  oncommand="com.gContactSync.Accounts.mUnsavedChange = true;">
-          <menupopup id="SyncDirectionPopup">
-            <menuitem value="Complete"  label="&Complete.label;"/>
-            <menuitem value="ReadOnly"  label="&ReadOnly.label;"/>
-            <menuitem value="WriteOnly" label="&WriteOnly.label;"/>
-          </menupopup>
-        </menulist>
-        <spacer height="5px"/>
-        <checkbox id="updateGoogleInConflicts"
-                  label="&updateG.label;"
-                  tooltiptext="&updateG.tooltiptext;"
-                  oncommand="com.gContactSync.Accounts.mUnsavedChange = true;"/>
-      </groupbox>
+        <button id="GetGroups"
+                oncommand="com.gContactSync.Accounts.getAllGroups(document.getElementById('Username').value);"
+                label="&GetGroups.label;"
+                accesskey="&GetGroups.accesskey;"/>
+      </hbox>
+      <spacer height="5px"/>
+      <label control="Plugin" value="&Plugin.label;" collapsed="true"/>
+      <menulist id="Plugin" collapsed="true"
+                oncommand="com.gContactSync.Accounts.mUnsavedChange = true;">
+        <menupopup id="PluginPopup">
+          <menuitem id="google" value="Google" label="&Google.label;"/>
+        </menupopup>
+      </menulist>
+      <spacer height="5px"/>
+      <hbox>
+        <label control="SyncDirection"  value="&SyncDirection.label;" accesskey="&SyncDirection.accesskey;"/>
+        <label id="link-label"    value="&DirectionHelp.label;"
+               onclick="com.gContactSync.Accounts.directionPopup();"/>
+      </hbox>
+      <menulist id="SyncDirection"
+                oncommand="com.gContactSync.Accounts.mUnsavedChange = true;">
+        <menupopup id="SyncDirectionPopup">
+          <menuitem value="Complete"  label="&Complete.label;"/>
+          <menuitem value="ReadOnly"  label="&ReadOnly.label;"/>
+          <menuitem value="WriteOnly" label="&WriteOnly.label;"/>
+        </menupopup>
+      </menulist>
+      <spacer height="5px"/>
+      <checkbox id="updateGoogleInConflicts"
+                label="&updateG.label;"
+                accesskey="&updateG.accesskey;"
+                tooltiptext="&updateG.tooltiptext;"
+                oncommand="com.gContactSync.Accounts.mUnsavedChange = true;"/>
+      <spacer height="5px"/>
+      <checkbox id="disabled"
+                label="&Disable.label;"
+                accesskey="&Disable.accesskey;"
+                tooltiptext="&Disable.tooltiptext;"
+                oncommand="com.gContactSync.Accounts.mUnsavedChange = true;"/>
       <spacer height="5px"/>
       <hbox id="acctButtons" align="right">
         <!--<button id="deleteAB" label="&deleteAB.label;" oncommand="com.gContactSync.Accounts.deleteSelectedAB();"/>-->
