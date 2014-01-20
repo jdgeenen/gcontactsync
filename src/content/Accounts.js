@@ -59,7 +59,7 @@ com.gContactSync.Accounts = {
   mAbNameIndex:  0,
   /** Stores the URIs of the ABs displayed in the Accounts dialog's tree */
   mAbURIs: [],
-  /** Element IDs used when enabling/disabling the preferences */
+  /** Element IDs used when changing the preferences */
   mPrefElemIDs: [
     "Username",
     "Groups",
