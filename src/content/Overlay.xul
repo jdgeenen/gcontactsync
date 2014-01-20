@@ -16,7 +16,7 @@
    -
    - The Initial Developer of the Original Code is
    - Josh Geenen <gcontactsync@pirules.org>.
-   - Portions created by the Initial Developer are Copyright (C) 2008-2010
+   - Portions created by the Initial Developer are Copyright (C) 2008-2014
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s):
@@ -128,7 +128,7 @@
                label="&newAcctMenuItem.label;"
                accesskey="&newAcctMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.Overlay.openAccountWizard();"/>
+               oncommand="com.gContactSync.Overlay.openAccountWizard(false);"/>
      <menuitem id="acctMenuItem"
                label="&acctMenuItem.label;"
                accesskey="&acctMenuItem.accesskey;"

@@ -16,7 +16,7 @@
    -
    - The Initial Developer of the Original Code is
    - Josh Geenen <gcontactsync@pirules.org>.
-   - Portions created by the Initial Developer are Copyright (C) 2013
+   - Portions created by the Initial Developer are Copyright (C) 2013-2014
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s):
@@ -35,6 +35,8 @@
    -
    - ***** END LICENSE BLOCK ***** -->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://gcontactsync/skin/Accounts.css" type="text/css"?>
+
 <!--<?xml-stylesheet href="chrome://gcontactsync/skin/AccountSetupWizard.css" type="text/css"?>-->
 <!DOCTYPE window [
   <!ENTITY % initialSetupDTD SYSTEM "chrome://gcontactsync/locale/AccountSetupWizard.dtd">
@@ -158,6 +160,19 @@
               label="&GetGroups.label;"
               accesskey="&GetGroups.accesskey;"/>
     </hbox>
+    <spacer height="5px"/>
+    <hbox>
+      <label control="SyncDirection"  value="&SyncDirection.label;" accesskey="&SyncDirection.accesskey;"/>
+      <label id="link-label"    value="&DirectionHelp.label;"
+             onclick="com.gContactSync.Accounts.directionPopup();"/>
+    </hbox>
+    <menulist id="SyncDirection">
+      <menupopup id="SyncDirectionPopup">
+        <menuitem value="Complete"  label="&Complete.label;"/>
+        <menuitem value="ReadOnly"  label="&ReadOnly.label;"/>
+        <menuitem value="WriteOnly" label="&WriteOnly.label;"/>
+      </menupopup>
+    </menulist>
     <spacer flex="1"/>
     <label align="end" value="&finish.value;"/>
   </wizardpage>

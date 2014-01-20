@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2010
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -126,24 +126,26 @@ com.gContactSync.Overlay = {
       }
     } else {
       this.setStatusBarText(com.gContactSync.StringBundle.getStr("notAuth"));
-      this.openAccountWizard();
+      this.openAccountWizard(true);
     }
   },
   /**
    * Prompts the user to enter his or her Google username and password and then
    * gets an authentication token to store and use.
    */
-  openAccountWizard: function Overlay_openAccountWizard() {
+  openAccountWizard: function Overlay_openAccountWizard(aSyncOnUnload) {
     var wizard = window.open("chrome://gcontactsync/content/AccountSetupWizard.xul",
                              "SetupWindow",
                              "chrome,resizable=yes,scrollbars=no,status=no");
     this.mAccountWizard = true;
-    // when the setup window loads, set its onunload property to begin a sync
-    wizard.onload = function onloadListener() {
-      wizard.onunload = function onunloadListener() {
-        com.gContactSync.Overlay.checkAuthentication();
+    if (aSyncOnUnload === true) {
+      // when the setup window loads, set its onunload property to begin a sync
+      wizard.onload = function onloadListener() {
+        wizard.onunload = function onunloadListener() {
+          com.gContactSync.Overlay.checkAuthentication();
+        };
       };
-    };
+    }
   },
   /**
    * Updates the current version in the gContactSync preferences.
