@@ -1,58 +1,64 @@
-<!ENTITY title.label           "gContactSync Accounts">
+<!ENTITY title.label             "gContactSync Accounts">
 
-<!ENTITY accounts.tab          "Accounts">
-<!ENTITY addressBook.label     "Address Book">
-<!ENTITY abSynced.label        "Google Account">
+<!ENTITY accounts.tab            "Accounts">
+<!ENTITY addressBook.label       "Address Book">
+<!ENTITY abSynced.label          "Google Account">
 
 <!-- Global buttons -->
-<!ENTITY addAB.label           "New Address Book">
-<!ENTITY addAB.accesskey       "N">
-<!ENTITY refreshTree.label     "Refresh">
-<!ENTITY refreshTree.accesskey "R">
+<!ENTITY addAB.label             "New Address Book">
+<!ENTITY addAB.accesskey         "N">
+<!ENTITY refreshTree.label       "Refresh">
+<!ENTITY refreshTree.accesskey   "R">
 
 <!-- Account labels and options -->
 
 <!-- Basic Settings -->
-<!ENTITY Basic.label           "Basic Settings">
-<!ENTITY Username.label        "Choose an Account">
-<!ENTITY NewUsername.label     "Add a New Account">
-<!ENTITY NoUsername.label      "No usernames found">
+<!ENTITY Basic.label             "Basic Settings">
+<!ENTITY Username.label          "Choose an Account">
+<!ENTITY Username.accesskey      "C">
+<!ENTITY NewUsername.label       "Add a New Account">
+<!ENTITY NewUsername.accesskey   "A">
+<!ENTITY NoUsername.label        "No usernames found">
 
-<!ENTITY Groups.label          "Groups and Contacts to Synchronize">
-<!ENTITY AllGroups.label       "All groups and contacts">
-<!ENTITY NoGroups.label        "Only contacts (no groups)">
-<!ENTITY Contacts.label        "My Contacts">
-<!ENTITY Coworkers.label       "Coworkers">
-<!ENTITY Family.label          "Family">
-<!ENTITY Friends.label         "Friends">
-<!ENTITY GetGroups.label       "Find all Groups">
-<!ENTITY GetGroups.accesskey   "F">
+<!ENTITY Groups.label            "Groups and Contacts to Synchronize">
+<!ENTITY Groups.accesskey        "G">
+<!ENTITY AllGroups.label         "All groups and contacts">
+<!ENTITY NoGroups.label          "Only contacts (no groups)">
+<!ENTITY Contacts.label          "My Contacts">
+<!ENTITY Coworkers.label         "Coworkers">
+<!ENTITY Family.label            "Family">
+<!ENTITY Friends.label           "Friends">
+<!ENTITY GetGroups.label         "Find all Groups">
+<!ENTITY GetGroups.accesskey     "F">
 
 <!-- Advanced Settings -->
-<!ENTITY showAdvanced.label    "Show Advanced Settings">
-<!ENTITY Advanced.label        "Advanced Settings">
+<!ENTITY showAdvanced.label      "Show Advanced Settings">
+<!ENTITY Advanced.label          "Advanced Settings">
 
-<!ENTITY Plugin.label          "Pick a Plugin to use">
-<!ENTITY Google.label          "Google">
+<!ENTITY Plugin.label            "Pick a Plugin to use">
+<!ENTITY Google.label            "Google">
 
-<!ENTITY SyncDirection.label   "Pick the direction for synchronization">
-<!ENTITY DirectionHelp.label   "What is this?">
-<!ENTITY Complete.label        "Complete (both Google and your client are updated)">
-<!ENTITY ReadOnly.label        "Read-only (your client receives updates from Google)">
-<!ENTITY WriteOnly.label       "Write-only (your client sends updates to Google)">
+<!ENTITY SyncDirection.label     "Pick the direction for synchronization">
+<!ENTITY SyncDirection.accesskey "P">
+<!ENTITY DirectionHelp.label     "What is this?">
+<!ENTITY Complete.label          "Complete (both Google and your client are updated)">
+<!ENTITY ReadOnly.label          "Read-only (your client receives updates from Google)">
+<!ENTITY WriteOnly.label         "Write-only (your client sends updates to Google)">
 
-<!ENTITY Disable.label         "Disable synchronization with this address book">
-<!ENTITY Disable.tooltiptext   "Check this box to skip over this address book when synchronizing.  Uncheck it when you want to synchronize it again.">
+<!ENTITY Disable.label           "Disable synchronization with this address book">
+<!ENTITY Disable.accesskey       "D">
+<!ENTITY Disable.tooltiptext     "Check this box to skip over this address book when synchronizing.  Uncheck it when you want to synchronize it again.">
 
-<!ENTITY updateG.label         "Local changes have priority over remote changes">
-<!ENTITY updateG.tooltiptext   "When a contact has been updated locally and remotely after the last synchronization, gContactSync needs to know which change to keep.  Check this box to have the local change overwrite the remote change">
+<!ENTITY updateG.label           "Local changes have priority over remote changes">
+<!ENTITY updateG.accesskey       "L">
+<!ENTITY updateG.tooltiptext     "When a contact has been updated locally and remotely after the last synchronization, gContactSync needs to know which change to keep.  Check this box to have the local change overwrite the remote change">
 
 <!-- Account buttons -->
-<!ENTITY deleteAB.label        "Delete this Address Book">
-<!ENTITY removeLogin.label     "Remove Settings">
-<!ENTITY saveChanges.label     "Save Changes">
-<!ENTITY saveChanges.accesskey "S">
+<!ENTITY deleteAB.label          "Delete this Address Book">
+<!ENTITY removeLogin.label       "Remove Settings">
+<!ENTITY saveChanges.label       "Save Changes">
+<!ENTITY saveChanges.accesskey   "S">
 
 <!-- Other -->
-<!ENTITY Close.label           "Close">
-<!ENTITY Close.accesskey       "C">
+<!ENTITY Close.label             "Close">
+<!ENTITY Close.accesskey         "C">

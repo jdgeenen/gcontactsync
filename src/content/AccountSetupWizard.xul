@@ -100,13 +100,14 @@
                 onselect="com.gContactSync.AccountSetupWizard.updateAccountIDs();">
       <radio id="existingAccount"
              label="&existingAccount.label;"
+             accesskey="&existingAccount.accesskey;"
              value="existing"
              selected="true"/>
       <menulist id="existingAccountList">
         <menupopup id="existingAccountPopup"/>
       </menulist>
       <spacer height="5px"/>
-      <radio id="newAccount" label="&newAccount.label;" value="new"/>
+      <radio id="newAccount" label="&newAccount.label;" accesskey="&newAccount.accesskey;" value="new"/>
       <grid flex="1" id="newAccountGrid">
         <columns>
           <column/>
@@ -114,11 +115,11 @@
         </columns>
         <rows>
           <row align="center">
-            <label id="emailLabel" value="&email.value;" control="email"/>
+            <label id="emailLabel" value="&email.value;" control="email" accesskey="&email.accesskey;"/>
             <textbox id="email"/>
           </row>
           <row align="center">
-            <label id="passwordLabel" value="&password.value;" control="password"/>
+            <label id="passwordLabel" value="&password.value;" control="password" accesskey="&password.accesskey;"/>
             <textbox id="password" type="password"/>
           </row>
         </rows>
@@ -129,7 +130,7 @@
   <wizardpage description="&accountSettings.description;"
               onpagerewound="com.gContactSync.AccountSetupWizard.mAuthToken='';"
               onpageshow="com.gContactSync.AccountSetupWizard.setupAccountSettings();">
-    <label control="abName" value="&abName.value;"/>
+    <label control="abName" value="&abName.value;" accesskey="&abName.accesskey;"/>
     <hbox>
       <menulist id="abName">
         <menupopup id="abNamePopup"/>
@@ -140,7 +141,7 @@
               oncommand="com.gContactSync.AccountSetupWizard.newAddressBook();"/>
     </hbox>
     <spacer height="5px"/>
-    <label control="Groups" value="&Groups.label;"/>
+    <label control="Groups" value="&Groups.label;" accesskey="&Groups.accesskey;"/>
     <hbox id="GroupsBox">
       <menulist id="Groups">
         <menupopup id="GroupsPopup">

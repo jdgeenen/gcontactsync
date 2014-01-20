@@ -80,12 +80,14 @@
     <groupbox flex="1">
       <label href="http://pirules.org/addons/gcontactsync/preferences.php"
              class="text-link"
-             value="&help.value;"/>
+             value="&help.value;"
+             accesskey="&help.value;"/>
       <groupbox>
         <caption label="&autoSync.value;"/>
         <checkbox preference="autoSync"
                   id="autoSync"
-                  label="&autoSync.label;"/>
+                  label="&autoSync.label;"
+                  accesskey="&autoSync.accesskey;"/>
         <grid>
           <columns>
             <column/>
@@ -93,7 +95,8 @@
           <rows>
             <row align="center">
               <label control="refreshInterval"
-                     value="&refreshInterval.value;"/>
+                     value="&refreshInterval.value;"
+                     accesskey="&refreshInterval.accesskey;"/>
               <textbox preference="refreshInterval"
                        id="refreshIntervalBox"
                        maxlength="4"
@@ -101,7 +104,8 @@
             </row>
             <row align="center">
               <label control="initialDelayMinutesBox"
-                     value="&initialDelayMinutes.value;"/>
+                     value="&initialDelayMinutes.value;"
+                     accesskey="&initialDelayMinutes.accesskey;"/>
               <textbox preference="initialDelayMinutes"
                        id="initialDelayMinutesBox"
                        maxlength="8"
@@ -115,13 +119,16 @@
         <caption label="&syncBehavior.label;"/>
         <checkbox preference="syncAddresses"
                   id="syncAddresses"
-                  label="&syncAddresses.label;"/>
+                  label="&syncAddresses.label;"
+                  accesskey="&syncAddresses.accesskey;"/>
         <checkbox preference="alertSummary"
                   id="alertSummary"
-                  label="&alertSummary.label;"/>
+                  label="&alertSummary.label;"
+                  accesskey="&alertSummary.accesskey;"/>
         <checkbox preference="phoneTypes"
                   id="phoneTypes"
-                  label="&phoneTypes.label;"/>
+                  label="&phoneTypes.label;"
+                  accesskey="&phoneTypes.accesskey;"/>
         <grid flex="1">
           <columns>
             <column/>
@@ -130,7 +137,8 @@
           <rows>
             <row align="center">
               <label control="accountDelay"
-                     value="&accountDelay.value;"/>
+                     value="&accountDelay.value;"
+                     accesskey="&accountDelay.accesskey;"/>
               <textbox preference="accountDelay"
                        id="accountDelay"
                        maxlength="6"
@@ -144,13 +152,16 @@
         <caption label="&logging.label;"/>
         <checkbox preference="enableLogging"
                   id="enableLogging"
-                  label="&enableLogging.label;"/>
+                  label="&enableLogging.label;"
+                  accesskey="&enableLogging.accesskey;"/>
         <checkbox preference="verboseLog"
                   id="verboseLog"
-                  label="&verboseLog.label;"/>
+                  label="&verboseLog.label;"
+                  accesskey="&verboseLog.accesskey;"/>
         <checkbox preference="showInConsole"
                   id="showInConsole"
-                  label="&showInConsole.label;"/>
+                  label="&showInConsole.label;"
+                  accesskey="&showInConsole.accesskey;"/>
       </groupbox>
     </groupbox>
   </prefpane>
@@ -175,19 +186,23 @@
         <caption label="&buttons.label;"/>
         <checkbox preference="enableMenu"
                   id="enableMenu"
-                  label="&enableMenu.label;"/>
+                  label="&enableMenu.label;"
+                  accesskey="&enableMenu.accesskey;"/>
         <checkbox preference="addReset"
                   id="addReset"
-                  label="&addReset.label;"/>
+                  label="&addReset.label;"
+                  accesskey="&addReset.accesskey;"/>
       </groupbox>
       <groupbox>
         <caption label="&abResults.label;"/>
         <checkbox preference="phoneColLabels"
                   id="phoneColLabels"
-                  label="&phoneColLabels.label;"/>
+                  label="&phoneColLabels.label;"
+                  accesskey="&phoneColLabels.accesskey;"/>
         <checkbox preference="newColLabels"
                   id="newColLabels"
-                  label="&newColLabels.label;"/>
+                  label="&newColLabels.label;"
+                  accesskey="&newColLabels.accesskey;"/>
       </groupbox>
     </groupbox>
   </prefpane>
@@ -221,7 +236,8 @@
           <rows>
             <row align="center">
               <label control="backupInterval"
-                     value="&backupInterval.value;"/>
+                     value="&backupInterval.value;"
+                     accesskey="&backupInterval.accesskey;"/>
               <textbox preference="backupInterval"
                        id="backupInterval"
                        maxlength="6"
@@ -240,7 +256,8 @@
           <rows>
             <row align="center">
               <label control="chromeTimeBox"
-                     value="&chromeTime.value;"/>
+                     value="&chromeTime.value;"
+                     accesskey="&chromeTime.accesskey;"/>
             </row>
             <row align="center">
               <textbox preference="max_chrome_script_run_time"
@@ -250,7 +267,8 @@
             </row>
             <row align="center">
               <label control="confirmDeleteThreshold"
-                     value="&confirmDeleteThreshold.value;"/>
+                     value="&confirmDeleteThreshold.value;"
+                     accesskey="&confirmDeleteThreshold.accesskey;"/>
             </row>
             <row align="center">
               <textbox preference="confirmDeleteThreshold"
@@ -260,7 +278,8 @@
             </row>
             <row align="center">
               <label control="httpRequestTimeout"
-                     value="&httpRequestTimeout.value;"/>
+                     value="&httpRequestTimeout.value;"
+                     accesskey="&httpRequestTimeout.accesskey;"/>
             </row>
             <row align="center">
               <textbox preference="httpRequestTimeout"
@@ -275,12 +294,15 @@
       <hbox>
         <button id="resetAll"
                 label="&resetAll.label;"
+                accesskey="&resetAll.accesskey;"
                 oncommand="com.gContactSync.GAbManager.resetAllSyncedABs(true);"/>
         <button id="cleanOldPhotos"
                 label="&cleanOldPhotos.label;"
+                accesskey="&cleanOldPhotos.accesskey;"
                 oncommand="com.gContactSync.Options.deleteOldPhotos();"/>
         <button id="cleanOldPrefs"
                 label="&cleanOldPrefs.label;"
+                accesskey="&cleanOldPrefs.accesskey;"
                 oncommand="com.gContactSync.Options.cleanOldPrefs(true);"/>
       </hbox>
     </vbox>
