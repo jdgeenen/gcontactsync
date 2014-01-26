@@ -109,7 +109,7 @@ com.gContactSync.Sync = {
     if (!com.gContactSync.gdata.isAuthValid()) {
       com.gContactSync.alert(com.gContactSync.StringBundle.getStr("pleaseAuth"));
       return;
-   }
+    }
     // quit if still syncing.
     if (com.gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
       return;
@@ -142,6 +142,7 @@ com.gContactSync.Sync = {
       com.gContactSync.version04Upgrade();
     }
 
+    com.gContactSync.Overlay.updateVersion();
     com.gContactSync.Sync.syncNextUser();
   },
   /**

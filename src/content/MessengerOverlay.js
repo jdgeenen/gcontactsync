@@ -91,10 +91,15 @@ com.gContactSync.MessengerOverlay = {
 
     com.gContactSync.Preferences.setSyncPref("synchronizing", false);
 
+    // If this is the first time gContactSync is running (or the user never setup an account)
+    // run the setup wizard.
     // If moving from 0.3.x or <0.4.0b1 then update the chat names and incorrect types
     // Otherwise if coming from pre-0.4.0rc1 update the incorrect types
     // The upgrade will take place during the next sync
-    if (((lastVersionMajor === 0) && (lastVersionMinor < 4) && (lastVersionMajor > 0)) ||
+    var runSetupWizard = false;
+    if ((lastVersionMajor === 0) && (lastVersionMinor === 0) && (lastVersionRelease === 0)) {
+      runSetupWizard = true;
+    } else if (((lastVersionMajor === 0) && (lastVersionMinor < 4) && (lastVersionMajor > 0)) ||
         ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && (lastVersionSuffix.charAt(0) === "a"))) {
       com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", true);
     } else if ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && ((lastVersionSuffix.charAt(0) === "a") || (lastVersionSuffix.charAt(0) === "b"))) {
@@ -107,7 +112,12 @@ com.gContactSync.MessengerOverlay = {
       } catch (e) {}
     }
     // Check for an auth token and either schedule a sync if at least one exists or show the new account wizard otherwise.
-    com.gContactSync.Overlay.checkAuthentication();
+    if (runSetupWizard) {
+      com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("notAuth"));
+      com.gContactSync.Overlay.openAccountWizard(true);
+    } else {
+      com.gContactSync.Sync.schedule(com.gContactSync.Preferences.mSyncPrefs.initialDelayMinutes.value * 60000);
+    }
   },
   /**
    * Calls the original SetBusyCursor() function from mailCore.js wrapped in a

@@ -57,7 +57,6 @@ com.gContactSync.Overlay = {
   mLastVersionMinor:   0,
   mLastVersionRelease: 0,
   mLastVersionSuffix:  "",
-  mAccountWizard:      false,
   /**
    * Called when the overlay is loaded and initializes everything and begins
    * the authentication check and sync or login prompt.
@@ -113,36 +112,21 @@ com.gContactSync.Overlay = {
     this.setStatusBarText(text + " " + hours + ":" + minutes + ":" + seconds);
   },
   /**
-   * Checks to see whether or not there is an authentication token in the login
-   * manager.  If so, it begins a sync.  If not, it shows the new account wizard.
-   */
-  checkAuthentication: function Overlay_checkAuthentication() {
-    if (com.gContactSync.gdata.isAuthValid()) {
-      this.updateVersion();  // Make sure the version has been updated
-      if (this.mAccountWizard) {
-        com.gContactSync.Sync.begin(true, null);
-      } else {
-        com.gContactSync.Sync.schedule(com.gContactSync.Preferences.mSyncPrefs.initialDelayMinutes.value * 60000);
-      }
-    } else {
-      this.setStatusBarText(com.gContactSync.StringBundle.getStr("notAuth"));
-      this.openAccountWizard(true);
-    }
-  },
-  /**
    * Prompts the user to enter his or her Google username and password and then
    * gets an authentication token to store and use.
+   * @param aSyncOnUnload {bool} If true will perform a sync when the wizard is closed.
    */
   openAccountWizard: function Overlay_openAccountWizard(aSyncOnUnload) {
     var wizard = window.open("chrome://gcontactsync/content/AccountSetupWizard.xul",
                              "SetupWindow",
                              "chrome,resizable=yes,scrollbars=no,status=no");
-    this.mAccountWizard = true;
     if (aSyncOnUnload === true) {
       // when the setup window loads, set its onunload property to begin a sync
       wizard.onload = function onloadListener() {
         wizard.onunload = function onunloadListener() {
-          com.gContactSync.Overlay.checkAuthentication();
+          if (com.gContactSync.gdata.isAuthValid()) {
+            com.gContactSync.Sync.begin(true, null);
+          }
         };
       };
     }
