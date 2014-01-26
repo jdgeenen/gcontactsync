@@ -65,11 +65,6 @@
 <!ENTITY FinishImport.label            "Finish Import">
 <!ENTITY FinishImport.accesskey        "F">
 <!ENTITY Facebook.label                "Facebook">
-<!ENTITY Google.label                  "Google">
 <!ENTITY LinkedIn.label                "LinkedIn">
-<!ENTITY MySpace.label                 "MySpace">
-<!ENTITY MozLabsContacts.label         "Mozilla Labs Contacts">
-<!ENTITY Plaxo.label                   "Plaxo">
 <!ENTITY Twitter.label                 "Twitter">
-<!ENTITY Yahoo.label                   "Yahoo">
 

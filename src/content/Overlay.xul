@@ -171,28 +171,11 @@
          <menupopup>
            <menuitem label="&Facebook.label;"
                      oncommand="com.gContactSync.Import.step1('facebook');"/>
-           <!-- Google shows duplicates (with different IDs), commented out to
-                avoid confusion over how to sync contacts -->
-           <!--<menuitem label="&Google.label;"
-                     oncommand="com.gContactSync.Import.step1('google');"/>-->
            <!-- Not supported quite yet -->
            <!--<menuitem label="&LinkedIn.label;"
                      oncommand="com.gContactSync.Import.step1('linkedin');"/>-->
-           <!-- This add-on has not been supported for years -->
-           <!--<menuitem label="&MozLabsContacts.label;"
-                     id="MozLabsContactsMenuitem"
-                     oncommand="com.gContactSync.Import.mozillaLabsContactsImporter();"/>-->
-           <!-- MySpace Developer has disappeared, requests return service unavailable -->
-           <!--<menuitem label="&MySpace.label;"
-                     oncommand="com.gContactSync.Import.step1('myspace');"/>-->
-           <!-- Plaxo's API is no longer supported. -->
-           <!--<menuitem label="&Plaxo.label;"
-                     oncommand="com.gContactSync.Import.step1('plaxo');"/>-->
            <menuitem label="&Twitter.label;"
                      oncommand="com.gContactSync.Import.step1('twitter');"/>
-           <!-- Yahoo is commented out because of an "Internal Error" -->
-           <!--<menuitem label="&Yahoo.label;"
-                         oncommand="com.gContactSync.Import.step1('yahoo');"/>-->
          </menupopup>
        </menu>
       <menuitem id="finishImport"
@@ -256,28 +239,11 @@
          <menupopup>
            <menuitem label="&Facebook.label;"
                      oncommand="com.gContactSync.Import.step1('facebook');"/>
-           <!-- Google shows duplicates (with different IDs), commented out to
-                avoid confusion over how to sync contacts -->
-           <!--<menuitem label="&Google.label;"
-                     oncommand="com.gContactSync.Import.step1('google');"/>-->
            <!-- Not supported quite yet -->
            <!--<menuitem label="&LinkedIn.label;"
                      oncommand="com.gContactSync.Import.step1('linkedin');"/>-->
-           <!-- This add-on has not been supported for years -->
-           <!--<menuitem label="&MozLabsContacts.label;"
-                     id="MozLabsContactsMenuitem"
-                     oncommand="com.gContactSync.Import.mozillaLabsContactsImporter();"/>-->
-           <!-- MySpace Developer has disappeared, requests return service unavailable -->
-           <!--<menuitem label="&MySpace.label;"
-                     oncommand="com.gContactSync.Import.step1('myspace');"/>-->
-           <!-- Plaxo's API is no longer supported. -->
-           <!--<menuitem label="&Plaxo.label;"
-                     oncommand="com.gContactSync.Import.step1('plaxo');"/>-->
            <menuitem label="&Twitter.label;"
                      oncommand="com.gContactSync.Import.step1('twitter');"/>
-           <!-- Yahoo is commented out because of an "Internal Error" -->
-           <!--<menuitem label="&Yahoo.label;"
-                         oncommand="com.gContactSync.Import.step1('yahoo');"/>-->
          </menupopup>
        </menu>
       <menuitem id="finishImport"

@@ -52,13 +52,10 @@ if (!com.gContactSync) {com.gContactSync = {};}
  * etc.
  * It also reorganizes and signs the parameters.
  * 
- * TODO List:
- *  - Attempt to get more contact info from MySpace
- * 
  * @class
  */
 com.gContactSync.Import = {
-  /** The 'source' from which contacts are imported (Plaxo, Google, etc.) */
+  /** The 'source' from which contacts are imported (Facebook, Twitter, etc.) */
   mSource: "",
   /** This is used internally to track whether an import is in progress */
   mStarted: false,
@@ -68,27 +65,6 @@ com.gContactSync.Import = {
   mNewContacts: 0,
   /** A reference to the window TODO remove */
   mWindow: {},
-  /** Map for Plaxo only */
-  mMapplaxo: {
-    /** The user's ID */
-    id:            "PlaxoID",
-    /** An array of the user's photos */
-    photos:        "PlaxoPhotos"
-  },
-  /** Map for MySpace only */
-  mMapmyspace: {
-    /** The user's MySpace ID */
-    id:            "MySpaceID",
-    /**
-     * The 'nickname' (MySpace only).  This is mapped w/ DisplayName because it
-     * is basically all that MySpace gives.
-     */
-    nickname:      "DisplayName",
-    /** The user's thumbnail */
-    thumbnailUrl:  "MySpaceThumbnail",
-    /** The URL to the contact's profile */
-    profileUrl:    "WebPage2"
-  },
   /** Map for Facebook only
    *  https://developers.facebook.com/docs/reference/api/user/
    * TODO - family (need a separate GET request for each contact)
