@@ -696,15 +696,15 @@ com.gContactSync.Sync = {
   },
   /**
    * Calls the given function after the timeout specified in the
-   * remoteActionDelay pref.  If the pref is <= 0 then this function calls it
+   * httpRequestDelay pref.  If the pref is <= 0 then this function calls it
    * immediately.
    * This should help mitigate 503 errors if the pref is set.
    * @param {function} func The function to call.
    */
   delayedProcessQueue: function Sync_delayedProcessQueue(func) {
-    if (com.gContactSync.Preferences.mSyncPrefs.remoteActionDelay.value > 0) {
+    if (com.gContactSync.Preferences.mSyncPrefs.httpRequestDelay.value > 0) {
       setTimeout(func,
-                 com.gContactSync.Preferences.mSyncPrefs.remoteActionDelay.value);
+                 com.gContactSync.Preferences.mSyncPrefs.httpRequestDelay.value);
     } else {
       func.call();
     }

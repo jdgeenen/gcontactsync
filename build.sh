@@ -10,7 +10,7 @@
 # Edit install.rdf and content/synonyms.js to change the actual VERSION
 #VERSION=0.3.6
 #SRC_DIR=./src3
-VERSION=0.4.0rc2
+VERSION=0.4.0rc3pre
 SRC_DIR=./src
 
 # Dest should be absolute or relative to SRC_DIR

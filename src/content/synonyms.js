@@ -51,7 +51,7 @@ com.gContactSync.versionMinor   = "4";
 /** The release for the current version of gContactSync (ie 1 in 0.3.1a7) */
 com.gContactSync.versionRelease = "0";
 /** The suffix for the current version of gContactSync (ie a7 for Alpha 7) */
-com.gContactSync.versionSuffix  = "rc2";
+com.gContactSync.versionSuffix  = "rc3pre";
 /** The attribute where the dummy e-mail address is stored */
 com.gContactSync.dummyEmailName = "PrimaryEmail";
 
@@ -676,4 +676,49 @@ com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
   }
   com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", false);
   com.gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", false);
+};
+
+com.gContactSync.test = function gCS_test() {
+
+  var ab = com.gContactSync.GAbManager.getGAbByName("gcontactsyncuser@gmail.com", true);
+  var abCard = ab.getAllContacts()[0];
+  var xml = com.gContactSync.ContactConverter.cardToAtomXML(abCard).xml;
+
+  com.gContactSync.string = com.gContactSync.serialize(xml);
+  com.gContactSync.editURL = abCard.getValue("EditURL");
+
+  com.gContactSync.num503s = 0;
+  com.gContactSync.delay = prompt("Delay?");
+  com.gContactSync.iters = prompt("Iters?");
+
+  com.gContactSync.onSuccess = function processUpdateSuccess(httpReq) {
+      com.gContactSync.LOGGER.LOG("Success");
+    };
+  com.gContactSync.onError = function processUpdateError(httpReq) {
+      com.gContactSync.LOGGER.LOG_ERROR('Error while updating contact',
+                                        httpReq.responseText);
+    };
+  com.gContactSync.on503 = function process503 (httpReq) { ++com.gContactSync.num503s; com.gContactSync.LOGGER.LOG_ERROR("503", httpReq.responseText); throw "503";};
+  com.gContactSync.token = com.gContactSync.LoginManager.getAuthToken("gcontactsyncuser@gmail.com");
+
+  com.gContactSync.i = 0;
+  com.gContactSync.test2();
+};
+
+com.gContactSync.test2 = function gCS_test2() {
+    var httpReq = new com.gContactSync.GHttpRequest("update",
+                                                    com.gContactSync.token,
+                                                    com.gContactSync.editURL,
+                                                    com.gContactSync.string,
+                                                    "gcontactsyncuser@gmail.com");
+    httpReq.addHeaderItem("If-Match", "*");
+    httpReq.mOnSuccess = com.gContactSync.onSuccess;
+    httpReq.mOnError   = com.gContactSync.onError;
+    httpReq.mOnOffline = com.gContactSync.Sync.mOfflineFunction;
+    httpReq.mOn503 = com.gContactSync.on503;
+    httpReq.send();
+
+    ++com.gContactSync.i;
+    if (com.gContactSync.i < com.gContactSync.iters) setTimeout(com.gContactSync.test2, com.gContactSync.delay);
+    else {alert(com.gContactSync.num503s);}
 };

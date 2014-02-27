@@ -222,6 +222,9 @@
       <preference id="httpRequestTimeout"
                   name="extensions.gContactSync.httpRequestTimeout"
                   type="int"/>
+      <preference id="httpRequestDelay"
+                  name="extensions.gContactSync.httpRequestDelay"
+                  type="int"/>
     </preferences>
     <vbox>
       <label value="&warning.value;"/>
@@ -287,6 +290,23 @@
                        maxlength="5"
                        maxwidth="60"/>
             </row>
+            <row align="center">
+              <label control="httpRequestDelay"
+                     value="&httpRequestDelay.value;"
+                     accesskey="&httpRequestDelay.accesskey;"/>
+            </row>
+            <row align="center">
+              <hbox>
+                <textbox preference="httpRequestDelay"
+                         id="httpRequestDelay"
+                         maxlength="5"
+                         maxwidth="60"/>
+                <button id="throttleTest"
+                        label="&throttleTest.label;"
+                        accesskey="&throttleTest.accesskey;"
+                        oncommand="com.gContactSync.ThrottleTest.start(0);"/>
+              </hbox>
+            </row>
           </rows>
         </grid>
       </groupbox>
@@ -347,6 +367,8 @@
           src="chrome://gcontactsync/content/Pref.js"/>
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/Preferences.js"/>
+  <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/ThrottleTest.js"/>
   <stringbundleset id="stringbundleset">
     <stringbundle id="gContactSyncStringBundle"
                   src="chrome://gContactSync/locale/gcontactsync.properties"/>

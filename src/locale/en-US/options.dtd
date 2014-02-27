@@ -55,6 +55,8 @@
 <!ENTITY confirmDeleteThreshold.accesskey "d">
 <!ENTITY httpRequestTimeout.value         "HTTP Request Timeout (ms, 0 to disable) [0]">
 <!ENTITY httpRequestTimeout.accesskey     "H">
+<!ENTITY httpRequestDelay.value           "Delay between HTTP requests (ms, 0 to disable) [100]">
+<!ENTITY httpRequestDelay.accesskey       "l">
 <!ENTITY resetAll.label                   "Reset All Synced ABs">
 <!ENTITY resetAll.accesskey               "R">
 <!ENTITY cleanOldPrefs.label              "Clean Old AB Preferences">
@@ -63,3 +65,5 @@
 <!ENTITY cleanOldPhotos.accesskey         "P">
 <!ENTITY resetAllSettings.label           "Reset all gContactSync settings">
 <!ENTITY resetAllSettings.accesskey       "g">
+<!ENTITY throttleTest.label               "Run Throttle Test">
+<!ENTITY throttleTest.accesskey           "T">

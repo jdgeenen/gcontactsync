@@ -206,10 +206,10 @@ com.gContactSync.Preferences = {
     overrideGetCardForEmail:  new com.gContactSync.Pref("overrideGetCardForEmail",  "bool", true),
     syncPhoneticNames:        new com.gContactSync.Pref("syncPhoneticNames",        "bool", true),
     newContactPhotoDelay:     new com.gContactSync.Pref("newContactPhotoDelay",      "int", 0),
-    remoteActionDelay:        new com.gContactSync.Pref("remoteActionDelay",         "int", 0),
     v04UpgradeNeeded:         new com.gContactSync.Pref("v04UpgradeNeeded",         "bool", false),
     v04RCUpgradeNeeded:       new com.gContactSync.Pref("v04RCUpgradeNeeded",       "bool", false),
-    httpRequestTimeout:       new com.gContactSync.Pref("httpRequestTimeout",        "int", 0)
+    httpRequestTimeout:       new com.gContactSync.Pref("httpRequestTimeout",        "int", 0),
+    httpRequestDelay:         new com.gContactSync.Pref("httpRequestDelay",          "int", 120)
   },
   /**
    * Gets a preference given its branch, name, and type
