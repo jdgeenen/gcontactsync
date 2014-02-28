@@ -165,7 +165,6 @@ com.gContactSync.GHttpRequest.prototype = new com.gContactSync.HttpRequest();
  * Handles 'Token Expired' errors.
  * If a sync is in progress:
  *  - Get the username
- *  - Remove the auth token
  *  - Alert the user
  *  - Prompt for the password
  *  - Get a new auth token to replace the old one
