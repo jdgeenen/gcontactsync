@@ -177,11 +177,6 @@ com.gContactSync.handle401 = function gCS_handle401(httpRequest) {
   if (com.gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
     // Get the current username
     var username = com.gContactSync.Sync.mCurrentUsername;
-    // Remove the auth token if it wasn't already
-    if (com.gContactSync.LoginManager.mAuthTokens[username]) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Removing old auth token");
-      com.gContactSync.LoginManager.removeAuthToken(username);
-    }
     com.gContactSync.alertWarning(com.gContactSync.StringBundle.getStr("tokenExpiredMsg"));
     // Prompt for the username and password
     var prompt   = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
@@ -246,6 +241,11 @@ com.gContactSync.finish401 = function gCS_finish401(aUsername, aAuthToken) {
   com.gContactSync.LOGGER.VERBOSE_LOG(" * finish401 called: " + aUsername +
                                       " - " + aAuthToken);
   if (aUsername && aAuthToken) {
+    // Remove the auth token if it wasn't already
+    if (com.gContactSync.LoginManager.mAuthTokens[aUsername]) {
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Removing old auth token");
+      com.gContactSync.LoginManager.removeAuthToken(aUsername);
+    }
     var token = 'GoogleLogin ' + aAuthToken;
     com.gContactSync.LoginManager.addAuthToken(aUsername, token);
     com.gContactSync.Sync.mCurrentAuthToken = token;
