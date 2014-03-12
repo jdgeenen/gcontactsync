@@ -244,31 +244,26 @@ com.gContactSync.gdata = {
       }
       
       var arr,
-          relAttr = "rel";
-      switch (aElement.tagName) {
+          relAttr = "rel",
+          tagName = aElement.tagName.substr(aElement.tagName.lastIndexOf(":") + 1);
+      switch (tagName) {
         case "email":
-        case "gd:email":
           arr = this.EMAIL_TYPES;
           break;
         case "im":
-        case "gd:im":
           arr = this.IM_TYPES;
           relAttr = "protocol";
           break;
         case "phoneNumber":
-        case "gd:phoneNumber":
           arr = this.PHONE_TYPES;
           break;
         case "structuredPostalAddress":
-        case "gd:structuredPostalAddress":
-          arr = this.POSTAL_ADDRESS_TYPES
+          arr = this.POSTAL_ADDRESS_TYPES;
           break;
         case "relation":
-        case "gd:relation":
           arr = this.RELATION_TYPES;
           break;
         case "website":
-        case "gContact:website":
           arr = this.WEBSITE_TYPES;
           break;
         default:
@@ -280,9 +275,9 @@ com.gContactSync.gdata = {
       
         // Set a rel; website and relation elements need the rel to just be the
         // type, everything else has a prefix and im elements need a protocol.
-        if (aElement.tagName == "website" || aElement.tagName == "relation") {
+        if (tagName === "website" || tagName === "relation") {
           aElement.setAttribute(relAttr, aType);
-        } else if (aElement.tagName == "im") {
+        } else if (tagName === "im") {
           aElement.setAttribute("protocol", com.gContactSync.gdata.contacts.rel + "#" + aType);
           aElement.setAttribute("rel",      com.gContactSync.gdata.contacts.rel + "#other");
         } else {
