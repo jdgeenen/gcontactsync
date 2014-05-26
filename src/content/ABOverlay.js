@@ -303,12 +303,12 @@ com.gContactSync.ABOverlay = {
  
       // Other section (relations)
       var visible = !cvData.cvhOther.getAttribute("collapsed");
+      var relationsArray = [];
+      for (var j = 0; j < com.gContactSync.Preferences.mSyncPrefs.numRelations.value; ++j) {
+        relationsArray.push("Relation" + j);
+      }
       // Relation fields
-      visible = com.gContactSync.ABOverlay.getVisible(aCard, ["Relation0",
-                                                              "Relation1",
-                                                              "Relation2",
-                                                              "Relation3"],
-                                                      visible, true);
+      visible = com.gContactSync.ABOverlay.getVisible(aCard, relationsArray, visible, true);
 
       var day = aCard.getProperty("AnniversaryDay", null);
       var month = aCard.getProperty("AnniversaryMonth", null);
@@ -495,10 +495,11 @@ com.gContactSync.ABOverlay = {
     var otherVbox = document.createElement("vbox");
     otherVbox.setAttribute("flex", "1");
     // Relation fields)
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < com.gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
       cvData["cvRelation" + i] = com.gContactSync.ABOverlay.makeDescElement("Relation" + i, "CardViewText");
       otherVbox.appendChild(cvData["cvRelation" + i]);
     }
+    vbox.appendChild(otherVbox);
 
     // Anniversary
     cvData.cvAnniversary = com.gContactSync.ABOverlay.makeDescElement("Anniversary", "CardViewText");

@@ -92,6 +92,8 @@ pref("extensions.gContactSync.v04RCUpgradeNeeded", false);
 pref("extensions.gContactSync.httpRequestTimeout", 0);
 // Delay between HTTP requests to mitigate 503 errors.
 pref("extensions.gContactSync.httpRequestDelay", 120);
+// Number of relation/people fields to show
+pref("extensions.gContactSync.numRelations", 6);
 // extended properties to sync
 pref("extensions.gContactSync.extended1", "Custom1");
 pref("extensions.gContactSync.extended2", "Custom2");

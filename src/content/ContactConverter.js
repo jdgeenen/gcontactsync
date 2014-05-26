@@ -69,9 +69,7 @@ com.gContactSync.ContactConverter = {
     "HomeFaxNumber", "OtherNumber", "ThirdEmail", "FourthEmail",
     "PrimaryEmailType", "SecondEmailType", "ThirdEmailType", "FourthEmailType",
     "HomePhoneType", "WorkPhoneType", "FaxNumberType", "CellularNumberType",
-    "PagerNumberType", "HomeFaxNumberType", "OtherNumberType", "Relation0",
-    "Relation0Type", "Relation1", "Relation1Type", "Relation2",
-    "Relation2Type", "Relation3", "Relation3Type", "CompanySymbol",
+    "PagerNumberType", "HomeFaxNumberType", "OtherNumberType", "CompanySymbol",
     "JobDescription", "WebPage1Type", "WebPage2Type"
   ],
   /** Stores whether this object has been initialized yet */
@@ -131,11 +129,6 @@ com.gContactSync.ContactConverter = {
       new com.gContactSync.ConverterElement("PhotoURL", "PhotoURL", 0),
       new com.gContactSync.ConverterElement("SelfURL",  "SelfURL",  0),
       new com.gContactSync.ConverterElement("EditURL",  "EditURL",  0),
-      // Relation fields
-      new com.gContactSync.ConverterElement("relation", "Relation0", 0, ""),
-      new com.gContactSync.ConverterElement("relation", "Relation1", 1, ""),
-      new com.gContactSync.ConverterElement("relation", "Relation2", 2, ""),
-      new com.gContactSync.ConverterElement("relation", "Relation3", 3, ""),
       // Websites
       new com.gContactSync.ConverterElement("website",   "WebPage2", 0, "home"),
       new com.gContactSync.ConverterElement("website",   "WebPage1", 1, "work"),
@@ -157,6 +150,10 @@ com.gContactSync.ContactConverter = {
       this.mConverterArr.push(new com.gContactSync.ConverterElement("postcode", "WorkZipCode",     0, "work"));
       this.mConverterArr.push(new com.gContactSync.ConverterElement("country",  "WorkCountry",     0, "work"));
     }
+    for (var i = 0; i < com.gContactSync.Preferences.mSyncPrefs.numRelations.value; i++) {
+      // Relation fields
+      this.mConverterArr.push(new com.gContactSync.ConverterElement("relation", "Relation" + i, i, ""));
+    }
     this.mInitialized = true;
   },
   /**
@@ -168,8 +165,13 @@ com.gContactSync.ContactConverter = {
     if (!this.mInitialized)
       this.init();
     var arr = this.mAddedAttributes.slice();
+    for (var i = 0; i < com.gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
+      arr.push("Relation" + i);
+      arr.push("Relation" + i + "Type");
+    }
     if (aIncludeURLs)
       arr = arr.concat("PhotoURL", "SelfURL", "EditURL", "GoogleID");
+    com.gContactSync.LOGGER.VERBOSE_LOG(arr);
     return arr;
   },
   /**

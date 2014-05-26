@@ -129,32 +129,9 @@
       </vbox>
       <vbox id="relationFields" hidden="true">
           <vbox id="gcontactSyncFields2" class="alignBoxWithFieldset" align="left">
-            <groupbox flex="1">
+            <groupbox flex="1" id="relationsGroupBox">
               <caption label="&relations.box;"/>
-              <hbox id="Relation0Box">
-                <spacer flex="1"/>
-                <hbox>
-                  <textbox id="Relation0" class="uri-element" width="180px"/>
-                </hbox>
-              </hbox>
-              <hbox id="Relation1Box">
-                <spacer flex="1"/>
-                <hbox>
-                  <textbox id="Relation1" class="uri-element" width="180px"/>
-                </hbox>
-              </hbox>
-              <hbox id="Relation2Box">
-                <spacer flex="1"/>
-                <hbox>
-                  <textbox id="Relation2"  class="uri-element" width="180px"/>
-                </hbox>
-              </hbox>
-              <hbox id="Relation3Box">
-                <spacer flex="1"/>
-                <hbox>
-                  <textbox id="Relation3" class="uri-element" width="180px"/>
-                </hbox>
-              </hbox>
+              <!-- Contents are added by CardDialogOverlay.js -->
             </groupbox>
           </vbox>
       </vbox>

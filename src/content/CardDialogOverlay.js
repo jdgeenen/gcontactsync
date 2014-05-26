@@ -63,14 +63,6 @@ com.gContactSync.gAttributes = {
   "PagerNumberType":      {},
   "HomeFaxNumberType":    {},
   "OtherNumberType":      {},
-  "Relation0":            {},
-  "Relation0Type":        {},
-  "Relation1":            {},
-  "Relation1Type":        {},
-  "Relation2":            {},
-  "Relation2Type":        {},
-  "Relation3":            {},
-  "Relation3Type":        {},
   "WebPage1Type":         {},
   "WebPage2Type":         {}
 };
@@ -98,6 +90,10 @@ com.gContactSync.CardDialogOverlay = {
         setTimeout(com.gContactSync.CardDialogOverlay.init, 200);
       com.gContactSync.CardDialogOverlay.mLoadNumber++;
       return;
+    }
+    for (var i = 0; i < com.gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
+      com.gContactSync.gAttributes["Relation" + i] = "";
+      com.gContactSync.gAttributes["Relation" + i + "Type"] = "";
     }
 
     try {
@@ -279,8 +275,18 @@ com.gContactSync.CardDialogOverlay = {
           for (i in com.gContactSync.gdata.contacts.RELATION_TYPES) {
             relationTypes.push(i);
           }
-          for (i = 0; i < 4; i++) {
-            var relationBox = document.getElementById("Relation" + i + "Box");
+          var groupbox = document.getElementById("relationsGroupBox");
+          for (var i = 0; i < com.gContactSync.Preferences.mSyncPrefs.numRelations.value; i++) {
+            var relationBox = document.createElement("hbox");
+            var spacer = document.createElement("spacer");
+            spacer.setAttribute("flex", 1);
+            relationBox.appendChild(spacer);
+            var relationText = document.createElement("textbox");
+            relationText.id = "Relation" + i;
+            relationText.setAttribute("class", "uri-element");
+            relationText.setAttribute("width", "180px");
+            relationBox.appendChild(relationText);
+            groupbox.appendChild(relationBox);
             this.addMenuItems(relationBox, relationTypes, "Relation" + i + "Type", "", com.gContactSync.StringBundle.getStr("relationWidth"));
           }
         }
