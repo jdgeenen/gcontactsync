@@ -171,7 +171,6 @@ com.gContactSync.ContactConverter = {
     }
     if (aIncludeURLs)
       arr = arr.concat("PhotoURL", "SelfURL", "EditURL", "GoogleID");
-    com.gContactSync.LOGGER.VERBOSE_LOG(arr);
     return arr;
   },
   /**
