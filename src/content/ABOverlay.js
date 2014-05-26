@@ -309,6 +309,29 @@ com.gContactSync.ABOverlay = {
                                                               "Relation2",
                                                               "Relation3"],
                                                       visible, true);
+
+      var day = aCard.getProperty("AnniversaryDay", null);
+      var month = aCard.getProperty("AnniversaryMonth", null);
+      var year = aCard.getProperty("AnniversaryYear", null);
+      var dateStr = null;
+      if (day > 0 && day < 32 && month > 0 && month < 13) {
+        var date = new Date(year, month - 1, day);
+        // if the year exists, just use Date.toLocaleString
+        if (year) {
+          date.setFullYear(year);
+          dateStr = date.toLocaleDateString();
+        } else {
+          // if the year doesn't exist, display Month DD (ex. January 01)
+          dateStr = date.toLocaleFormat(
+            gAddressBookBundle.getString("dateFormatMonthDay")
+          );
+        }
+      } else if (year) {
+        dateStr = year;
+      }
+      visible = cvSetNodeWithLabel(cvData.cvAnniversary,
+                                   com.gContactSync.StringBundle.getStr("anniversary"),
+                                   dateStr) || visible;
       cvSetVisible(cvData.cvhOther, visible);
       cvSetVisible(cvData.cvbOther, visible);
       // Phone section (add OtherNumber and HomeFaxNumber)
@@ -476,6 +499,10 @@ com.gContactSync.ABOverlay = {
       cvData["cvRelation" + i] = com.gContactSync.ABOverlay.makeDescElement("Relation" + i, "CardViewText");
       otherVbox.appendChild(cvData["cvRelation" + i]);
     }
+
+    // Anniversary
+    cvData.cvAnniversary = com.gContactSync.ABOverlay.makeDescElement("Anniversary", "CardViewText");
+    vbox.insertBefore(cvData.cvAnniversary, document.getElementById("cvBirthday").nextSibling);
 
     // Other Number and HomeFaxNumber
     cvData.cvOtherNumber = com.gContactSync.ABOverlay.makeDescElement("OtherNumber", "CardViewText");

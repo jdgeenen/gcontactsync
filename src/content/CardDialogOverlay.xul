@@ -35,7 +35,12 @@
    -
    - ***** END LICENSE BLOCK ***** -->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
-<!DOCTYPE overlay SYSTEM "chrome://gContactSync/locale/overlay.dtd">
+<!DOCTYPE overlay [
+  <!ENTITY % gcsOverlayDTD SYSTEM "chrome://gcontactsync/locale/overlay.dtd">
+  %gcsOverlayDTD;
+  <!ENTITY % tbDTD SYSTEM "chrome://messenger/locale/addressbook/abCardOverlay.dtd">
+  %tbDTD;
+]>
 
 <overlay id="gContactSync-abEditCardDialogOverlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -70,6 +75,18 @@
   </tabs>
 
   <tabpanels id="abTabPanels" flex="1">
+
+    <vbox id="abHomeTab">
+      <hbox id="anniversaryField" align="center" after="birthdayField">
+        <spacer flex="1"/>
+        <label control="Anniversary" value="&Anniversary.label;"
+               accesskey="&Anniversary.accesskey;"/>
+        <hbox class="AddressCardEditWidth" align="center">
+          <datepicker id="Anniversary" type="popup"/>
+        </hbox>
+      </hbox>
+    </vbox>
+
     <vbox flex="1">
       <hbox>
         <vbox>

@@ -23,6 +23,10 @@
 <!-- A label for extra phone number fields -->
 <!ENTITY numbers.box               "Additional Numbers">
 
+<!-- Anniversary-related fields -->
+<!ENTITY Anniversary.label "Anniversary">
+<!ENTITY Anniversary.accesskey "y">
+
 <!-- This can be blank or something like "Click on Sync to begin" -->
 <!ENTITY initialStatus.label "">
 

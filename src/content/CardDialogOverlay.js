@@ -319,7 +319,15 @@ com.gContactSync.CardDialogOverlay = {
       document.getElementById("HomeFaxNumber").readOnly    = true;
       document.getElementById("OtherNumber").readOnly      = true;
       document.getElementById("Relation").readOnly         = true;
+      document.getElementById("Anniversary").readOnly      = true;
     }
+
+    // Copy certain functions from the birthday datepicker (but show the year element)
+    var anniversaryElem = document.getElementById("Anniversary");
+    var birthdayElem    = document.getElementById("Birthday");
+    anniversaryElem._constrainValue = birthdayElem._constrainValue;
+    anniversaryElem._setFieldValue = birthdayElem._setFieldValue;
+
     // fix the width of the dialog
     window.sizeToContent();
 
@@ -413,6 +421,20 @@ com.gContactSync.CardDialogOverlay = {
         com.gContactSync.alertError("Error in com.gContactSync.CheckAndSetCardValues: " + attr + "\n" + e);
       }
     }
+
+    // get the anniversary information from the dialog
+    var anniversaryElem = aDoc.getElementById("Anniversary");
+    var anniversaryMonth = anniversaryElem.monthField.value;
+    var anniversaryDay = anniversaryElem.dateField.value;
+    var anniversaryYear = anniversaryElem.yearField.value;
+
+    com.gContactSync.LOGGER.VERBOSE_LOG("Anniversary: " + anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay);
+
+    // set the anniversary day, month, and year properties
+    contact.setValue("AnniversaryDay", anniversaryDay);
+    contact.setValue("AnniversaryMonth", anniversaryMonth);
+    contact.setValue("AnniversaryYear", anniversaryYear);
+
     if (!contact.mContact.getProperty && gEditCard.abURI) {
       if (contact.mContact.editCardToDatabase) { // Thunderbird 2
         contact.mContact.editCardToDatabase(gEditCard.abURI);
@@ -423,6 +445,7 @@ com.gContactSync.CardDialogOverlay = {
         }
       }
     }
+
     // ensure that every contact edited through this dialog has at least a dummy
     // e-mail address if necessary
     var primEmailElem = aDoc.getElementById("PrimaryEmail");
@@ -494,6 +517,38 @@ com.gContactSync.CardDialogOverlay = {
           }
         }
       } catch (e) { com.gContactSync.alertError("Error in com.gContactSync.GetCardValues: " + attr + "\n" + e); }
+    }
+
+    // Anniversary
+    var anniversaryElem = document.getElementById("Anniversary");
+    var year, month, day;
+    if (aCard.getProperty) { // post Bug 413260
+      year  = aCard.getProperty("AnniversaryYear", null);
+      month = aCard.getProperty("AnniversaryMonth", null);
+      day   = aCard.getProperty("AnniversaryDay", null);
+    } else { // pre Bug 413260
+      year  = aCard.getStringAttribute("AnniversaryYear");
+      month = aCard.getStringAttribute("AnniversaryMonth");
+      day   = aCard.getStringAttribute("AnniversaryDay");
+    }
+
+    // Default the year to 2000 (a leap year)
+    if (year && year < 10000 && year > 0) {
+      anniversaryElem.year = year;
+      anniversaryElem.yearField.value = year;
+    } else {
+      anniversaryElem.year = 2000;
+      anniversaryElem.yearField.value = null;
+    }
+    if (month > 0 && month < 13) {
+      anniversaryElem.month = month - 1;
+    } else {
+      anniversaryElem.monthField.value = null;
+    }
+    if (day > 0 && day < 32) {
+      anniversaryElem.date = day;
+    } else {
+      anniversaryElem.dateField.value = null;
     }
 
     // In TB 10 the way photos are saved changed and now requires two copies of
