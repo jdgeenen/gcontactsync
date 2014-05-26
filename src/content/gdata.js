@@ -170,7 +170,9 @@ com.gContactSync.gdata = {
       TYPED_WITH_ATTR: 1,
       UNTYPED: 2,
       /** The type is stored in the element's parent */
-      PARENT_TYPED: 3
+      PARENT_TYPED: 3,
+      /** gContact:event */
+      EVENT: 4
     },
     /** The prefix for rel attributes */
     rel: "http://schemas.google.com/g/2005",
@@ -185,6 +187,7 @@ com.gContactSync.gdata = {
           typedWithChild       = this.types.TYPED_WITH_CHILD,
           typedWithAttr        = this.types.TYPED_WITH_ATTR,
           parentTyped          = this.types.PARENT_TYPED,
+          eventType            = this.types.EVENT,
           gd                   = com.gContactSync.gdata.namespaces.GD,
           atom                 = com.gContactSync.gdata.namespaces.ATOM,
           gcontact             = com.gContactSync.gdata.namespaces.GCONTACT;
@@ -230,6 +233,7 @@ com.gContactSync.gdata = {
       this.region              = new GElement(parentTyped, "region",           gd);
       this.postcode            = new GElement(parentTyped, "postcode",         gd);
       this.country             = new GElement(parentTyped, "country",          gd);
+      this.event               = new GElement(eventType,   "event",            gcontact);
     },
     /**
      * Updates the given element's type by setting the rel or label attribute

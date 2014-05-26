@@ -93,16 +93,16 @@ pref("extensions.gContactSync.httpRequestTimeout", 0);
 // Delay between HTTP requests to mitigate 503 errors.
 pref("extensions.gContactSync.httpRequestDelay", 120);
 // extended properties to sync
-pref("extensions.gContactSync.extended1", "PreferMailFormat");
-pref("extensions.gContactSync.extended2", "AllowRemoteContent");
-pref("extensions.gContactSync.extended3", "AnniversaryYear");
-pref("extensions.gContactSync.extended4", "AnniversaryMonth");
-pref("extensions.gContactSync.extended5", "AnniversaryDay");
-pref("extensions.gContactSync.extended6", "PopularityIndex");
-pref("extensions.gContactSync.extended7", "Custom1");
-pref("extensions.gContactSync.extended8", "Custom2");
-pref("extensions.gContactSync.extended9", "Custom3");
-pref("extensions.gContactSync.extended10", "Custom4");
+pref("extensions.gContactSync.extended1", "Custom1");
+pref("extensions.gContactSync.extended2", "Custom2");
+pref("extensions.gContactSync.extended3", "Custom3");
+pref("extensions.gContactSync.extended4", "Custom4");
+pref("extensions.gContactSync.extended5", "");
+pref("extensions.gContactSync.extended6", "");
+pref("extensions.gContactSync.extended7", "");
+pref("extensions.gContactSync.extended8", "");
+pref("extensions.gContactSync.extended9", "");
+pref("extensions.gContactSync.extended10", "");
 pref("extensions.gContactSync.syncExtended", true);
 pref("extensions.gContactSync.faqURL",   "http://www.pirules.org/addons/gcontactsync/faq.php");
 pref("extensions.gContactSync.forumURL", "http://www.pirules.org/forum/");

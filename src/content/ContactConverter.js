@@ -261,6 +261,25 @@ com.gContactSync.ContactConverter = {
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Birthday: " + birthdayVal);
     aGContact.setValue("birthday", 0, null, birthdayVal);
 
+    var anniversaryDay = parseInt(aTBContact.getValue("AnniversaryDay"), 10);
+    var anniversaryMonth = (isNaN(anniversaryDay) || anniversaryDay > 31) ?
+                             null :
+                             parseInt(aTBContact.getValue("AnniversaryMonth"), 10);
+    var anniversaryYear = (isNaN(anniversaryMonth) || anniversaryMonth > 13) ?
+                            null :
+                            parseInt(aTBContact.getValue("AnniversaryYear"), 10);
+    anniversaryDay = String(anniversaryDay);
+    anniversaryMonth = String(anniversaryMonth);
+    while (anniversaryDay.length < 2) {
+      anniversaryDay = "0" + anniversaryDay;
+    }
+    while (anniversaryMonth.length < 2) {
+      anniversaryMonth = "0" + anniversaryMonth;
+    }
+    var anniversaryVal = anniversaryYear ? anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay : null;
+    com.gContactSync.LOGGER.VERBOSE_LOG(" * Anniversary: " + anniversaryVal);
+    aGContact.setValue("event", 0, "anniversary", anniversaryVal);
+
     // set the extended properties
     aGContact.removeExtendedProperties();
     arr = com.gContactSync.Preferences.mExtendedProperties;
@@ -272,7 +291,7 @@ com.gContactSync.ContactConverter = {
         value = this.checkValue(aTBContact.getValue(arr[i]));
         aGContact.setExtendedProperty(arr[i], value);
       }
-      else {
+      else if (arr[i] != "") {
         com.gContactSync.LOGGER.LOG_WARNING("Found a duplicate extended property: " +
                                             arr[i]);
       }
@@ -392,7 +411,7 @@ com.gContactSync.ContactConverter = {
     }
     
     // Get the birthday info
-    var bday = aGContact.getValue("birthday", 0, com.gContactSync.gdata.contacts.types.UNTYPED),
+    var bday = aGContact.getValue("birthday", 0),
         year  = null,
         month = null,
         day   = null;
@@ -419,6 +438,24 @@ com.gContactSync.ContactConverter = {
     aTBContact.setValue("BirthYear",  year);
     aTBContact.setValue("BirthMonth", month);
     aTBContact.setValue("BirthDay",   day);
+
+    // Anniversary
+    var anniversary = aGContact.getValue("event", 0, "anniversary");
+    var anniversaryYear = null, anniversaryMonth = null, anniversaryDay = null;
+    if (anniversary && anniversary.value) {
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Found an anniversary value of " + anniversary.value);
+      var anniversaryArray = anniversary.value.split("-");
+      if (anniversaryArray.length === 3) {
+        anniversaryYear = anniversaryArray[0];
+        anniversaryMonth = anniversaryArray[1];
+        anniversaryDay   = anniversaryArray[2];
+      } else {
+        com.gContactSync.LOGGER.LOG_WARNING("Invalid anniversary value", anniversary.value);
+      }
+    }
+    aTBContact.setValue("AnniversaryYear", anniversaryYear);
+    aTBContact.setValue("AnniversaryMonth", anniversaryMonth);
+    aTBContact.setValue("AnniversaryDay", anniversaryDay);
 
     if (com.gContactSync.Preferences.mSyncPrefs.getPhotos.value) {
       var info = aGContact.getPhotoInfo();

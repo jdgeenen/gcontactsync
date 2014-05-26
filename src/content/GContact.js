@@ -190,6 +190,11 @@ com.gContactSync.GContact.prototype = {
           if (arr[i].childNodes[0])
             return new com.gContactSync.Property(arr[i].childNodes[0].nodeValue);
           return null;
+        case com.gContactSync.gdata.contacts.types.EVENT:
+          if (arr[i].childNodes[0]) {
+            return new com.gContactSync.Property(arr[i].childNodes[0].getAttribute("startTime"));
+          }
+          return null;
         default:
           com.gContactSync.LOGGER.LOG_WARNING("Error - invalid contact type passed to the " +
                                               "getElementValue method." +
@@ -472,6 +477,18 @@ com.gContactSync.GContact.prototype = {
             elem.appendChild(text);
             this.xml.appendChild(elem);
           }
+          break;
+        case com.gContactSync.gdata.contacts.types.EVENT:
+          var eventElem = this.mCurrentElement;
+          if (!eventElem) {
+            eventElem = document.createElementNS(com.gContactSync.gdata.namespaces.GCONTACT.url, "event");
+            eventElem.setAttribute("rel", aType);
+            parentElem.appendChild(document.createElementNS(com.gContactSync.gdata.namespaces.GD.url, "when"));
+          }
+          // TODO - support xs:dateTime
+          // TODO - support endTime attribute
+          eventElem.firstChild.setAttribute("startTime", aValue);
+          if (!this.mCurrentElement) { this.xml.appendChild(eventElem.parentNode); }
           break;
         default:
           com.gContactSync.LOGGER.LOG_WARNING("Invalid aType parameter sent to the setElementValue"
