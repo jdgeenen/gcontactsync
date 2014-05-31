@@ -316,14 +316,20 @@
                 label="&resetAll.label;"
                 accesskey="&resetAll.accesskey;"
                 oncommand="com.gContactSync.GAbManager.resetAllSyncedABs(true);"/>
+        <button id="resetAllSettings"
+                label="&resetAllSettings.label;"
+                accesskey="&resetAllSettings.accesskey;"
+                oncommand="com.gContactSync.Options.resetAllSettings();"/>
+      </hbox>
+      <hbox>
         <button id="cleanOldPhotos"
                 label="&cleanOldPhotos.label;"
                 accesskey="&cleanOldPhotos.accesskey;"
-                oncommand="com.gContactSync.Options.deleteOldPhotos();"/>
+                oncommand="com.gContactSync.Options.deleteOldPhotos(true);"/>
         <button id="cleanOldPrefs"
                 label="&cleanOldPrefs.label;"
                 accesskey="&cleanOldPrefs.accesskey;"
-                oncommand="com.gContactSync.Options.cleanOldPrefs(true);"/>
+                oncommand="com.gContactSync.Options.removeABPrefs(true, true);"/>
       </hbox>
     </vbox>
   </prefpane>

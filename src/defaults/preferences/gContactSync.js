@@ -45,8 +45,6 @@ pref("extensions.gContactSync.newColLabels", true);
 // if disabled this can cause problems w/ mailing lists...
 // in cases where problems will almost certainly happen this pref is ignored
 pref("extensions.gContactSync.dummyEmail", false);
-// enable different IM URLs as defined in Overlay.js
-pref("extensions.gContactSync.enableImUrls", true);
 // the last version of gContactSync loaded
 pref("extensions.gContactSync.lastVersionMajor", 0);
 pref("extensions.gContactSync.lastVersionMinor", 0);

@@ -166,12 +166,12 @@ com.gContactSync.Preferences = {
    * verboseLog is first since it is used when logging preferences
    */
   mSyncPrefs: {
-    verboseLog:               new com.gContactSync.Pref("verboseLog",               "bool", true),
+    verboseLog:               new com.gContactSync.Pref("verboseLog",               "bool", false),
     initialDelayMinutes:      new com.gContactSync.Pref("initialDelayMinutes",      "int",  5),
     refreshInterval:          new com.gContactSync.Pref("refreshInterval",          "int",  120),
     accountDelay:             new com.gContactSync.Pref("accountDelay",             "int",  5000),
-    maxContacts:              new com.gContactSync.Pref("maxContacts",              "int",  5000),
-    backupInterval:           new com.gContactSync.Pref("backupInterval",           "int",  60),
+    maxContacts:              new com.gContactSync.Pref("maxContacts",              "int",  10000),
+    backupInterval:           new com.gContactSync.Pref("backupInterval",           "int",  14),
     confirmDeleteThreshold:   new com.gContactSync.Pref("confirmDeleteThreshold",   "int",  5),
     syncExtended:             new com.gContactSync.Pref("syncExtended",             "bool", true),
     overrideCopy:             new com.gContactSync.Pref("overrideCopy",             "bool", true),
@@ -186,14 +186,14 @@ com.gContactSync.Preferences = {
     phoneTypes:               new com.gContactSync.Pref("phoneTypes",               "bool", true),
     swapMobilePager:          new com.gContactSync.Pref("swapMobilePager",          "bool", true),
     newColLabels:             new com.gContactSync.Pref("newColLabels",             "bool", true),
-    dummyEmail:               new com.gContactSync.Pref("dummyEmail",               "bool", true),
+    dummyEmail:               new com.gContactSync.Pref("dummyEmail",               "bool", false),
     fixDupContactManagerCSS:  new com.gContactSync.Pref("fixDupContactManagerCSS",  "bool", false),
     getPhotos:                new com.gContactSync.Pref("getPhotos",                "bool", true),
     sendPhotos:               new com.gContactSync.Pref("sendPhotos",               "bool", true),
     addReset:                 new com.gContactSync.Pref("addReset",                 "bool", true),
     alertSummary:             new com.gContactSync.Pref("alertSummary",             "bool", true),
     statusBarText:            new com.gContactSync.Pref("statusBarText",            "char", ""),
-    myContactsName:           new com.gContactSync.Pref("myContactsName",           "char", "My Contacts"),
+    myContactsName:           new com.gContactSync.Pref("myContactsName",           "char", "Contacts"),
     lastVersionMajor:         new com.gContactSync.Pref("lastVersionMajor",         "int",  0),
     lastVersionMinor:         new com.gContactSync.Pref("lastVersionMinor",         "int",  0),
     lastVersionRelease:       new com.gContactSync.Pref("lastVersionRelease",       "int",  0),
@@ -205,7 +205,7 @@ com.gContactSync.Preferences = {
     synchronizing:            new com.gContactSync.Pref("synchronizing",            "bool", false),
     overrideGetCardForEmail:  new com.gContactSync.Pref("overrideGetCardForEmail",  "bool", true),
     syncPhoneticNames:        new com.gContactSync.Pref("syncPhoneticNames",        "bool", true),
-    newContactPhotoDelay:     new com.gContactSync.Pref("newContactPhotoDelay",      "int", 0),
+    newContactPhotoDelay:     new com.gContactSync.Pref("newContactPhotoDelay",      "int", 2000),
     v04UpgradeNeeded:         new com.gContactSync.Pref("v04UpgradeNeeded",         "bool", false),
     v04RCUpgradeNeeded:       new com.gContactSync.Pref("v04RCUpgradeNeeded",       "bool", false),
     httpRequestTimeout:       new com.gContactSync.Pref("httpRequestTimeout",        "int", 0),
@@ -306,6 +306,16 @@ com.gContactSync.Preferences = {
     if (!com.gContactSync.Preferences.mSyncPrefs.enableMenu.value &&
           document.getElementById("gContactSyncMenu")) {
       document.getElementById("gContactSyncMenu").collapsed = true;
+    }
+  },
+  /**
+   * Resets all gContactSync prefs to their default values.
+   */
+  defaultAllSyncPrefs: function Preferences_defaultAllSyncPrefs() {
+    com.gContactSync.LOGGER.LOG("\n***Defaulting Sync Preferences***");
+    for (var i in this.mSyncPrefs) {
+      // TODO - use the default branch value instead?
+      this.setSyncPref(this.mSyncPrefs[i].label, this.mSyncPrefs[i].defaultValue);
     }
   }
 };

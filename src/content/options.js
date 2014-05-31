@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2010
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -95,9 +95,45 @@ com.gContactSync.Options = {
     return true;
   },
   /**
-   * Deletes old preferences that are no longer required.
+   * Resets all gContactSync settings.  AB prefs, add-on prefs, cleans up old photos, and removes all auth tokens.
    */
-  cleanOldPrefs: function Options_cleanOldPrefs() {
+  resetAllSettings: function Options_resetAllSettings() {
+
+    if (!com.gContactSync.confirm(com.gContactSync.StringBundle.getStr("resetAllSettings"))) {
+      return;
+    }
+
+    // Force a restart
+    com.gContactSync.Preferences.setSyncPref("needRestart", true);
+
+    // Remove all AB prefs
+    this.removeABPrefs(false, false);
+
+    // Remove all auth tokens
+    var tokens = com.gContactSync.LoginManager.getAuthTokens();
+    for (var username in tokens) {
+      com.gContactSync.LOGGER.LOG("* Removing token for " + username);
+      com.gContactSync.LoginManager.removeAuthToken(username);
+    }
+
+    // Cleanup old photos
+    this.deleteOldPhotos(false);
+
+    // Reset sync prefs
+    com.gContactSync.Preferences.defaultAllSyncPrefs();
+
+    // Ask the user to restart
+    var restartStr = com.gContactSync.StringBundle.getStr("pleaseRestart");
+    com.gContactSync.Preferences.setSyncPref("statusBarText", restartStr);
+    com.gContactSync.alert(restartStr);
+  },
+  /**
+   * Deletes gContactSync preferences for address books.
+   * @param alertWhenFinished {bool} Whether this function should alert the user when finished.
+   * @param removeFromDeletedABsOnly {bool} Whether to only remove preferences for deleted ABs.
+   */
+  removeABPrefs: function Options_removeABPrefs(alertWhenFinished, removeFromDeletedABsOnly) {
+
     var abBranch    = Components.classes["@mozilla.org/preferences-service;1"]
                                 .getService(Components.interfaces.nsIPrefService)
                                 .getBranch("ldap_2.servers."),
@@ -115,42 +151,44 @@ com.gContactSync.Options = {
         // Step 1: Backup prefs.js
         prefsFile   = com.gContactSync.FileIO.getProfileDirectory(),
         backupFile  = com.gContactSync.FileIO.getProfileDirectory();
+
+    com.gContactSync.LOGGER.LOG("***Removing gContactSync address book preferences***");
     prefsFile.append(com.gContactSync.FileIO.fileNames.PREFS_JS);
     backupFile.append(com.gContactSync.FileIO.fileNames.FOLDER_NAME);
     backupFile.append(com.gContactSync.FileIO.fileNames.PREFS_BACKUP_DIR);
     backupFile.append(new Date().getTime() + "_" +
                       com.gContactSync.FileIO.fileNames.PREFS_JS + ".bak");
-    com.gContactSync.LOGGER.LOG("***Backing up prefs.js***");
-    com.gContactSync.LOGGER.LOG(" - Destination: " + backupFile.path);
+    com.gContactSync.LOGGER.LOG(" * Backing up prefs.js");
+    com.gContactSync.LOGGER.LOG("   - Destination: " + backupFile.path);
     com.gContactSync.FileIO.copyFile(prefsFile, backupFile);
     // Step 2: Clean all gContactSync prefs on ldap_2.servers
     //         if and only if the extensions.gContactSync.ldap_2.servers. branch
     //         exists (means that old prefs were already updated)
-    com.gContactSync.LOGGER.LOG("***Finding existing AB preference IDs***");
+    com.gContactSync.LOGGER.LOG(" * Finding existing AB preference IDs");
     for (i in abs) {
       var id = abs[i].mDirectory.dirPrefId;
-      com.gContactSync.LOGGER.VERBOSE_LOG(" - " + id);
+      com.gContactSync.LOGGER.VERBOSE_LOG("  - " + id);
       abPrefIDs[id] = abs[i];
     }
-    com.gContactSync.LOGGER.LOG("***Searching for obsolete prefs on ldap_2.servers.***");
+    com.gContactSync.LOGGER.LOG(" * Searching for obsolete prefs on ldap_2.servers.");
     children = abBranch.getChildList("", count);
     for (i = 0; i < count.value; i++) {
       // extract the preference ID from the whole preference
       // (ie MyAB_1.filename -> MyAB_1)
       var index  = children[i].indexOf("."),
           prefID = index > 0 ? children[i].substring(0, index) : children[i];
-      com.gContactSync.LOGGER.VERBOSE_LOG(" - " + children[i] + " - " + prefID);
-      if (!abPrefIDs["ldap_2.servers." + prefID]) {
+      com.gContactSync.LOGGER.VERBOSE_LOG("   - " + children[i] + " - " + prefID);
+      if (!removeFromDeletedABsOnly || !abPrefIDs["ldap_2.servers." + prefID]) {
         if (prefNames.test(children[i])) {
           abBranch.clearUserPref(children[i]);
-          com.gContactSync.LOGGER.LOG("  * Deleted old gContactSync pref");
+          com.gContactSync.LOGGER.LOG("  - Deleted old gContactSync pref");
           numObsolete++;
         }
       }
     }
-    com.gContactSync.LOGGER.LOG("***Found " + numObsolete + " obsolete prefs on ldap_2.servers.***");
+    com.gContactSync.LOGGER.LOG(" * Found " + numObsolete + " prefs on ldap_2.servers.*");
     // Step 3: clean prefs for deleted ABs on extensions.gContactSync.ldap_2.servers.
-    com.gContactSync.LOGGER.LOG("***Searching for gContactSync prefs for deleted ABs***");
+    com.gContactSync.LOGGER.LOG(" * Searching for gContactSync prefs for deleted ABs");
     children = gAbBranch.getChildList("", count);
     for (i = 0; i < count.value; i++) {
       // extract the preference ID from the whole preference
@@ -158,26 +196,28 @@ com.gContactSync.Options = {
       var index  = children[i].indexOf("."),
           prefID = index > 0 ? children[i].substring(0, index) : children[i];
       com.gContactSync.LOGGER.VERBOSE_LOG(" - " + children[i] + " - " + prefID);
-      if (!abPrefIDs["ldap_2.servers." + prefID]) {
+      if (!removeFromDeletedABsOnly || !abPrefIDs["ldap_2.servers." + prefID]) {
         if (prefNames.test(children[i])) {
           gAbBranch.clearUserPref(children[i]);
-          com.gContactSync.LOGGER.LOG("  * Deleted gContactSync pref for deleted AB");
           numDeleted++;
         }
       }
     }
-    com.gContactSync.LOGGER.LOG("***Found " + numDeleted + " gContactSync prefs for deleted ABs***");
-    com.gContactSync.alert(com.gContactSync.StringBundle.getStr("finishedPrefClean").replace("%d", numDeleted + numObsolete));
+    com.gContactSync.LOGGER.LOG(" * Found " + numDeleted + " gContactSync prefs for deleted ABs");
+    if (alertWhenFinished) {com.gContactSync.alert(com.gContactSync.StringBundle.getStr("finishedPrefClean").replace("%d", numDeleted + numObsolete));}
   },
   /**
    * Deletes unused contact photos from Thunderbird and gContactSync's photos
    * directories.  When address books and contacts are deleted TB doesn't delete
    * the corresponding photo which can leave quite a few photos behind.
+   * @param alertWhenFinished {bool} Whether this function should alert the user when finished.
    */
-  deleteOldPhotos: function Options_deleteOldPhotos() {
+  deleteOldPhotos: function Options_deleteOldPhotos(alertWhenFinished) {
     var abs = com.gContactSync.GAbManager.getAllAddressBooks();
     var photoURIs = {};
     var photoNames = {};
+
+    com.gContactSync.LOGGER.LOG("***Removing old contact photos***");
     
     // Get the URI for the gContactSync photos directory
     var file = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -212,14 +252,14 @@ com.gContactSync.Options = {
     if (file.exists() && file.isDirectory()) {
       // Step 2: Iterate through all photos in gContactSync's photos directory and
       // delete the unused ones
-      com.gContactSync.LOGGER.VERBOSE_LOG("\n\n**Searching gContactSync Photos directory***");
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Searching gContactSync Photos directory");
       var iter = file.directoryEntries;
       while (iter.hasMoreElements()) {
         file = iter.getNext().QueryInterface(Components.interfaces.nsIFile);
         if (file.isFile()) {
           var filename = file.leafName;
           if (!photoURIs[filename]) {
-            com.gContactSync.LOGGER.VERBOSE_LOG(" * Deleting " + filename);
+            com.gContactSync.LOGGER.VERBOSE_LOG("  - Deleting " + filename);
             try {
               file.remove(false);
               ++numRemoved;
@@ -239,14 +279,14 @@ com.gContactSync.Options = {
     if (file.exists() && file.isDirectory()) {
       // Step 2: Iterate through all photos in gContactSync's photos directory and
       // delete the unused ones
-      com.gContactSync.LOGGER.VERBOSE_LOG("\n\n**Searching TB Photos directory***");
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Searching TB Photos directory");
       var iter = file.directoryEntries;
       while (iter.hasMoreElements()) {
         file = iter.getNext().QueryInterface(Components.interfaces.nsIFile);
         if (file.isFile()) {
           var filename = file.leafName;
           if (!photoNames[filename]) {
-            com.gContactSync.LOGGER.VERBOSE_LOG(" * Deleting " + filename);
+            com.gContactSync.LOGGER.VERBOSE_LOG("  - Deleting " + filename);
             try {
               file.remove(false);
               ++numRemoved;
@@ -257,6 +297,6 @@ com.gContactSync.Options = {
         }
       }
     }
-    com.gContactSync.alert(com.gContactSync.StringBundle.getStr("finishedPhotoClean").replace("%d", numRemoved));
+    if (alertWhenFinished) {com.gContactSync.alert(com.gContactSync.StringBundle.getStr("finishedPhotoClean").replace("%d", numRemoved));}
   }
 };
