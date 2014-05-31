@@ -325,22 +325,7 @@ com.gContactSync.ContactConverter = {
     }
     // Upload the photo
     if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
-      // Get the profile directory
-      var file = Components.classes["@mozilla.org/file/directory_service;1"]
-                           .getService(Components.interfaces.nsIProperties)
-                           .get("ProfD", Components.interfaces.nsIFile);
-      // Get (or make) the Photos directory
-      file.append("Photos");
-      if (!file.exists())
-        file.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, parseInt("0755", 8));
-      file.append(aTBContact.getValue("PhotoName"));
-      if (file.exists() && file.isFile()) {
-        aGContact.setPhoto(Components.classes["@mozilla.org/network/io-service;1"]
-                                     .getService(Components.interfaces.nsIIOService)
-                                     .newFileURI(file));
-      } else {
-        aGContact.setPhoto("");
-      }
+      aGContact = this.savePhotoFromTBContact(aTBContact, aGContact);
     }
     
     // Add the phonetic first and last names
@@ -360,13 +345,45 @@ com.gContactSync.ContactConverter = {
     return aGContact;
   },
   /**
+   * Saves the photo from the given TB contact to the given Google contact if present and if it has changed
+   * since the last sync.
+   * @param aTBContact {TBContact} An existing card that can be QI'd to
+   *                            Components.interfaces.nsIAbMDBCard if this is
+   *                            before 413260 landed.
+   * @param aGContact {GContact} A GContact object to update with the TB contact's photo.
+   * @returns {GContact} The updated GContact.
+   */
+  savePhotoFromTBContact: function ContactConverter_savePhotoFromTBContact(aTBContact, aGContact) {
+    // Get the profile directory
+    var file = Components.classes["@mozilla.org/file/directory_service;1"]
+                         .getService(Components.interfaces.nsIProperties)
+                         .get("ProfD", Components.interfaces.nsIFile);
+    // Get (or make) the Photos directory
+    file.append("Photos");
+    if (!file.exists())
+      file.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, parseInt("0755", 8));
+    file.append(aTBContact.getValue("PhotoName"));
+    if (file.exists() && file.isFile()) {
+
+      if (file.lastModifiedTime > aGContact.getLastModifiedDate(true)) {
+        aGContact.setPhoto(Components.classes["@mozilla.org/network/io-service;1"]
+                                     .getService(Components.interfaces.nsIIOService)
+                                     .newFileURI(file));
+      } else {
+        com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo is already up-to-date");
+      }
+    } else {
+      aGContact.setPhoto("");
+    }
+    return aGContact;
+  },
+  /**
    * Converts an GContact's Atom/XML representation of a contact to
    * Thunderbird's address book card format.
    * @param aGContact {GContact} A GContact object with the contact to convert.
    * @param aTBContact {TBContact}   An existing card that can be QI'd to
    *                            Components.interfaces.nsIAbMDBCard if this is
    *                            before 413260 landed.
-   * @returns {TBContact} The updated TBContact.
    */
   makeCard: function ContactConverter_makeCard(aGContact, aTBContact) {
     if (!aGContact)
@@ -459,33 +476,8 @@ com.gContactSync.ContactConverter = {
     aTBContact.setValue("AnniversaryDay", anniversaryDay);
 
     if (com.gContactSync.Preferences.mSyncPrefs.getPhotos.value) {
-      var info = aGContact.getPhotoInfo();
-      // If the contact has a photo then save it to a local file and update
-      // the related attributes
-      // Thunderbird requires two copies of each photo.  A permanent copy must
-      // be kept outside of the Photos directory.  Each time a contact is edited
-      // Thunderbird will re-copy the original photo to the Photos directory and
-      // delete the old copy.
-      if (info && info.etag &&
-          (file = aGContact.writePhoto(com.gContactSync.Sync.mCurrentAuthToken))) {
-        com.gContactSync.LOGGER.VERBOSE_LOG("Wrote photo...name: " + file.leafName);
-        com.gContactSync.copyPhotoToPhotosDir(file);
-        aTBContact.setValue("PhotoName", file.leafName);
-        aTBContact.setValue("PhotoType", "file");
-        aTBContact.setValue("PhotoURI",
-                            Components.classes["@mozilla.org/network/io-service;1"]
-                                      .getService(Components.interfaces.nsIIOService)
-                                      .newFileURI(file)
-                                      .spec);
-        aTBContact.setValue("PhotoEtag", info.etag);
-      }
-      // If the contact doesn't have a photo then clear the related attributes
-      else {
-        aTBContact.setValue("PhotoName", "");
-        aTBContact.setValue("PhotoType", "");
-        aTBContact.setValue("PhotoURI",  "");
-        aTBContact.setValue("PhotoEtag", "");
-      }
+
+      aTBContact = this.savePhotoFromGContact(aTBContact, aGContact);
     }
     
     // Add the phonetic first and last names
@@ -525,6 +517,63 @@ com.gContactSync.ContactConverter = {
         }
       }
     }
+  },
+  /**
+   * Saves the photo from the given Google contact to the given TB contact if present and if it has changed
+   * since the last sync.
+   * @param aGContact {GContact} A GContact object with the photo to save.
+   * @param aTBContact {TBContact}   An existing card that can be QI'd to
+   *                            Components.interfaces.nsIAbMDBCard if this is
+   *                            before 413260 landed.  Updated with the photo from the GContact.
+   * @returns {TBContact} The updated TBContact.
+   */
+  savePhotoFromGContact: function ContactConvert_savePhotoFromGContact(aTBContact, aGContact) {
+
+    var info = aGContact.getPhotoInfo();
+
+    // If the contact has a photo then save it to a local file and update
+    // the related attributes
+    // Thunderbird requires two copies of each photo.  A permanent copy must
+    // be kept outside of the Photos directory.  Each time a contact is edited
+    // Thunderbird will re-copy the original photo to the Photos directory and
+    // delete the old copy.
+
+    if (!info || !info.etag) {
+
+      // If the contact doesn't have a photo then clear the related attributes
+      aTBContact.setValue("PhotoName", "");
+      aTBContact.setValue("PhotoType", "");
+      aTBContact.setValue("PhotoURI",  "");
+      aTBContact.setValue("PhotoEtag", "");
+
+    } else if (info.etag === aTBContact.getValue("PhotoEtag")) {
+
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo is already up-to-date");
+
+    } else {
+
+      var file = aGContact.writePhoto(com.gContactSync.Sync.mCurrentAuthToken);
+
+      if (!file) {
+
+        com.gContactSync.LOGGER.LOG_WARNING("Failed to write contact photo");
+
+      } else {
+
+        com.gContactSync.LOGGER.VERBOSE_LOG("Wrote photo...name: " + file.leafName);
+        com.gContactSync.copyPhotoToPhotosDir(file);
+        aTBContact.setValue("PhotoName", file.leafName);
+        aTBContact.setValue("PhotoType", "file");
+        aTBContact.setValue("PhotoURI",
+                            Components.classes["@mozilla.org/network/io-service;1"]
+                                      .getService(Components.interfaces.nsIIOService)
+                                      .newFileURI(file)
+                                      .spec);
+        aTBContact.setValue("PhotoEtag", info.etag);
+      }
+    }
+
+    return aTBContact;
   },
   /**
    * Check if the given string is null, of length 0, or consists only of spaces

@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -501,11 +501,12 @@ com.gContactSync.GContact.prototype = {
   /**
    * Gets the last modified date from an contacts's XML feed in milliseconds
    * since 1970.
+   * @param aIgnoreWriteOnly {bool} Ignore write-only mode and return the actual last modified date.
    * @returns {int} The last modified date of the entry in milliseconds from 1970
    */
-  getLastModifiedDate: function GContact_getLastModifiedDate() {
+  getLastModifiedDate: function GContact_getLastModifiedDate(aIgnoreWriteOnly) {
     try {
-      if (com.gContactSync.Preferences.mSyncPrefs.writeOnly.value) {
+      if (com.gContactSync.Preferences.mSyncPrefs.writeOnly.value && !aIgnoreWriteOnly) {
         return 1;
       }
       var sModified = this.xml.getElementsByTagName('updated')[0].childNodes[0].nodeValue,
