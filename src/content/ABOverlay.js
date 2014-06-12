@@ -310,9 +310,10 @@ com.gContactSync.ABOverlay = {
       // Relation fields
       visible = com.gContactSync.ABOverlay.getVisible(aCard, relationsArray, visible, true);
 
-      var day = aCard.getProperty("AnniversaryDay", null);
-      var month = aCard.getProperty("AnniversaryMonth", null);
-      var year = aCard.getProperty("AnniversaryYear", null);
+      // Anniversary
+      var day   = com.gContactSync.GAbManager.getCardValue(aCard, "AnniversaryDay");
+      var month = com.gContactSync.GAbManager.getCardValue(aCard, "AnniversaryMonth");
+      var year  = com.gContactSync.GAbManager.getCardValue(aCard, "AnniversaryYear");
       var dateStr = null;
       if (day > 0 && day < 32 && month > 0 && month < 13) {
         var date = new Date(year, month - 1, day);
