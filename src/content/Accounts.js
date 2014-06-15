@@ -186,17 +186,17 @@ com.gContactSync.Accounts = {
         pluginElem    = document.getElementById("Plugin"),
         disableElem   = document.getElementById("disabled"),
         updateGElem   = document.getElementById("updateGoogleInConflicts"),
-        ab            = this.getSelectedAb(),
-        needsReset    = false;
-    if (!ab) {
-      return null;
-    }
+        ab            = this.getSelectedAb();
 
-    if (!usernameElem || !groupElem || !directionElem || !pluginElem || !disableElem) {
+    if (!ab || !usernameElem || !groupElem || !directionElem || !pluginElem || !disableElem) {
       return false;
     }
+
     var syncGroups = String(groupElem.value === "All"),
-        myContacts = String(groupElem.value !== "All" && groupElem.value !== "false");
+        myContacts = String(groupElem.value !== "All" && groupElem.value !== "false");;
+    // check if the AB should be reset based on the new values
+    var needsReset = this.needsReset(ab, usernameElem.value, syncGroups, myContacts, groupElem.value);
+
     // the simple preferences
     ab.savePref("Username",                usernameElem.value);
     ab.savePref("Plugin",                  pluginElem.value);
@@ -211,19 +211,20 @@ com.gContactSync.Accounts = {
     // Sync Direction
     ab.savePref("writeOnly", String(directionElem.value === "WriteOnly"));
     ab.savePref("readOnly",  String(directionElem.value === "ReadOnly"));
-    // this is done before the needsReset call in case something happens
+
     // reset the unsaved change
     this.mUnsavedChange = false;
     this.fillUsernames();
     this.fillAbTree();
-    this.selectedAbChange();
-    // check if the AB should be reset based on the new values
-    needsReset = this.needsReset(ab, usernameElem.value, syncGroups, myContacts, groupElem.value);
+    this.selectedAbChange()
+
     if (needsReset) {
       ab.reset();
+      com.gContactSync.Preferences.setSyncPref("needRestart", true);
+      var restartStr = com.gContactSync.StringBundle.getStr("pleaseRestart");
+      com.gContactSync.Preferences.setSyncPref("statusBarText", restartStr);
       com.gContactSync.alert(com.gContactSync.StringBundle.getStr("finishedAcctSave"));
-    }
-    else {
+    } else {
       com.gContactSync.alert(com.gContactSync.StringBundle.getStr("finishedAcctSaveNoRestart"));
     }
     return true;
@@ -516,7 +517,6 @@ com.gContactSync.Accounts = {
       "  * " + aMyContactsName + " <- " + aAB.mPrefs.myContactsName + "\n" +
       "  * Last sync date: " + aAB.mPrefs.lastSync
      );
-    // NOTE: mUnsavedChange is reset to false before this method is called
     if ((aAB.mPrefs.Username && aAB.mPrefs.Username !== "none") &&
          aUsername !== "none" &&
          parseInt(aAB.mPrefs.lastSync, 10) > 0 &&
