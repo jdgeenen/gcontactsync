@@ -84,6 +84,11 @@ com.gContactSync.MessengerOverlay = {
         "\n * User Agent:       " + navigator.userAgent +
         "\n * Log location:     " + com.gContactSync.FileIO.mLogFile.path +
         "\n");
+
+    if (com.gContactSync.Preferences.mSyncPrefs.verboseLog.value) {
+      com.gContactSync.Preferences.getSyncPrefs();  // for logging
+    }
+
     var lastVersionMajor   = com.gContactSync.Preferences.mSyncPrefs.lastVersionMajor.value;
     var lastVersionMinor   = com.gContactSync.Preferences.mSyncPrefs.lastVersionMinor.value;
     var lastVersionRelease = com.gContactSync.Preferences.mSyncPrefs.lastVersionRelease.value;
