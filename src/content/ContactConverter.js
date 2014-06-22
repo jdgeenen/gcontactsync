@@ -204,6 +204,7 @@ com.gContactSync.ContactConverter = {
             "ContactConverter.cardToAtomXML from " + this.caller;
     }
     this.mCurrentCard = aTBContact;
+    var nonEmpty = false;
     // set the regular properties from the array mConverterArr
     for (i = 0, length = arr.length; i < length; i++) {
       // skip the URLs
@@ -224,6 +225,7 @@ com.gContactSync.ContactConverter = {
       }
       com.gContactSync.LOGGER.VERBOSE_LOG("   - " + value + " type: " + type);
       aGContact.setValue(obj.elementName, obj.index, type, value);
+      nonEmpty = nonEmpty || value;
     }
     // Birthday can be either YYYY-M-D or --M-D for no year.
     // TB can have all three, just a day/month, or just a year through the UI
@@ -260,6 +262,7 @@ com.gContactSync.ContactConverter = {
       birthdayVal = birthYear + "-" + birthMonth + "-" + birthDay;
     }
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Birthday: " + birthdayVal);
+    nonEmpty = nonEmpty || birthdayVal;
     aGContact.setValue("birthday", 0, null, birthdayVal);
 
     var anniversaryDay = parseInt(aTBContact.getValue("AnniversaryDay"), 10);
@@ -279,6 +282,7 @@ com.gContactSync.ContactConverter = {
     }
     var anniversaryVal = anniversaryYear ? anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay : null;
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Anniversary: " + anniversaryVal);
+    nonEmpty = nonEmpty || anniversaryVal;
     aGContact.setValue("event", 0, "anniversary", anniversaryVal);
 
     // set the extended properties
@@ -290,6 +294,7 @@ com.gContactSync.ContactConverter = {
       if (arr[i] && !props[arr[i]]) {
         props[arr[i]] = true;
         value = this.checkValue(aTBContact.getValue(arr[i]));
+        nonEmpty = nonEmpty || value;
         aGContact.setExtendedProperty(arr[i], value);
       }
       else if (arr[i] != "") {
@@ -299,6 +304,7 @@ com.gContactSync.ContactConverter = {
     }
     // If the myContacts pref is set and this contact is new then add the
     // myContactsName group
+    // Group membership does not make a contact not "empty" according to Google's API.
     if (ab.mPrefs.myContacts === "true") {
       if (isNew && com.gContactSync.Sync.mContactsUrl) {
         aGContact.setGroups([com.gContactSync.Sync.mContactsUrl]);
@@ -324,25 +330,29 @@ com.gContactSync.ContactConverter = {
       aGContact.setGroups(groups);
     }
     // Upload the photo
+    // Photos do not make a contact non-empty by Google's API.
     if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
       aGContact = this.savePhotoFromTBContact(aTBContact, aGContact);
     }
     
     // Add the phonetic first and last names
     if (com.gContactSync.Preferences.mSyncPrefs.syncPhoneticNames.value) {
+      var phonFirstName = aTBContact.getValue("PhoneticFirstName");
+      var phonLastName = aTBContact.getValue("PhoneticLastName");
       aGContact.setAttribute("givenName",
                              com.gContactSync.gdata.namespaces.GD.url,
                              0,
                              "yomi",
-                             aTBContact.getValue("PhoneticFirstName"));
+                             phonFirstName);
       aGContact.setAttribute("familyName",
                              com.gContactSync.gdata.namespaces.GD.url,
                              0,
                              "yomi",
-                             aTBContact.getValue("PhoneticLastName"));
+                             phonLastName);
+      nonEmpty = nonEmpty || phonFirstName || phonLastName;
     }
     
-    return aGContact;
+    return nonEmpty ? aGContact : null;
   },
   /**
    * Saves the photo from the given TB contact to the given Google contact if present and if it has changed

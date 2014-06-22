@@ -769,11 +769,16 @@ com.gContactSync.Sync = {
                                               com.gContactSync.StringBundle.getStr("remaining"));
     var cardToAdd = com.gContactSync.Sync.mContactsToAdd.shift();
     com.gContactSync.LOGGER.LOG("\n" + cardToAdd.getName());
+
     // get the XML representation of the card
     // NOTE: cardToAtomXML adds the contact to the current group, if any
     var gcontact = com.gContactSync.ContactConverter.cardToAtomXML(cardToAdd);
-    var xml      = gcontact.xml;
-    var string   = com.gContactSync.serialize(xml);
+    if (!gcontact) {
+      com.gContactSync.LOGGER.LOG_WARNING("Skipping empty contact");
+      return com.gContactSync.Sync.processAddQueue();
+    }
+
+    var string = com.gContactSync.serialize(gcontact.xml);
     if (com.gContactSync.Preferences.mSyncPrefs.verboseLog.value)
       com.gContactSync.LOGGER.LOG(" * XML of contact being added:\n" + string + "\n");
     var httpReq = new com.gContactSync.GHttpRequest("add",
@@ -854,9 +859,14 @@ com.gContactSync.Sync = {
 
     var editURL = gContact.getValue("EditURL").value;
     com.gContactSync.LOGGER.LOG("\nUpdating " + gContact.getName());
-    var xml = com.gContactSync.ContactConverter.cardToAtomXML(abCard, gContact).xml;
+    gContact = com.gContactSync.ContactConverter.cardToAtomXML(abCard, gContact);
 
-    var string = com.gContactSync.serialize(xml);
+    if (!gContact) {
+      com.gContactSync.LOGGER.LOG_WARNING("Skipping empty contact");
+      return com.gContactSync.Sync.processUpdateQueue();
+    }
+
+    var string = com.gContactSync.serialize(gContact.xml);
     if (com.gContactSync.Preferences.mSyncPrefs.verboseLog.value)
       com.gContactSync.LOGGER.LOG(" * XML of contact being updated:\n" + string + "\n");
     var httpReq = new com.gContactSync.GHttpRequest("update",
