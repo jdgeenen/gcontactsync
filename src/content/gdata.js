@@ -295,10 +295,10 @@ com.gContactSync.gdata = {
       // Otherwise it IS a custom type so it should be a label
       } else {
         // Set a label
-        this.mCurrentElement.setAttribute("label", aType);
+        aElement.setAttribute("label", aType);
         // Remove a rel, if present
-        if (this.mCurrentElement.hasAttribute("rel")) {
-          this.mCurrentElement.removeAttribute("rel");
+        if (aElement.hasAttribute("rel")) {
+          aElement.removeAttribute("rel");
         }
       }
     },
