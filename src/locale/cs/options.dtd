@@ -1,0 +1,66 @@
+<!ENTITY title.label "gContactSync Možnosti">
+<!ENTITY main.tab "Hlavní">
+<!ENTITY help.value "Nápověda">
+<!ENTITY help.accesskey "v">
+<!ENTITY autoSync.value "Automatická synchronizace">
+<!ENTITY autoSync.label "Synchronizovat kontakty automaticky">
+<!ENTITY autoSync.accesskey "S">
+<!ENTITY refreshInterval.value "Interval synchronizace (minuty) [Výchozí 120 (2 hodiny)]">
+<!ENTITY refreshInterval.accesskey "I">
+<!ENTITY initialDelayMinutes.value "Interval počáteční synchronizace (minuty) [Výchozí 5]">
+<!ENTITY initialDelayMinutes.accesskey "n">
+<!ENTITY abName.value "Jméno adresáře k synchronizaci (staré nebo nové)">
+<!ENTITY abName.accesskey "a">
+<!ENTITY syncBehavior.label "Chování synchronizace">
+<!ENTITY syncAddresses.label "Synchronizovat poštovní adresy (experimentální)">
+<!ENTITY syncAddresses.accesskey "p">
+<!ENTITY alertSummary.label "Zobrazit souhrn po každé ruční synchronizaci">
+<!ENTITY alertSummary.accesskey "o">
+<!ENTITY phoneTypes.label "Přidat pole pro telefon (ignorovat názvy existujících polí)">
+<!ENTITY phoneTypes.accesskey "d">
+<!ENTITY accountDelay.value "Interval mezi účty (ms) [5000]">
+<!ENTITY accountDelay.accesskey "m">
+<!ENTITY logging.label "Logování">
+<!ENTITY enableLogging.label "Povolit logování">
+<!ENTITY enableLogging.accesskey "g">
+<!ENTITY verboseLog.label "Povolit podrobnější logování (pro ladění)">
+<!ENTITY verboseLog.accesskey "a">
+<!ENTITY showInConsole.label "Zaznamenávat chyby do Chybové konzoly (ladění)">
+<!ENTITY showInConsole.accesskey "Z">
+<!ENTITY interface.tab "Rozhraní">
+<!ENTITY buttons.label "Tlačítka a nabídky">
+<!ENTITY enableMenu.label "Povolit nabídku gContactSync">
+<!ENTITY enableMenu.accesskey "P">
+<!ENTITY enableMenuLinks.label "Přidat odkazy (Wiki, FAQ, atd.) do nabídky">
+<!ENTITY enableMenuLinks.accesskey "o">
+<!ENTITY addReset.label "Přidat 'Nahradit' a 'Nahradit ze serveru' do místní nabídky adresáře">
+<!ENTITY addReset.accesskey "N">
+<!ENTITY abResults.label "Seznam kontaktů">
+<!ENTITY phoneColLabels.label "Přejmenovat telefonní štítky">
+<!ENTITY phoneColLabels.accesskey "e">
+<!ENTITY newColLabels.label "Přidat nová pole do sloupce štítků (pouze TB 3/SM 2)">
+<!ENTITY newColLabels.accesskey "n">
+<!ENTITY advanced.tab "Rozšířené">
+<!ENTITY warning.value "Varování - pouze pro zkušené uživatele">
+<!ENTITY backup.label "Zálohování adresáře">
+<!ENTITY backupInterval.value "Intervaly záloh (dny, -1 pro vypnutí) [14]">
+<!ENTITY backupInterval.accesskey "z">
+<!ENTITY other.label "Další">
+<!ENTITY chromeTime.value "Interval pro varování 'Skript nereaguje' (0 pro vypnutí)">
+<!ENTITY chromeTime.accesskey "S">
+<!ENTITY confirmDeleteThreshold.value "Minimální počet kontaktů pro smazání před zobrazením dotazu">
+<!ENTITY confirmDeleteThreshold.accesskey "M">
+<!ENTITY httpRequestTimeout.value "Platnost HTTP požadavků (ms, 0 pro vypnutí) [0]">
+<!ENTITY httpRequestTimeout.accesskey "H">
+<!ENTITY httpRequestDelay.value "Interval mezi HTTP požadavky (ms, 0 pro vypnutí) [100]">
+<!ENTITY httpRequestDelay.accesskey "T">
+<!ENTITY resetAll.label "Resetovat všechny synchronizované adresáře">
+<!ENTITY resetAll.accesskey "R">
+<!ENTITY cleanOldPrefs.label "Vyčistit nastavení starých adresářů">
+<!ENTITY cleanOldPrefs.accesskey "V">
+<!ENTITY cleanOldPhotos.label "Smazat staré fotografie kontaktů">
+<!ENTITY cleanOldPhotos.accesskey "f">
+<!ENTITY resetAllSettings.label "Obnovit všechna nastavení gContactSync">
+<!ENTITY resetAllSettings.accesskey "O">
+<!ENTITY throttleTest.label "Spustit test rychlosti">
+<!ENTITY throttleTest.accesskey "t">

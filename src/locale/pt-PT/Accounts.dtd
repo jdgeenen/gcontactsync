@@ -1,0 +1,48 @@
+<!ENTITY title.label "Contas gContactSync">
+<!ENTITY accounts.tab "Contas">
+<!ENTITY addressBook.label "Livro de Endereços">
+<!ENTITY abSynced.label "Conta Google">
+<!-- Global buttons -->
+<!ENTITY addAB.label "Novo Livro de Endereços">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "Recarregar">
+<!ENTITY refreshTree.accesskey "R">
+<!-- Account labels and options -->
+<!-- Basic Settings -->
+<!ENTITY Username.label "Escolher uma Conta">
+<!ENTITY Username.accesskey "C">
+<!ENTITY NewUsername.label "Adicionar uma Nova Conta">
+<!ENTITY NewUsername.accesskey "A">
+<!ENTITY NoUsername.label "Não foram encontrados utilizadores">
+<!ENTITY Groups.label "Grupos e Contactos a Sincronizar">
+<!ENTITY Groups.accesskey "G">
+<!ENTITY AllGroups.label "Todos os grupos e contactos">
+<!ENTITY NoGroups.label "Apenas contactos (e não grupos)">
+<!ENTITY Contacts.label "Os Meus Contactos">
+<!ENTITY Coworkers.label "Conhecidos">
+<!ENTITY Family.label "Família">
+<!ENTITY Friends.label "Amigos">
+<!ENTITY GetGroups.label "Localizar todos os Grupos">
+<!ENTITY GetGroups.accesskey "F">
+<!ENTITY Plugin.label "Escolher um Plugin a usar">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "Escolher a direcção da sincronização">
+<!ENTITY SyncDirection.accesskey "E">
+<!ENTITY DirectionHelp.label "O que é isto?">
+<!ENTITY Complete.label "Completo (tanto o Google como o seu cliente são actualizados)">
+<!ENTITY ReadOnly.label "Apenas de Leitura (o seu cliente recebe actualizações do Google)">
+<!ENTITY WriteOnly.label "Apenas de Escrita (o seu cliente envia actualizações para o Google)">
+<!ENTITY Disable.label "Desactivar temporariamente a sincronização com este livro de endereços">
+<!ENTITY Disable.accesskey "D">
+<!ENTITY Disable.tooltiptext "Marque esta caixa para ignorar este livro de endereços durante a sincronização. Desmarque-a quando quiser sincronizá-lo novamente.">
+<!ENTITY updateG.label "Alterações locais têm prioridade sobre alterações remotas">
+<!ENTITY updateG.accesskey "L">
+<!ENTITY updateG.tooltiptext "Quando um contacto for actualizado local e remotamente depois da última sincronização, gContactSync precisa de saber que mudanças deve manter. Marque esta caixa para que as alterações locais sobreponham as alterações remotas">
+<!-- Account buttons -->
+<!ENTITY deleteAB.label "Apagar este Livro de Endereços">
+<!ENTITY removeLogin.label "Remover Configurações">
+<!ENTITY saveChanges.label "Guardar Alterações">
+<!ENTITY saveChanges.accesskey "S">
+<!-- Other -->
+<!ENTITY Close.label "Fechar">
+<!ENTITY Close.accesskey "F">

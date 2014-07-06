@@ -1,0 +1,48 @@
+<!ENTITY title.label "gContactSync Účty">
+<!ENTITY accounts.tab "Účty">
+<!ENTITY addressBook.label "Adresář">
+<!ENTITY abSynced.label "Google účet">
+<!-- Global buttons -->
+<!ENTITY addAB.label "Nový adresář">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "Aktualizovat">
+<!ENTITY refreshTree.accesskey "A">
+<!-- Account labels and options -->
+<!-- Basic Settings -->
+<!ENTITY Username.label "Vyberte účet">
+<!ENTITY Username.accesskey "V">
+<!ENTITY NewUsername.label "Přidat nový účet">
+<!ENTITY NewUsername.accesskey "P">
+<!ENTITY NoUsername.label "Uživ. jména nenalezena">
+<!ENTITY Groups.label "Skupiny a kontakty k synchronizaci">
+<!ENTITY Groups.accesskey "S">
+<!ENTITY AllGroups.label "Všechny skupiny a kontakty">
+<!ENTITY NoGroups.label "Pouze kontakty (ne skupiny)">
+<!ENTITY Contacts.label "Moje kontakty">
+<!ENTITY Coworkers.label "Kolegové">
+<!ENTITY Family.label "Rodina">
+<!ENTITY Friends.label "Přátelé">
+<!ENTITY GetGroups.label "Vyhledat všechny skupiny">
+<!ENTITY GetGroups.accesskey "V">
+<!ENTITY Plugin.label "Vybrat zásuvný modul k použití">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "Vybrat směr synchronizace">
+<!ENTITY SyncDirection.accesskey "y">
+<!ENTITY DirectionHelp.label "Co je to?">
+<!ENTITY Complete.label "Kompletní režim (Google i váš klient jsou aktualizovány)">
+<!ENTITY ReadOnly.label "Pouze číst (váš klient přijímá aktualizace od Google)">
+<!ENTITY WriteOnly.label "Pouze zápis (váš klient odesílá aktualizace pro Google)">
+<!ENTITY Disable.label "Dočasně deaktivovat synchronizaci tohoto adresáře">
+<!ENTITY Disable.accesskey "d">
+<!ENTITY Disable.tooltiptext "Zaškrtněte pro přeskočení synchronizace tohoto adresáře.  Odškrtněte, pokud chcete adresář opět synchronizovat.">
+<!ENTITY updateG.label "Místní změny mají přednost před vzdálenými">
+<!ENTITY updateG.accesskey "M">
+<!ENTITY updateG.tooltiptext "Pokud byl kontakt upraven místně i vzdáleně po poslední synchronizaci, gContactSync potřebuje vědět, které změny zachovat. Zaškrtněte, pokud mají místní změny přepsat vzdálené.">
+<!-- Account buttons -->
+<!ENTITY deleteAB.label "Smazat tento adresář">
+<!ENTITY removeLogin.label "Smazat nastavení">
+<!ENTITY saveChanges.label "Uložit změny">
+<!ENTITY saveChanges.accesskey "U">
+<!-- Other -->
+<!ENTITY Close.label "Zavřít">
+<!ENTITY Close.accesskey "Z">

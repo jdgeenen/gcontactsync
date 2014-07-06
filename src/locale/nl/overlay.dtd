@@ -1,0 +1,63 @@
+<!-- The name of the extension (should just be gContactSync) -->
+<!ENTITY gContactSyncTab.label "gContactSync">
+<!-- Ordinal numbers -->
+<!ENTITY first.label "Eerste">
+<!ENTITY second.label "Tweede">
+<!ENTITY third.label "Derde">
+<!ENTITY fourth.label "Vierde">
+<!ENTITY fifth.label "Vijfde">
+<!ENTITY sixth.label "Zesde">
+<!ENTITY seventh.label "Zevende">
+<!ENTITY eighth.label "Achste">
+<!-- Different address types -->
+<!ENTITY home.label "Thuis">
+<!ENTITY work.label "Werk">
+<!ENTITY other.label "Anders">
+<!-- A label for extra screenname fields -->
+<!ENTITY screenname.box "Overige schermnamen">
+<!-- A label for extra e-mail address fields -->
+<!ENTITY email.box "Overige e-mailadressen">
+<!-- A label for extra phone number fields -->
+<!ENTITY numbers.box "Overige telefoonnummers">
+<!-- A label for extra postal address fields -->
+<!ENTITY Anniversary.label "Verjaardag">
+<!ENTITY Anniversary.accesskey "j">
+<!-- Note: these are only displayed in Thunderbird 3/Seamonkey 2 (not Postbox or TB 2) -->
+<!ENTITY initialStatus.label "">
+<!-- LOCALIZATION NOTE: Please try to keep the number of characters down (around 60) to avoid making the window too wide -->
+<!ENTITY relations.box "Personen">
+<!-- This can be blank or something like "Click on Sync to begin" -->
+<!ENTITY sync.label "Sync">
+<!ENTITY sync.tooltip "Synchroniseer uw contactpersonen met gContactSync">
+<!-- People who are somehow related to or associated with the contact -->
+<!ENTITY status.tooltip "Klik hier om het logbestand te openen.">
+<!-- Used for the Sync button on the Address Book toolbar -->
+<!ENTITY gContactSyncMenu.label "gContactSync">
+<!ENTITY gContactSyncMenu.accesskey "g">
+<!ENTITY syncMenuItem.label "Sync">
+<!ENTITY syncMenuItem.accesskey "S">
+<!ENTITY newAcctMenuItem.label "Nieuwe account">
+<!ENTITY newAcctMenuItem.accesskey "N">
+<!ENTITY acctMenuItem.label "Accounts">
+<!ENTITY acctMenuItem.accesskey "A">
+<!ENTITY prefMenuItem.label "Voorkeuren">
+<!ENTITY prefMenuItem.accesskey "P">
+<!ENTITY forumMenuItem.label "Ondersteuningsforum">
+<!ENTITY forumMenuItem.accesskey "u">
+<!ENTITY faqMenuItem.label "FAQ">
+<!ENTITY faqMenuItem.accesskey "Q">
+<!ENTITY errorMenuItem.label "Foutrapportage">
+<!ENTITY errorMenuItem.accesskey "r">
+<!ENTITY logMenuItem.label "Log">
+<!ENTITY logMenuItem.accesskey "L">
+<!ENTITY gcMenuItem.label "Google Contacts online">
+<!ENTITY gcMenuItem.accesskey "C">
+<!-- A tooltip on the status bar -->
+<!-- The text for Import.label should match importNotStarted in gcontactsync.properties -->
+<!ENTITY Import.label "Importeren starten (EXPERIMENTEEL)">
+<!ENTITY Import.accesskey "I">
+<!ENTITY FinishImport.label "Importeren beëindigen">
+<!ENTITY FinishImport.accesskey "F">
+<!ENTITY Facebook.label "Facebook">
+<!ENTITY LinkedIn.label "LinkedIn">
+<!ENTITY Twitter.label "Twitter">

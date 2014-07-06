@@ -1,0 +1,15 @@
+<!ENTITY title.label "gContactSync: Kontoguiden">
+<!ENTITY account.description "Välj kontot som skall synkas eller ange inloggningsinformationen för ditt Google-konto nedan.">
+<!ENTITY account2.description "Du kan lägga till andra konton senare.">
+<!ENTITY existingAccount.label "Använd ett befintligt Google-konto">
+<!ENTITY existingAccount.accesskey "a">
+<!ENTITY newAccount.label "Använd ett nytt konto">
+<!ENTITY newAccount.accesskey "v">
+<!ENTITY email.value "E-postadress:">
+<!ENTITY email.accesskey "p">
+<!ENTITY password.value "Lösenord:">
+<!ENTITY password.accesskey "L">
+<!ENTITY accountSettings.description "Kontoinställningar">
+<!ENTITY newABButton.label "Nytt">
+<!ENTITY newABButton.accesskey "N">
+<!ENTITY finish.value "Klicka på Slutför för att lägga till kontot och synkronisera.">

@@ -1,0 +1,48 @@
+<!ENTITY title.label "gContactSync Konten">
+<!ENTITY accounts.tab "Konten">
+<!ENTITY addressBook.label "Adressbuch">
+<!ENTITY abSynced.label "Google Konto">
+<!-- Global buttons -->
+<!ENTITY addAB.label "Neues Adressbuch">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "Aktualisieren">
+<!ENTITY refreshTree.accesskey "R">
+<!-- Account labels and options -->
+<!-- Basic Settings -->
+<!ENTITY Username.label "Wählen Sie ein Konto">
+<!ENTITY Username.accesskey "K">
+<!ENTITY NewUsername.label "Ein neues Konto hinzufügen">
+<!ENTITY NewUsername.accesskey "N">
+<!ENTITY NoUsername.label "Keine Benutzernamen gefunden">
+<!ENTITY Groups.label "Zu synchronisierende Gruppen und Kontakte">
+<!ENTITY Groups.accesskey "G">
+<!ENTITY AllGroups.label "Alle Gruppen und Kontakte">
+<!ENTITY NoGroups.label "Nur Kontakte (keine Gruppen)">
+<!ENTITY Contacts.label "Meine Kontakte">
+<!ENTITY Coworkers.label "Kollegen">
+<!ENTITY Family.label "Familie">
+<!ENTITY Friends.label "Freunde">
+<!ENTITY GetGroups.label "Alle Gruppen suchen">
+<!ENTITY GetGroups.accesskey "A">
+<!ENTITY Plugin.label "Wählen Sie ein Plugin zu Benutzung aus">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "Wählen Sie die Synchronisationsrichtung">
+<!ENTITY SyncDirection.accesskey "R">
+<!ENTITY DirectionHelp.label "Was ist das?">
+<!ENTITY Complete.label "Komplett (Google und Thunderbird werden aktualisiert)">
+<!ENTITY ReadOnly.label "Nur lesen (Thunderbird erhält Aktualisierungen von Google)">
+<!ENTITY WriteOnly.label "Nur schreiben (Thunderbird sendet Aktualisierungen an Google)">
+<!ENTITY Disable.label "Vorübergehend die Synchronisierung dieses Adressbuchs deaktivieren">
+<!ENTITY Disable.accesskey "D">
+<!ENTITY Disable.tooltiptext "Markieren Sie dieses Feld, um dieses Adressbuch bei der Synchronisierung zu überspringen.">
+<!ENTITY updateG.label "Lokale Änderungen haben Vorrang gegenüber Änderungen von außen">
+<!ENTITY updateG.accesskey "L">
+<!ENTITY updateG.tooltiptext "Falls ein Kontakt lokal und extern nach der letzten Synchronisierung aktualisiert wurde, muss gContactSync wissen, welche Änderungen beibehalten werden sollen. Markieren Sie dieses Feld, um die externe Änderung mit der lokalen zu überschreiben.">
+<!-- Account buttons -->
+<!ENTITY deleteAB.label "Dieses Adressbuch löschen">
+<!ENTITY removeLogin.label "Einstellungen entfernen">
+<!ENTITY saveChanges.label "Einstellungen speichern">
+<!ENTITY saveChanges.accesskey "s">
+<!-- Other -->
+<!ENTITY Close.label "Schließen">
+<!ENTITY Close.accesskey "l">

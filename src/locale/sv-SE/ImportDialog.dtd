@@ -1,0 +1,12 @@
+<!ENTITY Title.label "Importalternativ – gContactSync">
+<!ENTITY ABList.label "Adressbok:">
+<!ENTITY ABList.accesskey "A">
+<!ENTITY NewABButton.label "Ny adressbok">
+<!ENTITY NewABButton.accesskey "N">
+<!ENTITY MergeContacts.label "Slå samman kontakter">
+<!ENTITY MergeContacts.accesskey "S">
+<!ENTITY Warning.value "Obs: Import av kontakter kan ta tid.  Om du ser varningen 'Ett skript svarar inte', klicka på 'Fortsätt'.">
+<!ENTITY Finish.label "Slutför">
+<!ENTITY Finish.accesskey "F">
+<!ENTITY Cancel.label "Avbryt">
+<!ENTITY Cancel.accesskey "v">

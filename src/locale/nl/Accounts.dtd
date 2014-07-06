@@ -1,0 +1,48 @@
+<!ENTITY title.label "gContactSync-accounts">
+<!ENTITY accounts.tab "Accounts">
+<!ENTITY addressBook.label "Adresboek">
+<!ENTITY abSynced.label "Google-account">
+<!-- Global buttons -->
+<!ENTITY addAB.label "Nieuw adresboek">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "Vernieuwen">
+<!ENTITY refreshTree.accesskey "R">
+<!-- Account labels and options -->
+<!-- Basic Settings -->
+<!ENTITY Username.label "Kies een account">
+<!ENTITY Username.accesskey "K">
+<!ENTITY NewUsername.label "Een nieuwe account toevoegen">
+<!ENTITY NewUsername.accesskey "A">
+<!ENTITY NoUsername.label "Geen gebruikersnamen gevonden">
+<!ENTITY Groups.label "Te synchroniseren groepen en contactpersonen">
+<!ENTITY Groups.accesskey "G">
+<!ENTITY AllGroups.label "Alle groepen en contactpersonen">
+<!ENTITY NoGroups.label "Alleen contactpersonen (geen groepen)">
+<!ENTITY Contacts.label "Mijn contactpersonen">
+<!ENTITY Coworkers.label "Collega’s">
+<!ENTITY Family.label "Familie">
+<!ENTITY Friends.label "Vrienden">
+<!ENTITY GetGroups.label "Alle groepen zoeken">
+<!ENTITY GetGroups.accesskey "Z">
+<!ENTITY Plugin.label "Kies een te gebruiken plug-in">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "Kies de richting van synchronisatie">
+<!ENTITY SyncDirection.accesskey "K">
+<!ENTITY DirectionHelp.label "Wat is dit?">
+<!ENTITY Complete.label "Volledig (zowel Google als uw client worden bijgewerkt)">
+<!ENTITY ReadOnly.label "Alleen-schrijven (uw client ontvangt updates van Google)">
+<!ENTITY WriteOnly.label "Alleen-schrijven (uw client stuurt updates naar Google)">
+<!ENTITY Disable.label "Synchronisatie met dit adresboek uitschakelen">
+<!ENTITY Disable.accesskey "U">
+<!ENTITY Disable.tooltiptext "Vink dit veld aan om dit adresboek bij synchronisatie over te slaan. Haal het vinkje weg om weer te synchroniseren.">
+<!ENTITY updateG.label "Lokale wijzigingen hebben prioriteit over wijzigingen in Google">
+<!ENTITY updateG.accesskey "L">
+<!ENTITY updateG.tooltiptext "Als een contactpersoon zowel lokaal als op Google is gewijzigd sinds de laatste synchronisatie moet gContactSync weten welke wijziging moet worden bewaard. Vink deze optie aan om de lokale wijziging die in Google te overschrijven.">
+<!-- Advanced Settings -->
+<!ENTITY deleteAB.label "Dit adresboek verwijderen">
+<!ENTITY removeLogin.label "Instellingen verwijderen">
+<!ENTITY saveChanges.label "Wijzigingen opslaan">
+<!ENTITY saveChanges.accesskey "O">
+<!-- Account buttons -->
+<!ENTITY Close.label "Sluiten">
+<!ENTITY Close.accesskey "S">

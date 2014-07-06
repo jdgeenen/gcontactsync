@@ -1,0 +1,15 @@
+<!ENTITY title.label "Asistente de gContactSync">
+<!ENTITY account.description "Seleccione la cuenta a sincronizar o introduzca sus credenciales de la cuneta Google a continuación">
+<!ENTITY account2.description "Después podrá configurar cuentas">
+<!ENTITY existingAccount.label "Usar una cuenta existente (debe de ser una cuenta Google)">
+<!ENTITY existingAccount.accesskey "a">
+<!ENTITY newAccount.label "Usar una cuenta nueva">
+<!ENTITY newAccount.accesskey "w">
+<!ENTITY email.value "Dirección de email">
+<!ENTITY email.accesskey "m">
+<!ENTITY password.value "Contraseña:">
+<!ENTITY password.accesskey "C">
+<!ENTITY accountSettings.description "Configuración de cuenta">
+<!ENTITY newABButton.label "Nuevo">
+<!ENTITY newABButton.accesskey "N">
+<!ENTITY finish.value "Seleccione finalizar para añadir la cuenta y sincronizar">

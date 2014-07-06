@@ -1,0 +1,63 @@
+<!-- The name of the extension (should just be gContactSync) -->
+<!ENTITY gContactSyncTab.label "gContactSync">
+<!-- Ordinal numbers -->
+<!ENTITY first.label "Primeiro">
+<!ENTITY second.label "Segundo">
+<!ENTITY third.label "Terceiro">
+<!ENTITY fourth.label "Quarto">
+<!ENTITY fifth.label "Quinto">
+<!ENTITY sixth.label "Sexto">
+<!ENTITY seventh.label "Sétimo">
+<!ENTITY eighth.label "Oitavo">
+<!-- Different address types -->
+<!ENTITY home.label "Casa">
+<!ENTITY work.label "Trabalho">
+<!ENTITY other.label "Outro">
+<!-- A label for extra screenname fields -->
+<!ENTITY screenname.box "Nomes de Utilizador Adicionais">
+<!-- A label for extra e-mail address fields -->
+<!ENTITY email.box "Endereços de Correio Electrónico Adicionais">
+<!-- A label for extra phone number fields -->
+<!ENTITY numbers.box "Números Adicionais">
+<!-- Anniversary-related fields -->
+<!ENTITY Anniversary.label "Aniversário">
+<!ENTITY Anniversary.accesskey "o">
+<!-- This can be blank or something like "Click on Sync to begin" -->
+<!ENTITY initialStatus.label "Carregue em Sincronizar para iniciar">
+<!-- People who are somehow related to or associated with the contact -->
+<!ENTITY relations.box "Pessoas">
+<!-- Used for the Sync button on the Address Book toolbar -->
+<!ENTITY sync.label "Sincronizar">
+<!ENTITY sync.tooltip "Sincroniza os seus contactos com o gContactSync">
+<!-- A tooltip on the status bar -->
+<!ENTITY status.tooltip "Carregue aqui para visualizar o ficheiro de registos">
+<!-- The gContactSync menu -->
+<!ENTITY gContactSyncMenu.label "gContactSync">
+<!ENTITY gContactSyncMenu.accesskey "g">
+<!ENTITY syncMenuItem.label "Sincronizar">
+<!ENTITY syncMenuItem.accesskey "S">
+<!ENTITY newAcctMenuItem.label "Nova Conta">
+<!ENTITY newAcctMenuItem.accesskey "N">
+<!ENTITY acctMenuItem.label "Contas">
+<!ENTITY acctMenuItem.accesskey "C">
+<!ENTITY prefMenuItem.label "Preferências">
+<!ENTITY prefMenuItem.accesskey "P">
+<!ENTITY forumMenuItem.label "Fórum de Suporte">
+<!ENTITY forumMenuItem.accesskey "u">
+<!ENTITY faqMenuItem.label "FAQs">
+<!ENTITY faqMenuItem.accesskey "Q">
+<!ENTITY errorMenuItem.label "Formulário de Relatório de Erros">
+<!ENTITY errorMenuItem.accesskey "r">
+<!ENTITY logMenuItem.label "Registos">
+<!ENTITY logMenuItem.accesskey "R">
+<!ENTITY gcMenuItem.label "Contactos Google online">
+<!ENTITY gcMenuItem.accesskey "o">
+<!-- Import menu -->
+<!-- The text for Import.label should match importNotStarted in gcontactsync.properties -->
+<!ENTITY Import.label "Iniciar Importação (EXPERIMENTAL)">
+<!ENTITY Import.accesskey "I">
+<!ENTITY FinishImport.label "Finalizar Importação">
+<!ENTITY FinishImport.accesskey "F">
+<!ENTITY Facebook.label "Facebook">
+<!ENTITY LinkedIn.label "LinkedIn">
+<!ENTITY Twitter.label "Twitter">

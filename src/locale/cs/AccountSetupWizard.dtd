@@ -1,0 +1,15 @@
+<!ENTITY title.label "Průvodce gContactSync">
+<!ENTITY account.description "Vyber účet k synchronizaci nebo vložte níže své přihlašovací údaje.">
+<!ENTITY account2.description "Další účty si můžete nastavit také později.">
+<!ENTITY existingAccount.label "Použít existující účet (pouze Google účet).">
+<!ENTITY existingAccount.accesskey "e">
+<!ENTITY newAccount.label "Použít nový účet">
+<!ENTITY newAccount.accesskey "o">
+<!ENTITY email.value "E-mailová adresa:">
+<!ENTITY email.accesskey "m">
+<!ENTITY password.value "Heslo:">
+<!ENTITY password.accesskey "e">
+<!ENTITY accountSettings.description "Nastavení účtu">
+<!ENTITY newABButton.label "Nový">
+<!ENTITY newABButton.accesskey "o">
+<!ENTITY finish.value "Pro přidání účtu k synchronizaci klikněte na Dokončit.">

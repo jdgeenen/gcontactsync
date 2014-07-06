@@ -1,0 +1,15 @@
+<!ENTITY title.label "gContactSync-wizard">
+<!ENTITY account.description "Selecteer de te synchroniseren account of voer hieronder de aanmeldgegevens van uw Google-account in.">
+<!ENTITY account2.description "U kunt later nog meer accounts instellen.">
+<!ENTITY existingAccount.label "Een bestaande account gebruiken (dit dient een Google-account te zijn)">
+<!ENTITY existingAccount.accesskey "b">
+<!ENTITY newAccount.label "Nieuwe account gebruiken">
+<!ENTITY newAccount.accesskey "w">
+<!ENTITY email.value "E-mailadres:">
+<!ENTITY email.accesskey "m">
+<!ENTITY password.value "Wachtwoord:">
+<!ENTITY password.accesskey "W">
+<!ENTITY accountSettings.description "Accountinstellingen">
+<!ENTITY newABButton.label "Nieuw">
+<!ENTITY newABButton.accesskey "N">
+<!ENTITY finish.value "Klik Afronden om de account toe te voegen en te synchroniseren.">
