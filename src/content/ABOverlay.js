@@ -322,10 +322,10 @@ com.gContactSync.ABOverlay = {
           date.setFullYear(year);
           dateStr = date.toLocaleDateString();
         } else {
+          var formatStr = "%d-%B";
+          try {formatStr = gAddressBookBundle.getString("dateFormatMonthDay");} catch (e) {}
           // if the year doesn't exist, display Month DD (ex. January 01)
-          dateStr = date.toLocaleFormat(
-            gAddressBookBundle.getString("dateFormatMonthDay")
-          );
+          dateStr = date.toLocaleFormat(formatStr);
         }
       } else if (year) {
         dateStr = year;
