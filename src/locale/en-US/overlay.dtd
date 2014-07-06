@@ -1,6 +1,5 @@
 <!-- The name of the extension (should just be gContactSync) -->
 <!ENTITY gContactSyncTab.label "gContactSync">
-
 <!-- Ordinal numbers -->
 <!ENTITY first.label "First">
 <!ENTITY second.label "Second">
@@ -10,65 +9,55 @@
 <!ENTITY sixth.label "Sixth">
 <!ENTITY seventh.label "Seventh">
 <!ENTITY eighth.label "Eighth">
-
 <!-- Different address types -->
 <!ENTITY home.label "Home">
 <!ENTITY work.label "Work">
 <!ENTITY other.label "Other">
-
 <!-- A label for extra screenname fields -->
-<!ENTITY screenname.box            "Additional Screennames">
+<!ENTITY screenname.box "Additional Screennames">
 <!-- A label for extra e-mail address fields -->
-<!ENTITY email.box                 "Additional Email Addresses">
+<!ENTITY email.box "Additional Email Addresses">
 <!-- A label for extra phone number fields -->
-<!ENTITY numbers.box               "Additional Numbers">
-
+<!ENTITY numbers.box "Additional Numbers">
 <!-- Anniversary-related fields -->
 <!ENTITY Anniversary.label "Anniversary">
 <!ENTITY Anniversary.accesskey "y">
-
 <!-- This can be blank or something like "Click on Sync to begin" -->
 <!ENTITY initialStatus.label "">
-
 <!-- People who are somehow related to or associated with the contact -->
 <!ENTITY relations.box "People">
-
 <!-- Used for the Sync button on the Address Book toolbar -->
-<!ENTITY sync.label    "Sync">
-<!ENTITY sync.tooltip  "Synchronize your contacts with gContactSync">
-
+<!ENTITY sync.label "Sync">
+<!ENTITY sync.tooltip "Synchronize your contacts with gContactSync">
 <!-- A tooltip on the status bar -->
 <!ENTITY status.tooltip "Click here to view the log file">
-
 <!-- The gContactSync menu -->
-<!ENTITY gContactSyncMenu.label        "gContactSync">
-<!ENTITY gContactSyncMenu.accesskey    "C">
-<!ENTITY syncMenuItem.label            "Sync">
-<!ENTITY syncMenuItem.accesskey        "S">
-<!ENTITY newAcctMenuItem.label         "New Account">
-<!ENTITY newAcctMenuItem.accesskey     "N">
-<!ENTITY acctMenuItem.label            "Edit Accounts">
-<!ENTITY acctMenuItem.accesskey        "A">
-<!ENTITY prefMenuItem.label            "Preferences">
-<!ENTITY prefMenuItem.accesskey        "P">
-<!ENTITY forumMenuItem.label           "Support Forum">
-<!ENTITY forumMenuItem.accesskey       "u">
-<!ENTITY faqMenuItem.label             "FAQs">
-<!ENTITY faqMenuItem.accesskey         "Q">
-<!ENTITY errorMenuItem.label           "Error Report Form">
-<!ENTITY errorMenuItem.accesskey       "r">
-<!ENTITY logMenuItem.label             "Log">
-<!ENTITY logMenuItem.accesskey         "L">
-<!ENTITY gcMenuItem.label              "Google Contacts online">
-<!ENTITY gcMenuItem.accesskey          "C">
-
+<!ENTITY gContactSyncMenu.label "gContactSync">
+<!ENTITY gContactSyncMenu.accesskey "C">
+<!ENTITY syncMenuItem.label "Sync">
+<!ENTITY syncMenuItem.accesskey "S">
+<!ENTITY newAcctMenuItem.label "New Account">
+<!ENTITY newAcctMenuItem.accesskey "N">
+<!ENTITY acctMenuItem.label "Edit Accounts">
+<!ENTITY acctMenuItem.accesskey "A">
+<!ENTITY prefMenuItem.label "Preferences">
+<!ENTITY prefMenuItem.accesskey "P">
+<!ENTITY forumMenuItem.label "Support Forum">
+<!ENTITY forumMenuItem.accesskey "u">
+<!ENTITY faqMenuItem.label "FAQs">
+<!ENTITY faqMenuItem.accesskey "Q">
+<!ENTITY errorMenuItem.label "Error Report Form">
+<!ENTITY errorMenuItem.accesskey "r">
+<!ENTITY logMenuItem.label "Log">
+<!ENTITY logMenuItem.accesskey "L">
+<!ENTITY gcMenuItem.label "Google Contacts online">
+<!ENTITY gcMenuItem.accesskey "C">
 <!-- Import menu -->
 <!-- The text for Import.label should match importNotStarted in gcontactsync.properties -->
-<!ENTITY Import.label                  "Start Import (EXPERIMENTAL)">
-<!ENTITY Import.accesskey              "I">
-<!ENTITY FinishImport.label            "Finish Import">
-<!ENTITY FinishImport.accesskey        "F">
-<!ENTITY Facebook.label                "Facebook">
-<!ENTITY LinkedIn.label                "LinkedIn">
-<!ENTITY Twitter.label                 "Twitter">
-
+<!ENTITY Import.label "Start Import (EXPERIMENTAL)">
+<!ENTITY Import.accesskey "I">
+<!ENTITY FinishImport.label "Finish Import">
+<!ENTITY FinishImport.accesskey "F">
+<!ENTITY Facebook.label "Facebook">
+<!ENTITY LinkedIn.label "LinkedIn">
+<!ENTITY Twitter.label "Twitter">

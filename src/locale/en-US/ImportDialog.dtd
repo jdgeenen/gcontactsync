@@ -1,17 +1,12 @@
-<!ENTITY Title.label             "gContactSync Import Options">
-
-<!ENTITY ABList.label            "Address Book:">
-<!ENTITY ABList.accesskey        "A">
-
-<!ENTITY NewABButton.label       "New Address Book">
-<!ENTITY NewABButton.accesskey   "N">
-
-<!ENTITY MergeContacts.label     "Merge Contacts">
+<!ENTITY Title.label "gContactSync Import Options">
+<!ENTITY ABList.label "Address Book:">
+<!ENTITY ABList.accesskey "A">
+<!ENTITY NewABButton.label "New Address Book">
+<!ENTITY NewABButton.accesskey "N">
+<!ENTITY MergeContacts.label "Merge Contacts">
 <!ENTITY MergeContacts.accesskey "M">
-
-<!ENTITY Warning.value           "NOTE: Importing contacts can take a while.  If you see an 'Unresponsive Script' warning click Continue.">
-
-<!ENTITY Finish.label            "Finish">
-<!ENTITY Finish.accesskey        "F">
-<!ENTITY Cancel.label            "Cancel">
-<!ENTITY Cancel.accesskey        "C">
+<!ENTITY Warning.value "NOTE: Importing contacts can take a while.  If you see an 'Unresponsive Script' warning click Continue.">
+<!ENTITY Finish.label "Finish">
+<!ENTITY Finish.accesskey "F">
+<!ENTITY Cancel.label "Cancel">
+<!ENTITY Cancel.accesskey "C">

@@ -1,17 +1,15 @@
-<!ENTITY title.label                 "gContactSync Wizard">
-
-<!ENTITY account.description         "Select the account to sync or enter your Google Account credentials below.">
-<!ENTITY account2.description        "You may setup additional accounts later.">
-<!ENTITY existingAccount.label       "Use an existing account (must be a Google Account)">
-<!ENTITY existingAccount.accesskey   "a">
-<!ENTITY newAccount.label            "Use a new account">
-<!ENTITY newAccount.accesskey        "w">
-<!ENTITY email.value                 "E-mail Address:">
-<!ENTITY email.accesskey             "m">
-<!ENTITY password.value              "Password:">
-<!ENTITY password.accesskey          "P">
-
+<!ENTITY title.label "gContactSync Wizard">
+<!ENTITY account.description "Select the account to sync or enter your Google Account credentials below.">
+<!ENTITY account2.description "You may setup additional accounts later.">
+<!ENTITY existingAccount.label "Use an existing account (must be a Google Account)">
+<!ENTITY existingAccount.accesskey "a">
+<!ENTITY newAccount.label "Use a new account">
+<!ENTITY newAccount.accesskey "w">
+<!ENTITY email.value "E-mail Address:">
+<!ENTITY email.accesskey "m">
+<!ENTITY password.value "Password:">
+<!ENTITY password.accesskey "P">
 <!ENTITY accountSettings.description "Account Settings">
-<!ENTITY newABButton.label           "New">
-<!ENTITY newABButton.accesskey       "N">
-<!ENTITY finish.value                "Click Finish to add the account and synchronize.">
+<!ENTITY newABButton.label "New">
+<!ENTITY newABButton.accesskey "N">
+<!ENTITY finish.value "Click Finish to add the account and synchronize.">
