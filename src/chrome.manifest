@@ -1,6 +1,13 @@
 content  gcontactsync               content/
 skin     gcontactsync  classic/1.0  skin/
 locale   gcontactsync  en-US        locale/en-US/
+locale   gcontactsync  cs           locale/cs/
+locale   gcontactsync  de           locale/de/
+locale   gcontactsync  es-ES        locale/es-ES/
+locale   gcontactsync  nl           locale/nl/
+locale   gcontactsync  pt-PT        locale/pt-PT/
+locale   gcontactsync  sv-SE        locale/sv-SE/
+locale   gcontactsync  zh-CN        locale/zh-CN/
 
 overlay  chrome://messenger/content/addressbook/addressbook.xul       chrome://gcontactsync/content/Overlay.xul
 overlay  chrome://messenger/content/addressbook/addressbook.xul       chrome://gcontactsync/content/ABOverlay.xul
