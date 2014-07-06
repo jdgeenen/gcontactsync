@@ -33,7 +33,7 @@
 <!ENTITY enableMenu.accesskey "M">
 <!ENTITY enableMenuLinks.label "Adicionar alguns endereços (Wiki, FAQ, etc.) ao Menu gContactSync">
 <!ENTITY enableMenuLinks.accesskey "l">
-<!ENTITY addReset.label "Adicionar \'Substituir para\' e \'Substituir a partir so Servidor\' ao menu de contexto no Livro de Endereços">
+<!ENTITY addReset.label "Adicionar 'Substituir para' e 'Substituir a partir so Servidor' ao menu de contexto no Livro de Endereços">
 <!ENTITY addReset.accesskey "S">
 <!ENTITY abResults.label "Lista de Contactos">
 <!ENTITY phoneColLabels.label "Mudar o nome das etiquetas da coluna telefone">
@@ -46,7 +46,7 @@
 <!ENTITY backupInterval.value "Intervalo da cópia de segurança (dias, -1 para desactivar) [14]">
 <!ENTITY backupInterval.accesskey "I">
 <!ENTITY other.label "Outros">
-<!ENTITY chromeTime.value "Tempo de atraso do aviso \'Unresponsive Script\' (0 para desactivar)">
+<!ENTITY chromeTime.value "Tempo de atraso do aviso 'Unresponsive Script' (0 para desactivar)">
 <!ENTITY chromeTime.accesskey "U">
 <!ENTITY confirmDeleteThreshold.value "Número de contactos mínimo a apagar antes de ser requisitada a permissão [5]">
 <!ENTITY confirmDeleteThreshold.accesskey "a">

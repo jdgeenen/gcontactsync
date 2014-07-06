@@ -46,7 +46,7 @@
 <!ENTITY backupInterval.value "Intervalo de Copia de Seguridad (días, -1 para deshabilitar) [14]">
 <!ENTITY backupInterval.accesskey "B">
 <!ENTITY other.label "Otros">
-<!ENTITY chromeTime.value "Retardo del aviso \'Script no responde\' (0 para deshabilitar)">
+<!ENTITY chromeTime.value "Retardo del aviso 'Script no responde' (0 para deshabilitar)">
 <!ENTITY chromeTime.accesskey "U">
 <!ENTITY confirmDeleteThreshold.value "Mínimo número de contactos a borrar antes de solicitar permiso">
 <!ENTITY confirmDeleteThreshold.accesskey "d">
