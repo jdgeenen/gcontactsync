@@ -66,10 +66,9 @@ com.gContactSync.MessengerOverlay = {
   initialize: function MessengerOverlay_initialize() {
     // reset the needRestart pref
     com.gContactSync.Preferences.setSyncPref("needRestart", false);
-    // remove the old log file
-    if (com.gContactSync.FileIO.mLogFile && com.gContactSync.FileIO.mLogFile.exists()) {
-      com.gContactSync.FileIO.mLogFile.remove(false); // delete the old log file
-    }
+
+    // Perform log rotation
+    com.gContactSync.MessengerOverlay.rotateLog(Math.max(1, com.gContactSync.Preferences.mSyncPrefs.numLogsInRotation.value));
 
     // override SetBusyCursor to wrap it in a try/catch block as it and
     // this add-on do not get along...
@@ -85,8 +84,10 @@ com.gContactSync.MessengerOverlay = {
         "\n * Log location:     " + com.gContactSync.FileIO.mLogFile.path +
         "\n");
 
+    // Preferences.js is loaded before MessengerOverlay so the preferences are logged to the previous log file
+    // in the rotation (if any).  If verbose logging is enabled get the prefs again to log them.
     if (com.gContactSync.Preferences.mSyncPrefs.verboseLog.value) {
-      com.gContactSync.Preferences.getSyncPrefs();  // for logging
+      com.gContactSync.Preferences.getSyncPrefs();
     }
 
     var lastVersionMajor   = com.gContactSync.Preferences.mSyncPrefs.lastVersionMajor.value;
@@ -123,6 +124,40 @@ com.gContactSync.MessengerOverlay = {
     } else {
       com.gContactSync.Sync.schedule(com.gContactSync.Preferences.mSyncPrefs.initialDelayMinutes.value * 60000);
     }
+  },
+  /**
+   * Rotates log files.
+   * @param numLogsInRotation The total number of logs in the rotation.  Must be at least 1.
+   */
+  rotateLog: function MessengerOverlay_rotateLog(numLogsInRotation) {
+    var file = com.gContactSync.FileIO.getProfileDirectory();
+    file.append(com.gContactSync.FileIO.fileNames.FOLDER_NAME);
+
+    // Remove the last file in the rotation
+    var lastName = this.getLogFileNameFromNumber(numLogsInRotation - 1);
+    file.append(lastName);
+    if (file.exists()) {file.remove(false);}
+
+    // Rename files
+    for (var i = numLogsInRotation - 2; i >= 0; --i) {
+      var name = this.getLogFileNameFromNumber(i);
+      file = file.parent;
+      file.append(name);
+      if (file.exists() && file.isFile()) {
+        file.moveTo(file.parent, lastName);
+      }
+      lastName = name;
+    }
+  },
+  /**
+   * Returns the name of the log file given the log index.
+   * @param i The log file number.
+   * @return {string} The name of the log file at the given index.
+   */
+  getLogFileNameFromNumber: function MessengerOverlay_getLogFileNameFromNumber(i) {
+    var fileName = com.gContactSync.FileIO.fileNames.LOG_FILE;
+    if (i) {fileName = fileName.replace(/log/, "log" + i);}
+    return fileName;
   },
   /**
    * Calls the original SetBusyCursor() function from mailCore.js wrapped in a

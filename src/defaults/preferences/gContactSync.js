@@ -92,6 +92,8 @@ pref("extensions.gContactSync.httpRequestTimeout", 0);
 pref("extensions.gContactSync.httpRequestDelay", 120);
 // Number of relation/people fields to show
 pref("extensions.gContactSync.numRelations", 6);
+// Number of log files to store.  Must be >= 1.
+pref("extensions.gContactSync.numLogsInRotation", 3);
 // extended properties to sync
 pref("extensions.gContactSync.extended1", "Custom1");
 pref("extensions.gContactSync.extended2", "Custom2");

@@ -210,7 +210,8 @@ com.gContactSync.Preferences = {
     v04RCUpgradeNeeded:       new com.gContactSync.Pref("v04RCUpgradeNeeded",       "bool", false),
     httpRequestTimeout:       new com.gContactSync.Pref("httpRequestTimeout",        "int", 0),
     httpRequestDelay:         new com.gContactSync.Pref("httpRequestDelay",          "int", 120),
-    numRelations:             new com.gContactSync.Pref("numRelations",              "int", 6)
+    numRelations:             new com.gContactSync.Pref("numRelations",              "int", 6),
+    numLogsInRotation:        new com.gContactSync.Pref("numLogsInRotation",         "int", 3)
   },
   /**
    * Gets a preference given its branch, name, and type
