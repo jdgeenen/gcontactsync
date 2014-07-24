@@ -1011,11 +1011,13 @@ com.gContactSync.GContact.prototype = {
    */
   setAttribute: function GContact_setAttribute(aTagName, aNamespace, aIndex, aAttributeName, aValue) {
     var elems = this.xml.getElementsByTagNameNS(aNamespace, aTagName);
-    if (elems.length > aIndex && aIndex >= 0) {
+    if (elems.length <= aIndex || aIndex < 0) {return false;}
+    if (aValue) {
       elems[aIndex].setAttribute(aAttributeName, aValue);
-      return true;
+    } else {
+      elems[aIndex].removeAttribute(aAttributeName);
     }
-    return false;
+    return true;
   },
   /**
    * Gets the value of a given attribute for the ith element with the given
