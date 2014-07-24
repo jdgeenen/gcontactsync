@@ -339,6 +339,7 @@ com.gContactSync.ContactConverter = {
     if (com.gContactSync.Preferences.mSyncPrefs.syncPhoneticNames.value) {
       var phonFirstName = aTBContact.getValue("PhoneticFirstName");
       var phonLastName = aTBContact.getValue("PhoneticLastName");
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Phonetic: " + phonFirstName + " " + phonLastName);
       aGContact.setAttribute("givenName",
                              com.gContactSync.gdata.namespaces.GD.url,
                              0,
