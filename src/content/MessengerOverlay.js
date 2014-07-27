@@ -105,7 +105,7 @@ com.gContactSync.MessengerOverlay = {
     var runSetupWizard = false;
     if ((lastVersionMajor === 0) && (lastVersionMinor === 0) && (lastVersionRelease === 0)) {
       runSetupWizard = true;
-    } else if (((lastVersionMajor === 0) && (lastVersionMinor < 4) && (lastVersionMajor > 0)) ||
+    } else if (((lastVersionMajor === 0) && (lastVersionMinor < 4)) ||
         ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && (lastVersionSuffix.charAt(0) === "a"))) {
       com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", true);
     } else if ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && ((lastVersionSuffix.charAt(0) === "a") || (lastVersionSuffix.charAt(0) === "b"))) {
