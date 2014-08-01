@@ -487,21 +487,26 @@ com.gContactSync.Sync = {
     // similar TB contacts during the first sync.
     // This is very basic, and won't merge duplicates in Thunderbird or dups
     // in Google; it just matches with the first contact it finds, if any.
-    if (lastSync == 0) {
+    if (lastSync === 0) {
       com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("firstSyncContacts"));
       for (i = 0, length = abCards.length; i < length; i++) {
         if (abCards[i].getValue("GoogleID")) continue;
         for (var id in gContacts) {
-          if (gContacts[id] && abCards[i] && !gContacts[id].merged &&
+          if (gContacts[id] && abCards[i] &&
               com.gContactSync.GAbManager.compareContacts(
                 abCards[i],
                 gContacts[id],
                 ["DisplayName", "PrimaryEmail"],
                 ["fullName",    "email"],
                 0.5)) {
-            abCards[i].setValue("GoogleID", id);
-            abCards[i].setValue("LastModifiedDate", 0);
-            gContacts[id].merged = true;
+            com.gContactSync.LOGGER.LOG(abCards[i].getName() + ": " + id);
+            com.gContactSync.LOGGER.LOG(" * Merging");
+            if (com.gContactSync.ContactConverter.merge(abCards[i], gContacts[id])) {
+              com.gContactSync.Sync.mContactsToUpdate.push(toUpdate);
+            }
+            gContacts[id] = null;
+            abCards.splice(i, 1);
+            --i;
             break;
           }
         }

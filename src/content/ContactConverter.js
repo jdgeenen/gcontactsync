@@ -530,6 +530,73 @@ com.gContactSync.ContactConverter = {
     }
   },
   /**
+   * Merges the two contacts together.  This is a very primitive merge and only
+   * copies values from both sides into the other.
+   * If both contacts have a value the updateGoogleInConflicts pref decides which
+   * value "wins".
+   * @param aTBContact {TBContact} The Thunderbird contact to merge.
+   * @param aGContact {GContact} The Google contact to merge.
+   * @return Whether the Google contact was updated.
+   */
+  merge: function ContactConverter_merge(aTBContact, aGContact) {
+
+    if (!this.mInitialized)
+      this.init();
+
+    this.mCurrentCard = aTBContact;
+    var ab = aTBContact.mAddressBook;
+
+    aTBContact.setValue("GoogleID", aGContact.id);
+    aTBContact.setValue("LastModifiedDate", 0);
+
+    var gContactUpdated = false;
+    var tbContactUpdated = false;
+    var arr = this.mConverterArr;
+
+    for (var i = 0, length = arr.length; i < length; i++) {
+
+      var obj = arr[i],
+          property = aGContact.getValue(obj.elementName, obj.index, obj.type),
+          value = this.checkValue(aTBContact.getValue(arr[i])),
+          type = aTBContact.getValue(obj.tbName + "Type");
+
+      if (!type || type === "")
+        type = obj.type;
+      property = property || new com.gContactSync.Property("", "");
+      if (obj.tbName === com.gContactSync.dummyEmailName &&
+          com.gContactSync.isDummyEmail(value)) {
+        value = null;
+        type  = null;
+      }
+
+      com.gContactSync.LOGGER.VERBOSE_LOG(obj.tbName + ": '" + property.value +
+                                          "'/'" + value + " , type: '" + property.type +
+                                          "'/'" + type + "'");
+
+      // If TB has a value and (Google's is empty or update Google in conflict)
+      // update Google.
+      if (value && !property || value && !ab.mPrefs.updateGoogleInConflicts) {
+        gContactUpdated = true;
+        aGContact.setValue(obj.elementName, obj.index, type, value);
+      } else {
+        tbContactUpdated = true;
+        aTBContact.setValue(obj.tbName, property.value);
+        // set the type, if it is an attribute with a type
+        if (property.type)
+          aTBContact.setValue(obj.tbName + "Type", property.type);
+      }
+    }
+    // TODO:
+    // Birthday
+    // Anniversary
+    // Extended properties (TB -> Google only)
+    // Groups
+    // Photo
+    // Phonetic names
+    if (tbContactUpdated) aTBContact.update();
+    return gContactUpdated;
+  },
+  /**
    * Saves the photo from the given Google contact to the given TB contact if present and if it has changed
    * since the last sync.
    * @param aGContact {GContact} A GContact object with the photo to save.
