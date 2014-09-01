@@ -1,0 +1,15 @@
+<!ENTITY title.label "Procedura guidata">
+<!ENTITY account.description "Selezionare un account da sincronizzare o inserire qui sotto le credenziali del proprio account Google">
+<!ENTITY account2.description "Successivamente si possono configurare altri account">
+<!ENTITY existingAccount.label "Usare un account esistente (deve trattarsi di un account Google)">
+<!ENTITY existingAccount.accesskey "U">
+<!ENTITY newAccount.label "Usare un nuovo account">
+<!ENTITY newAccount.accesskey "a">
+<!ENTITY email.value "Indirizzo di email:">
+<!ENTITY email.accesskey "m">
+<!ENTITY password.value "Password:">
+<!ENTITY password.accesskey "P">
+<!ENTITY accountSettings.description "Impostazioni account">
+<!ENTITY newABButton.label "Nuovo">
+<!ENTITY newABButton.accesskey "N">
+<!ENTITY finish.value "Fare clic su 'Fine' per aggiungere l'account e sincronizzare">

@@ -1,0 +1,12 @@
+<!ENTITY Title.label "Opzioni di importazione di gContactSync">
+<!ENTITY ABList.label "Rubrica:">
+<!ENTITY ABList.accesskey "R">
+<!ENTITY NewABButton.label "Nuova rubrica">
+<!ENTITY NewABButton.accesskey "N">
+<!ENTITY MergeContacts.label "Unisci contatti">
+<!ENTITY MergeContacts.accesskey "U">
+<!ENTITY Warning.value "NOTA: L'importazione dei contatti può richiedere un certo tempo.  Se compare l'avvertimento 'Unresponsive Script' fare clic su 'Continua'">
+<!ENTITY Finish.label "Fine">
+<!ENTITY Finish.accesskey "F">
+<!ENTITY Cancel.label "Annulla">
+<!ENTITY Cancel.accesskey "A">

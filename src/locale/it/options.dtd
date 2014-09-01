@@ -1,0 +1,66 @@
+<!ENTITY title.label "Preferenze di gContactSync">
+<!ENTITY main.tab "Principale">
+<!ENTITY help.value "Guida">
+<!ENTITY help.accesskey "G">
+<!ENTITY autoSync.value "Sincronizzazione automatica">
+<!ENTITY autoSync.label "Sincronizza i contatti automaticamente">
+<!ENTITY autoSync.accesskey "S">
+<!ENTITY refreshInterval.value "Intervallo di sincronizzazione (min) [Valore predefinito: 120]">
+<!ENTITY refreshInterval.accesskey "I">
+<!ENTITY initialDelayMinutes.value "Ritardo iniziale di sincronizzazione (min) [Valore predefinito: 5]">
+<!ENTITY initialDelayMinutes.accesskey "d">
+<!ENTITY abName.value "Rubrica da sincronizzare">
+<!ENTITY abName.accesskey "R">
+<!ENTITY syncBehavior.label "Funzionamento della sincronizzazione">
+<!ENTITY syncAddresses.label "Sincronizzazione degli indirizzi postali">
+<!ENTITY syncAddresses.accesskey "p">
+<!ENTITY alertSummary.label "Dopo ogni sincronizzazione manuale viene visualizzato un riepilogo">
+<!ENTITY alertSummary.accesskey "m">
+<!ENTITY phoneTypes.label "Aggiunge una tipologia ai campi dei numeri telefonici (ignorando i nomi dei campi esistenti)">
+<!ENTITY phoneTypes.accesskey "n">
+<!ENTITY accountDelay.value "Ritardo fra gli account (ms) [5000]">
+<!ENTITY accountDelay.accesskey "a">
+<!ENTITY logging.label "Registrazione eventi">
+<!ENTITY enableLogging.label "Attiva la registrazione degli eventi">
+<!ENTITY enableLogging.accesskey "L">
+<!ENTITY verboseLog.label "Attiva una registrazione dettagliata degli eventi (per il debugging)">
+<!ENTITY verboseLog.accesskey "V">
+<!ENTITY showInConsole.label "Registrazione degli errori nella console degli errori (per il debugging)">
+<!ENTITY showInConsole.accesskey "E">
+<!ENTITY interface.tab "Interfaccia">
+<!ENTITY buttons.label "Pulsanti e menu">
+<!ENTITY enableMenu.label "Attiva il menu gContactSync">
+<!ENTITY enableMenu.accesskey "A">
+<!ENTITY enableMenuLinks.label "Aggiunge altre voci al menu di gContactSync (Modulo di report degli errori, FAQ, ecc…)">
+<!ENTITY enableMenuLinks.accesskey "l">
+<!ENTITY addReset.label "Aggiunge al menu contestuale della rubrica le voci 'Modifica sul server' e 'Modifica dal server'">
+<!ENTITY addReset.accesskey "M">
+<!ENTITY abResults.label "Elenco contatti">
+<!ENTITY phoneColLabels.label "Rinomina le etichette dei campi dei telefoni">
+<!ENTITY phoneColLabels.accesskey "R">
+<!ENTITY newColLabels.label "Aggiunge i nuovi campi alla colonna delle etichette">
+<!ENTITY newColLabels.accesskey "N">
+<!ENTITY advanced.tab "Avanzate">
+<!ENTITY warning.value "Avvertenza - sezione dedicata ad utenti esperti">
+<!ENTITY backup.label "Criteri di backup della rubrica">
+<!ENTITY backupInterval.value "Intervallo di backup (in giorni) (-1 per disabilitare) [14]">
+<!ENTITY backupInterval.accesskey "B">
+<!ENTITY other.label "Varie">
+<!ENTITY chromeTime.value "Ritardo nella comparsa della scritta 'Unresponsive Script' (0 per disabilitare)">
+<!ENTITY chromeTime.accesskey "U">
+<!ENTITY confirmDeleteThreshold.value "Massimo numero di contatti che possono essere eliminati senza richiedere il permesso [5]">
+<!ENTITY confirmDeleteThreshold.accesskey "M">
+<!ENTITY httpRequestTimeout.value "Timeout della richiesta HTTP in ms (0 per disabiltare) [0]">
+<!ENTITY httpRequestTimeout.accesskey "H">
+<!ENTITY httpRequestDelay.value "Ritardo fra le richieste HTTP in ms (0 per disabilitare) [100]">
+<!ENTITY httpRequestDelay.accesskey "R">
+<!ENTITY resetAll.label "Azzeramento di tutte le rubriche sincronizzate">
+<!ENTITY resetAll.accesskey "A">
+<!ENTITY cleanOldPrefs.label "Pulizia delle preferenze delle vecchie rubriche">
+<!ENTITY cleanOldPrefs.accesskey "P">
+<!ENTITY cleanOldPhotos.label "Eliminazione delle foto dei vecchi contatti">
+<!ENTITY cleanOldPhotos.accesskey "E">
+<!ENTITY resetAllSettings.label "Azzeramento di tutte le impostazioni di gContactSync">
+<!ENTITY resetAllSettings.accesskey "g">
+<!ENTITY throttleTest.label "Esegui un test di regolazione">
+<!ENTITY throttleTest.accesskey "T">
