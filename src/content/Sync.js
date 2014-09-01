@@ -490,7 +490,11 @@ com.gContactSync.Sync = {
     if (lastSync === 0) {
       com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("firstSyncContacts"));
       for (i = 0, length = abCards.length; i < length; i++) {
+
+        // If this address book was previously synchronized with gContactSync there's no need to merge.
+        // The contacts will conflict and the updateGoogleInConflicts pref will be used to resolve.
         if (abCards[i].getValue("GoogleID")) continue;
+
         for (var id in gContacts) {
           if (gContacts[id] && abCards[i] &&
               com.gContactSync.GAbManager.compareContacts(
@@ -501,8 +505,18 @@ com.gContactSync.Sync = {
                 0.5)) {
             com.gContactSync.LOGGER.LOG(abCards[i].getName() + ": " + id);
             com.gContactSync.LOGGER.LOG(" * Merging");
-            if (com.gContactSync.ContactConverter.merge(abCards[i], gContacts[id])) {
+            // Pass false to update TB during conflicts.  Other add-ons don't synchronize types so allowing Google to be updated
+            // would reset types to their default values.
+            var updated = com.gContactSync.ContactConverter.merge(abCards[i], gContacts[id], false);
+            if (updated.google) {
+              var toUpdate = {};
+              toUpdate.gContact = gContacts[id];
+              toUpdate.abCard   = abCards[i];
               com.gContactSync.Sync.mContactsToUpdate.push(toUpdate);
+              this.mCurrentSummary.mRemote.mUpdated++;
+            }
+            if (updated.thunderbird) {
+              this.mCurrentSummary.mLocal.mUpdated++;
             }
             gContacts[id] = null;
             abCards.splice(i, 1);

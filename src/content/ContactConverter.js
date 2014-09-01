@@ -227,81 +227,11 @@ com.gContactSync.ContactConverter = {
       aGContact.setValue(obj.elementName, obj.index, type, value);
       nonEmpty = nonEmpty || value;
     }
-    // Birthday can be either YYYY-M-D or --M-D for no year.
-    // TB can have all three, just a day/month, or just a year through the UI
-    var birthDay    = parseInt(aTBContact.getValue("BirthDay"), 10),
-        birthMonth  = (isNaN(birthDay) || (birthDay > 31)) ?
-                      null : aTBContact.getValue("BirthMonth"),
-        birthdayVal = null;
-    // if the contact has a birth month (and birth day) add it to the contact
-    // from Google
-    if (birthMonth && !isNaN(parseInt(birthMonth, 10)) && (birthMonth <= 12)) {
-      var birthYear = parseInt(aTBContact.getValue("BirthYear"), 10);
-      // if the birth year is NaN or 0, use '-'
-      if (!birthYear) {
-        birthYear = "-";
-      }
-      // otherwise pad it to 4 characters
-      else {
-        birthYear = String(birthYear);
-        while (birthYear.length < 4) {
-          birthYear = "0" + birthYear;
-        }
-      }
-      // Pad the birth month to 2 characters
-      birthMonth = String(birthMonth);
-      while (birthMonth.length < 2) {
-        birthMonth = "0" + birthMonth;
-      }
-      // Pad the birth day to 2 characters
-      birthDay = String(birthDay);
-      while (birthDay.length < 2) {
-        birthDay = "0" + birthDay;
-      }
-      // form the birthday string: year-month-day
-      birthdayVal = birthYear + "-" + birthMonth + "-" + birthDay;
-    }
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Birthday: " + birthdayVal);
-    nonEmpty = nonEmpty || birthdayVal;
-    aGContact.setValue("birthday", 0, null, birthdayVal);
 
-    var anniversaryDay = parseInt(aTBContact.getValue("AnniversaryDay"), 10);
-    var anniversaryMonth = (isNaN(anniversaryDay) || anniversaryDay > 31) ?
-                             null :
-                             parseInt(aTBContact.getValue("AnniversaryMonth"), 10);
-    var anniversaryYear = (isNaN(anniversaryMonth) || anniversaryMonth > 13) ?
-                            null :
-                            parseInt(aTBContact.getValue("AnniversaryYear"), 10);
-    anniversaryDay = String(anniversaryDay);
-    anniversaryMonth = String(anniversaryMonth);
-    while (anniversaryDay.length < 2) {
-      anniversaryDay = "0" + anniversaryDay;
-    }
-    while (anniversaryMonth.length < 2) {
-      anniversaryMonth = "0" + anniversaryMonth;
-    }
-    var anniversaryVal = anniversaryYear ? anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay : null;
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Anniversary: " + anniversaryVal);
-    nonEmpty = nonEmpty || anniversaryVal;
-    aGContact.setValue("event", 0, "anniversary", anniversaryVal);
+    nonEmpty = this.setGoogleBirthday(aGContact, aTBContact) || nonEmpty;
+    nonEmpty = this.setGoogleAnniversary(aGContact, aTBContact) || nonEmpty;
+    nonEmpty = this.setExtendedProperties(aGContact, aTBContact) || nonEmpty;
 
-    // set the extended properties
-    aGContact.removeExtendedProperties();
-    arr = com.gContactSync.Preferences.mExtendedProperties;
-    var props = {};
-    for (i = 0, length = arr.length; i < length; i++) {
-      // add this extended property if it isn't a duplicate or blank
-      if (arr[i] && !props[arr[i]]) {
-        props[arr[i]] = true;
-        value = this.checkValue(aTBContact.getValue(arr[i]));
-        nonEmpty = nonEmpty || value;
-        aGContact.setExtendedProperty(arr[i], value);
-      }
-      else if (arr[i] != "") {
-        com.gContactSync.LOGGER.LOG_WARNING("Found a duplicate extended property: " +
-                                            arr[i]);
-      }
-    }
     // If the myContacts pref is set and this contact is new then add the
     // myContactsName group
     // Group membership does not make a contact not "empty" according to Google's API.
@@ -311,7 +241,7 @@ com.gContactSync.ContactConverter = {
       }
     // If syncing all groups then find all the lists this contact is in and set
     // those as the contact's groups
-    } else if (ab.mPrefs.syncGroups == "true") {
+    } else if (ab.mPrefs.syncGroups === "true") {
       // set the groups
       var groups = [],
           list;
@@ -332,7 +262,7 @@ com.gContactSync.ContactConverter = {
     // Upload the photo
     // Photos do not make a contact non-empty by Google's API.
     if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
-      aGContact = this.savePhotoFromTBContact(aTBContact, aGContact);
+      this.savePhotoFromTBContact(aTBContact, aGContact);
     }
     
     // Add the phonetic first and last names
@@ -362,7 +292,6 @@ com.gContactSync.ContactConverter = {
    *                            Components.interfaces.nsIAbMDBCard if this is
    *                            before 413260 landed.
    * @param aGContact {GContact} A GContact object to update with the TB contact's photo.
-   * @returns {GContact} The updated GContact.
    */
   savePhotoFromTBContact: function ContactConverter_savePhotoFromTBContact(aTBContact, aGContact) {
     // Get the profile directory
@@ -386,7 +315,6 @@ com.gContactSync.ContactConverter = {
     } else {
       aGContact.setPhoto("");
     }
-    return aGContact;
   },
   /**
    * Converts an GContact's Atom/XML representation of a contact to
@@ -440,92 +368,56 @@ com.gContactSync.ContactConverter = {
     }
     
     // Get the birthday info
-    var bday = aGContact.getValue("birthday", 0),
-        year  = null,
-        month = null,
-        day   = null;
-    // If it has a birthday...
-    if (bday && bday.value) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Found a birthday value of " + bday.value);
-      // If it consists of all three date elements: YYYY-M-D
-      if (bday.value.indexOf("--") === -1) {
-        arr = bday.value.split("-");
-        year  = arr[0];
-        month = arr[1];
-        day   = arr[2];
-      }
-      // Else it is just a month and day: --M-D
-      else {
-        arr   = bday.value.replace("--", "").split("-");
-        month = arr[0];
-        day   = arr[1];
-      }
-      com.gContactSync.LOGGER.VERBOSE_LOG("  - Year:  " +  year);
-      com.gContactSync.LOGGER.VERBOSE_LOG("  - Month: " +  month);
-      com.gContactSync.LOGGER.VERBOSE_LOG("  - Day:   " +  day);
-    }
-    aTBContact.setValue("BirthYear",  year);
-    aTBContact.setValue("BirthMonth", month);
-    aTBContact.setValue("BirthDay",   day);
-
-    // Anniversary
-    var anniversary = aGContact.getValue("event", 0, "anniversary");
-    var anniversaryYear = null, anniversaryMonth = null, anniversaryDay = null;
-    if (anniversary && anniversary.value) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Found an anniversary value of " + anniversary.value);
-      var anniversaryArray = anniversary.value.split("-");
-      if (anniversaryArray.length === 3) {
-        anniversaryYear = anniversaryArray[0];
-        anniversaryMonth = anniversaryArray[1];
-        anniversaryDay   = anniversaryArray[2];
-      } else {
-        com.gContactSync.LOGGER.LOG_WARNING("Invalid anniversary value", anniversary.value);
-      }
-    }
-    aTBContact.setValue("AnniversaryYear", anniversaryYear);
-    aTBContact.setValue("AnniversaryMonth", anniversaryMonth);
-    aTBContact.setValue("AnniversaryDay", anniversaryDay);
+    this.setTBBirthday(aTBContact, aGContact.getValue("birthday", 0));
+    this.setTBAnniversary(aTBContact, aGContact.getValue("event", 0, "anniversary"));
 
     if (com.gContactSync.Preferences.mSyncPrefs.getPhotos.value) {
 
-      aTBContact = this.savePhotoFromGContact(aTBContact, aGContact);
+      this.savePhotoFromGContact(aTBContact, aGContact);
     }
     
     // Add the phonetic first and last names
     if (com.gContactSync.Preferences.mSyncPrefs.syncPhoneticNames.value) {
       aTBContact.setValue("PhoneticFirstName",
                           aGContact.getAttribute("givenName",
-                          com.gContactSync.gdata.namespaces.GD.url,
-                          0,
-                          "yomi"));
+                                                 com.gContactSync.gdata.namespaces.GD.url,
+                                                 0,
+                                                 "yomi"));
       aTBContact.setValue("PhoneticLastName",
                           aGContact.getAttribute("familyName",
-                          com.gContactSync.gdata.namespaces.GD.url,
-                          0,
-                          "yomi"));
+                                                 com.gContactSync.gdata.namespaces.GD.url,
+                                                 0,
+                                                 "yomi"));
     }
 
     aTBContact.update();
     if (ab.mPrefs.syncGroups == "true" && ab.mPrefs.myContacts != "true") {
-      // get the groups after updating the card
-      var groups = aGContact.getValue("groupMembershipInfo"),
-          lists  = com.gContactSync.Sync.mLists,
-          list,
-          group;
-      for (var i in lists) {
-        group = groups[i];
-        list  = lists[i];
-        // delete the card from the list, if necessary
-        if (list.hasContact(aTBContact)) {
-          if (!group) {
-            list.deleteContacts([aTBContact]);
-          }
-          aTBContact.update();
+      this.setTBGroups(aTBContact, aGContact);
+    }
+  },
+  /**
+   * Sets the group (mailing list) membership for the given TB contact.
+   * @param aTBContact {TBContact} The Thunderbird contact to update.
+   * @param aGContact {GContact} The Google contact to get the groups from.
+   */
+  setTBGroups: function ContactConverter_setTBGroups(aTBContact, aGContact) {
+    var groups = aGContact.getValue("groupMembershipInfo"),
+        lists  = com.gContactSync.Sync.mLists,
+        list,
+        group;
+    for (var i in lists) {
+      group = groups[i];
+      list  = lists[i];
+      // delete the card from the list, if necessary
+      if (list.hasContact(aTBContact)) {
+        if (!group) {
+          list.deleteContacts([aTBContact]);
         }
-        // add the card to the list, if necessary
-        else if (group) {
-          list.addContact(aTBContact);
-        }
+        aTBContact.update();
+      }
+      // add the card to the list, if necessary
+      else if (group) {
+        list.addContact(aTBContact);
       }
     }
   },
@@ -536,9 +428,10 @@ com.gContactSync.ContactConverter = {
    * value "wins".
    * @param aTBContact {TBContact} The Thunderbird contact to merge.
    * @param aGContact {GContact} The Google contact to merge.
+   * @param aUpdateGoogleInConflicts {boolean} Whether Google should be updated during conflicts.
    * @return Whether the Google contact was updated.
    */
-  merge: function ContactConverter_merge(aTBContact, aGContact) {
+  merge: function ContactConverter_merge(aTBContact, aGContact, aUpdateGoogleInConflicts) {
 
     if (!this.mInitialized)
       this.init();
@@ -549,6 +442,19 @@ com.gContactSync.ContactConverter = {
     aTBContact.setValue("GoogleID", aGContact.id);
     aTBContact.setValue("LastModifiedDate", 0);
 
+    // Shift phone numbers to avoid duplicates.
+    var numberAttributes = ["WorkPhone", "HomePhone", "FaxNumber", "CellularNumber", "PagerNumber", "HomeFaxNumber", "OtherNumber"];
+    var numbers = [];
+    for (var attr in numberAttributes) {
+      var tbValue = aTBContact.getValue(numberAttributes[attr]);
+      if (tbValue) {numbers.push(new com.gContactSync.Property(tbValue, aTBContact.getValue(numberAttributes[attr] + "Type")));}
+    }
+    for (var attr in numberAttributes) {
+      var prop = numbers.length ? numbers.shift : new com.gContactSync.Property(null, null);
+      aTBContact.setValue(numberAttributes[attr], prop.value);
+      aTBContact.setValue(numberAttributes[attr] + "Type", prop.type);
+    }
+
     var gContactUpdated = false;
     var tbContactUpdated = false;
     var arr = this.mConverterArr;
@@ -557,7 +463,7 @@ com.gContactSync.ContactConverter = {
 
       var obj = arr[i],
           property = aGContact.getValue(obj.elementName, obj.index, obj.type),
-          value = this.checkValue(aTBContact.getValue(arr[i])),
+          value = this.checkValue(aTBContact.getValue(obj.tbName)),
           type = aTBContact.getValue(obj.tbName + "Type") || obj.type;
 
       property = property || new com.gContactSync.Property("", "");
@@ -569,29 +475,115 @@ com.gContactSync.ContactConverter = {
       }
 
       com.gContactSync.LOGGER.VERBOSE_LOG(obj.tbName + ": '" + property.value +
-                                          "'/'" + value + " , type: '" + property.type +
+                                          "'/'" + value + "' , type: '" + property.type +
                                           "'/'" + type + "'");
 
       // If TB has a value and (Google's is empty or update Google in conflict) update Google
       // Else if Google has a value update TB
-      if (value && (!property.value || !ab.mPrefs.updateGoogleInConflicts)) {
-        gContactUpdated = true;
-        aGContact.setValue(obj.elementName, obj.index, type, value);
-      } else if (property.value) {
-        tbContactUpdated = true;
-        aTBContact.setValue(obj.tbName, property.value);
-        if (property.type) {aTBContact.setValue(obj.tbName + "Type", property.type);}
+      if (value != property.value || type != property.type) {
+        if (value && (!property.value || aUpdateGoogleInConflicts)) {
+          gContactUpdated = true;
+          aGContact.setValue(obj.elementName, obj.index, type, value);
+        } else if (property.value) {
+          tbContactUpdated = true;
+          aTBContact.setValue(obj.tbName, property.value);
+          aTBContact.setValue(obj.tbName + "Type", property.type);
+          if (property.type) {aTBContact.setValue(obj.tbName + "Type", property.type);}
+        }
       }
     }
-    // TODO:
-    // Birthday
-    // Anniversary
-    // Extended properties (TB -> Google only)
-    // Groups
-    // Photo
-    // Phonetic names
-    if (tbContactUpdated) {aTBContact.update();}
-    return gContactUpdated;
+
+    // When merging take the extended properties from TB.  No other add-ons use these.
+    if (this.setExtendedProperties(aGContact, aTBContact)) {
+      // TODO - determine if there were actual changes
+      gContactUpdated = true;
+    }
+
+    // Merge photos
+    var tbPhoto = aTBContact.getValue("PhotoName");
+    var gPhoto = aGContact.getPhotoInfo().etag;
+    if (tbPhoto && (!gPhoto || aUpdateGoogleInConflicts)) {
+      if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
+        this.savePhotoFromTBContact(aTBContact, aGContact);
+      }
+    } else if (gPhoto) {
+      if (com.gContactSync.Preferences.mSyncPrefs.getPhotos.value) {
+        tbContactUpdated = true;
+        this.savePhotoFromGContact(aTBContact, aGContact);
+      }
+    }
+
+    // Merge birthday
+    var tbBirthday = aTBContact.getValue("BirthMonth");
+    var gBirthday = aGContact.getValue("birthday");
+    if (tbBirthday && (!gBirthday || aUpdateGoogleInConflicts)) {
+      var oldValue = gBirthday ? gBirthday.value : null;
+      gContactUpdated = (this.setGoogleBirthday(aGContact, aTBContact) != oldValue) || gContactUpdated;
+    } else if (gBirthday) {
+      tbContactUpdated = true;
+      this.setTBBirthday(aTBContact, gBirthday);
+    }
+
+    // Merge anniversary
+    var tbAnniversary = aTBContact.getValue("AnniversaryMonth");
+    var gAnniversary = aGContact.getValue("event", 0, "anniversary");
+    if (tbAnniversary && (!gAnniversary || aUpdateGoogleInConflicts)) {
+      var oldValue = gAnniversary ? gAnniversary.value : null;
+      gContactUpdated = (this.setGoogleAnniversary(aGContact, aTBContact) != oldValue) || gContactUpdated;
+    } else if (gAnniversary) {
+      tbContactUpdated = true;
+      this.setTBAnniversary(aTBContact, gAnniversary);
+    }
+
+    var tbPhonFirst = aTBContact.getValue("PhoneticFirstName");
+    var gPhonFirst  = aGContact.getAttribute("givenName",
+                                             com.gContactSync.gdata.namespaces.GD.url,
+                                             0,
+                                             "yomi");
+    if (tbPhonFirst != gPhonFirst) {
+      if (tbPhonFirst && (!gPhonFirst || aUpdateGoogleInConflicts)) {
+        gContactUpdated = true;
+        aGContact.setAttribute("givenName",
+                               com.gContactSync.gdata.namespaces.GD.url,
+                               0,
+                               "yomi",
+                               tbPhonFirst);
+      } else if (gPhonFirst) {
+        tbContactUpdated = true;
+        aTBContact.setValue("PhoneticFirstName", gPhonFirst);
+      }
+    }
+
+    var tbPhonLast = aTBContact.getValue("PhoneticLastName");
+    var gPhonLast  = aGContact.getAttribute("familyName",
+                                             com.gContactSync.gdata.namespaces.GD.url,
+                                             0,
+                                             "yomi");
+    if (tbPhonLast != gPhonLast) {
+      if (tbPhonLast && (!gPhonLast || aUpdateGoogleInConflicts)) {
+        gContactUpdated = true;
+        aGContact.setAttribute("familyName",
+                               com.gContactSync.gdata.namespaces.GD.url,
+                               0,
+                               "yomi",
+                               tbPhonLast);
+      } else if (gPhonLast) {
+        tbContactUpdated = true;
+        aTBContact.setValue("PhoneticLastName", gPhonLast);
+      }
+    }
+
+    // If synchronizing groups Google wins since it always has groups.  Not all add-ons sync groups.
+    if (ab.mPrefs.syncGroups == "true" && ab.mPrefs.myContacts != "true") {
+      if (tbContactUpdated) {aTBContact.update();}  // Must update the contact before changing mailing lists.
+      tbContactUpdated = true;
+      this.setTBGroups(aTBContact, aGContact);
+    }
+
+    if (tbContactUpdated) {
+      aTBContact.update();
+    }
+    return {google: gContactUpdated, thunderbird: tbContactUpdated};
   },
   /**
    * Saves the photo from the given Google contact to the given TB contact if present and if it has changed
@@ -600,7 +592,6 @@ com.gContactSync.ContactConverter = {
    * @param aTBContact {TBContact}   An existing card that can be QI'd to
    *                            Components.interfaces.nsIAbMDBCard if this is
    *                            before 413260 landed.  Updated with the photo from the GContact.
-   * @returns {TBContact} The updated TBContact.
    */
   savePhotoFromGContact: function ContactConvert_savePhotoFromGContact(aTBContact, aGContact) {
 
@@ -647,8 +638,6 @@ com.gContactSync.ContactConverter = {
         aTBContact.setValue("PhotoEtag", info.etag);
       }
     }
-
-    return aTBContact;
   },
   /**
    * Check if the given string is null, of length 0, or consists only of spaces
@@ -665,5 +654,157 @@ com.gContactSync.ContactConverter = {
     for (var i = 0; i < aValue.length; i++)
       if (aValue[i] != " ") return aValue;
     return null;
+  },
+  /**
+   * Sets the extended properties in the given Google contact from the given TB contact.
+   *
+   * @param aGContact {GContact} The Google contact to update.
+   * @param aTBContact {TBContact} The Thunderbird contact.
+   * @return {boolean} Whether the contact has any extended properties.
+   */
+  setExtendedProperties: function ContactConverter_setExtendedProperties(aGContact, aTBContact) {
+    aGContact.removeExtendedProperties();
+    arr = com.gContactSync.Preferences.mExtendedProperties;
+    var props = {};
+    var nonEmpty = false;
+    for (i = 0, length = arr.length; i < length; i++) {
+      // add this extended property if it isn't a duplicate or blank
+      if (arr[i] && !props[arr[i]]) {
+        props[arr[i]] = true;
+        value = this.checkValue(aTBContact.getValue(arr[i]));
+        aGContact.setExtendedProperty(arr[i], value);
+      }
+      else if (arr[i] != "") {
+        com.gContactSync.LOGGER.LOG_WARNING("Found a duplicate extended property: " +
+                                            arr[i]);
+      }
+    }
+    return nonEmpty;
+  },
+  /**
+   * Sets the birthday of the given contact.
+   * @param aTBContact {TBContact} The Thunderbird contact.
+   * @param bday {string} The birthday string.  null if not present.
+   */
+  setTBBirthday: function ContactConverter_setTBBirthday(aTBContact, bday) {
+    var year  = null,
+        month = null,
+        day   = null;
+    if (bday && bday.value) {
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Found a birthday value of " + bday.value);
+      // If it consists of all three date elements: YYYY-M-D
+      if (bday.value.indexOf("--") === -1) {
+        arr = bday.value.split("-");
+        year  = arr[0];
+        month = arr[1];
+        day   = arr[2];
+      }
+      // Else it is just a month and day: --M-D
+      else {
+        arr   = bday.value.replace("--", "").split("-");
+        month = arr[0];
+        day   = arr[1];
+      }
+      com.gContactSync.LOGGER.VERBOSE_LOG("  - Year:  " +  year);
+      com.gContactSync.LOGGER.VERBOSE_LOG("  - Month: " +  month);
+      com.gContactSync.LOGGER.VERBOSE_LOG("  - Day:   " +  day);
+    }
+    aTBContact.setValue("BirthYear",  year);
+    aTBContact.setValue("BirthMonth", month);
+    aTBContact.setValue("BirthDay",   day);
+  },
+  /**
+   * Sets the anniversary of the given contact.
+   * @param aTBContact {TBContact} The Thunderbird contact.
+   * @param bday {string} The anniversary string.  null if not present.
+   */
+  setTBAnniversary: function ContactConverter_setTBAnniversary(aTBContact, anniversary) {
+    var anniversaryYear = null, anniversaryMonth = null, anniversaryDay = null;
+    if (anniversary && anniversary.value) {
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Found an anniversary value of " + anniversary.value);
+      var anniversaryArray = anniversary.value.split("-");
+      if (anniversaryArray.length === 3) {
+        anniversaryYear = anniversaryArray[0];
+        anniversaryMonth = anniversaryArray[1];
+        anniversaryDay   = anniversaryArray[2];
+      } else {
+        com.gContactSync.LOGGER.LOG_WARNING("Invalid anniversary value", anniversary.value);
+      }
+    }
+    aTBContact.setValue("AnniversaryYear", anniversaryYear);
+    aTBContact.setValue("AnniversaryMonth", anniversaryMonth);
+    aTBContact.setValue("AnniversaryDay", anniversaryDay);
+  },
+  /**
+   * Sets the birthday of the given Google contact from the given TB contact.
+   * @param aGContact {GContact} The Google contact.
+   * @param aTBContact {TBContact} The Thunderbird contact to get the birthday from.
+   * @return {string} The birthday value.
+   */
+  setGoogleBirthday: function ContactConverter_setGoogleBirthday(aGContact, aTBContact) {
+    // Birthday can be either YYYY-M-D or --M-D for no year.
+    // TB can have all three, just a day/month, or just a year through the UI
+    var birthDay    = parseInt(aTBContact.getValue("BirthDay"), 10),
+        birthMonth  = (isNaN(birthDay) || (birthDay > 31)) ?
+                      null : aTBContact.getValue("BirthMonth"),
+        birthdayVal = null;
+    // if the contact has a birth month (and birth day) add it to the contact
+    // from Google
+    if (birthMonth && !isNaN(parseInt(birthMonth, 10)) && (birthMonth <= 12)) {
+      var birthYear = parseInt(aTBContact.getValue("BirthYear"), 10);
+      // if the birth year is NaN or 0, use '-'
+      if (!birthYear) {
+        birthYear = "-";
+      }
+      // otherwise pad it to 4 characters
+      else {
+        birthYear = String(birthYear);
+        while (birthYear.length < 4) {
+          birthYear = "0" + birthYear;
+        }
+      }
+      // Pad the birth month to 2 characters
+      birthMonth = String(birthMonth);
+      while (birthMonth.length < 2) {
+        birthMonth = "0" + birthMonth;
+      }
+      // Pad the birth day to 2 characters
+      birthDay = String(birthDay);
+      while (birthDay.length < 2) {
+        birthDay = "0" + birthDay;
+      }
+      // form the birthday string: year-month-day
+      birthdayVal = birthYear + "-" + birthMonth + "-" + birthDay;
+    }
+    com.gContactSync.LOGGER.VERBOSE_LOG(" * Birthday: " + birthdayVal);
+    aGContact.setValue("birthday", 0, null, birthdayVal);
+    return birthdayVal;
+  },
+  /**
+   * Sets the anniversary of the given Google contact from the given TB contact.
+   * @param aGContact {GContact} The Google contact.
+   * @param aTBContact {TBContact} The Thunderbird contact to get the anniversary from.
+   * @return {string} The anniversary value.
+   */
+  setGoogleAnniversary: function ContactConverter_setGoogleAnniversary(aGContact, aTBContact) {
+    var anniversaryDay = parseInt(aTBContact.getValue("AnniversaryDay"), 10);
+    var anniversaryMonth = (isNaN(anniversaryDay) || anniversaryDay > 31) ?
+                             null :
+                             parseInt(aTBContact.getValue("AnniversaryMonth"), 10);
+    var anniversaryYear = (isNaN(anniversaryMonth) || anniversaryMonth > 13) ?
+                            null :
+                            parseInt(aTBContact.getValue("AnniversaryYear"), 10);
+    anniversaryDay = String(anniversaryDay);
+    anniversaryMonth = String(anniversaryMonth);
+    while (anniversaryDay.length < 2) {
+      anniversaryDay = "0" + anniversaryDay;
+    }
+    while (anniversaryMonth.length < 2) {
+      anniversaryMonth = "0" + anniversaryMonth;
+    }
+    var anniversaryVal = anniversaryYear ? anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay : null;
+    com.gContactSync.LOGGER.VERBOSE_LOG(" * Anniversary: " + anniversaryVal);
+    aGContact.setValue("event", 0, "anniversary", anniversaryVal);
+    return anniversaryVal;
   }
 };
