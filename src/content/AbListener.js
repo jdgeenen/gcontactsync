@@ -82,14 +82,14 @@ com.gContactSync.AbListener = {
       if (aParentDir.isMailList) {
         try {
           aItem.QueryInterface(Components.interfaces.nsIAbCard);
-          var now     = (new Date()).getTime() / 1000,
-              uri     = this.getURI(aParentDir),
-              // the parent of aParentDir (aParentDir is a mailing list, dir is the
-              // directory in which aParentDir is stored)
-              dir     = new com.gContactSync.GAddressBook(com.gContactSync.AbManager.getAbByURI(uri)),
-              contact = new com.gContactSync.TBContact(aItem, dir);
+          var now = (new Date()).getTime() / 1000;
           // the URI of the list's parent
+          var uri = this.getURI(aParentDir);
           uri = uri.substring(0, uri.lastIndexOf("/"));
+          // the parent of aParentDir (aParentDir is a mailing list, dir is the
+          // directory in which aParentDir is stored)
+          var dir = new com.gContactSync.GAddressBook(com.gContactSync.AbManager.getAbByURI(uri));
+          var contact = new com.gContactSync.TBContact(aItem, dir);
           // set the last modified date and update the card
           contact.setValue("LastModifiedDate", now);
           contact.update();
