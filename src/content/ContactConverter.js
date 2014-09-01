@@ -558,11 +558,10 @@ com.gContactSync.ContactConverter = {
       var obj = arr[i],
           property = aGContact.getValue(obj.elementName, obj.index, obj.type),
           value = this.checkValue(aTBContact.getValue(arr[i])),
-          type = aTBContact.getValue(obj.tbName + "Type");
+          type = aTBContact.getValue(obj.tbName + "Type") || obj.type;
 
-      if (!type || type === "")
-        type = obj.type;
       property = property || new com.gContactSync.Property("", "");
+
       if (obj.tbName === com.gContactSync.dummyEmailName &&
           com.gContactSync.isDummyEmail(value)) {
         value = null;
@@ -573,17 +572,15 @@ com.gContactSync.ContactConverter = {
                                           "'/'" + value + " , type: '" + property.type +
                                           "'/'" + type + "'");
 
-      // If TB has a value and (Google's is empty or update Google in conflict)
-      // update Google.
-      if (value && !property || value && !ab.mPrefs.updateGoogleInConflicts) {
+      // If TB has a value and (Google's is empty or update Google in conflict) update Google
+      // Else if Google has a value update TB
+      if (value && (!property.value || !ab.mPrefs.updateGoogleInConflicts)) {
         gContactUpdated = true;
         aGContact.setValue(obj.elementName, obj.index, type, value);
-      } else {
+      } else if (property.value) {
         tbContactUpdated = true;
         aTBContact.setValue(obj.tbName, property.value);
-        // set the type, if it is an attribute with a type
-        if (property.type)
-          aTBContact.setValue(obj.tbName + "Type", property.type);
+        if (property.type) {aTBContact.setValue(obj.tbName + "Type", property.type);}
       }
     }
     // TODO:
@@ -593,7 +590,7 @@ com.gContactSync.ContactConverter = {
     // Groups
     // Photo
     // Phonetic names
-    if (tbContactUpdated) aTBContact.update();
+    if (tbContactUpdated) {aTBContact.update();}
     return gContactUpdated;
   },
   /**
