@@ -192,7 +192,7 @@ com.gContactSync.GContact.prototype = {
           return null;
         case com.gContactSync.gdata.contacts.types.EVENT:
           if (arr[i].childNodes[0]) {
-            return new com.gContactSync.Property(arr[i].childNodes[0].getAttribute("startTime"));
+            return new com.gContactSync.Property(arr[i].childNodes[0].getAttribute("startTime"), arr[i].getAttribute("rel"));
           }
           return null;
         default:
@@ -483,12 +483,12 @@ com.gContactSync.GContact.prototype = {
           if (!eventElem) {
             eventElem = document.createElementNS(com.gContactSync.gdata.namespaces.GCONTACT.url, "event");
             eventElem.setAttribute("rel", aType);
-            parentElem.appendChild(document.createElementNS(com.gContactSync.gdata.namespaces.GD.url, "when"));
+            eventElem.appendChild(document.createElementNS(com.gContactSync.gdata.namespaces.GD.url, "when"));
+            this.xml.appendChild(eventElem);
           }
           // TODO - support xs:dateTime
           // TODO - support endTime attribute
           eventElem.firstChild.setAttribute("startTime", aValue);
-          if (!this.mCurrentElement) { this.xml.appendChild(eventElem.parentNode); }
           break;
         default:
           com.gContactSync.LOGGER.LOG_WARNING("Invalid aType parameter sent to the setElementValue"

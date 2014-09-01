@@ -270,6 +270,9 @@ com.gContactSync.gdata = {
         case "website":
           arr = this.WEBSITE_TYPES;
           break;
+        case "event":
+          arr = this.EVENT_TYPES;
+          break;
         default:
           throw "Unrecognized tagName '" + aElement.tagName + "' in setRelOrLabel";
       }
@@ -323,6 +326,9 @@ com.gContactSync.gdata = {
     /** Postal address categories */
     POSTAL_ADDRESS_TYPES: [
       "home", "work", "other"
+    ],
+    EVENT_TYPES: [
+      "other", "anniversary"
     ],
     /** Tags that are valid an an organization tag */
     ORG_TAGS: {
