@@ -94,7 +94,7 @@
           </columns>
           <rows>
             <row align="center">
-              <label control="refreshInterval"
+              <label control="refreshIntervalBox"
                      value="&refreshInterval.value;"
                      accesskey="&refreshInterval.accesskey;"/>
               <textbox preference="refreshInterval"
@@ -136,11 +136,11 @@
           </columns>
           <rows>
             <row align="center">
-              <label control="accountDelay"
+              <label control="accountDelayBox"
                      value="&accountDelay.value;"
                      accesskey="&accountDelay.accesskey;"/>
               <textbox preference="accountDelay"
-                       id="accountDelay"
+                       id="accountDelayBox"
                        maxlength="6"
                        maxwidth="60"/>
             </row>
@@ -238,11 +238,11 @@
           </columns>
           <rows>
             <row align="center">
-              <label control="backupInterval"
+              <label control="backupIntervalBox"
                      value="&backupInterval.value;"
                      accesskey="&backupInterval.accesskey;"/>
               <textbox preference="backupInterval"
-                       id="backupInterval"
+                       id="backupIntervalBox"
                        maxlength="6"
                        maxwidth="60"/>
             </row>
@@ -269,36 +269,36 @@
                        maxwidth="60"/>
             </row>
             <row align="center">
-              <label control="confirmDeleteThreshold"
+              <label control="confirmDeleteThresholdBox"
                      value="&confirmDeleteThreshold.value;"
                      accesskey="&confirmDeleteThreshold.accesskey;"/>
             </row>
             <row align="center">
               <textbox preference="confirmDeleteThreshold"
-                       id="confirmDeleteThreshold"
+                       id="confirmDeleteThresholdBox"
                        maxlength="5"
                        maxwidth="60"/>
             </row>
             <row align="center">
-              <label control="httpRequestTimeout"
+              <label control="httpRequestTimeoutBox"
                      value="&httpRequestTimeout.value;"
                      accesskey="&httpRequestTimeout.accesskey;"/>
             </row>
             <row align="center">
               <textbox preference="httpRequestTimeout"
-                       id="httpRequestTimeout"
+                       id="httpRequestTimeoutBox"
                        maxlength="5"
                        maxwidth="60"/>
             </row>
             <row align="center">
-              <label control="httpRequestDelay"
+              <label control="httpRequestDelayBox"
                      value="&httpRequestDelay.value;"
                      accesskey="&httpRequestDelay.accesskey;"/>
             </row>
             <row align="center">
               <hbox>
                 <textbox preference="httpRequestDelay"
-                         id="httpRequestDelay"
+                         id="httpRequestDelayBox"
                          maxlength="5"
                          maxwidth="60"/>
                 <button id="throttleTest"

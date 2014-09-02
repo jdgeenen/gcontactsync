@@ -36,7 +36,7 @@
 <!ENTITY enableMenuLinks.label            "Add some links (Error Report Form, FAQ, etc.) to the gContactSync Menu">
 <!ENTITY enableMenuLinks.accesskey        "l">
 <!ENTITY addReset.label                   "Add Replace to and Replace from Server links to the Address Book context menu">
-<!ENTITY addReset.accesskey               "R">
+<!ENTITY addReset.accesskey               "A">
 <!ENTITY abResults.label                  "Contacts List">
 <!ENTITY phoneColLabels.label             "Rename the phone column labels">
 <!ENTITY phoneColLabels.accesskey         "R">
