@@ -229,11 +229,16 @@ com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
                                                                 [numrows]);
       }
     }
-    // update the address book view so it doesn't show the card twice
-    SetAbView(GetSelectedDirectory(), false);
-    // select the first card, if any
-    if (gAbView && gAbView.getCardFromRow(0))
-      SelectFirstCard();
+
+    if (com.gContactSync.Preferences.mSyncPrefs.selectFirstCardAfterDrop.value) {
+      // update the address book view so it doesn't show the card twice
+      SetAbView(GetSelectedDirectory(), false);
+      // select the first card, if any
+      if (gAbView && gAbView.getCardFromRow(0)) {
+        SelectFirstCard();
+      }
+    }
+
     // set the status text
     document.getElementById("statusText").label = cardsTransferredText;
   }
