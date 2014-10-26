@@ -211,7 +211,8 @@ com.gContactSync.Preferences = {
     httpRequestTimeout:       new com.gContactSync.Pref("httpRequestTimeout",        "int", 0),
     httpRequestDelay:         new com.gContactSync.Pref("httpRequestDelay",          "int", 120),
     numRelations:             new com.gContactSync.Pref("numRelations",              "int", 6),
-    numLogsInRotation:        new com.gContactSync.Pref("numLogsInRotation",         "int", 3)
+    numLogsInRotation:        new com.gContactSync.Pref("numLogsInRotation",         "int", 3),
+    selectFirstCardAfterDrop: new com.gContactSync.Pref("selectFirstCardAfterDrop", "bool", true)
   },
   /**
    * Gets a preference given its branch, name, and type

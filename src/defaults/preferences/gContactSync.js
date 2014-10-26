@@ -94,6 +94,9 @@ pref("extensions.gContactSync.httpRequestDelay", 120);
 pref("extensions.gContactSync.numRelations", 6);
 // Number of log files to store.  Must be >= 1.
 pref("extensions.gContactSync.numLogsInRotation", 3);
+// Select the first card after a drag and drop event.
+// This works around a Thunderbird bug.
+pref("extensions.gContactSync.selectFirstCardAfterDrop", true);
 // extended properties to sync
 pref("extensions.gContactSync.extended1", "Custom1");
 pref("extensions.gContactSync.extended2", "Custom2");
