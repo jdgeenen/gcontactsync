@@ -78,6 +78,8 @@ com.gContactSync.CardDialogOverlay = {
   mLoadNumber: 0,
   /** This stores whether the contact is read-only (ie from LDAP or the Mac AB) */
   mDisabled:   false,
+  /** Whether the application is Postbox */
+  mIsPostbox:  false,
   /**
    * Adds a tab to the tab box, if possible.  Waits until the abCardOverlay is
    * loaded.
@@ -118,8 +120,9 @@ com.gContactSync.CardDialogOverlay = {
     }
     // add the email type drop down menus
     try {
+      this.mIsPostbox = this.addPostboxEmailType(document.getElementById("PrimaryEmail"));
       // add the type for Postbox (this does nothing for TB or Seamonkey)
-      if (!this.addPostboxEmailType(document.getElementById("PrimaryEmail"))) {
+      if (!this.mIsPostbox) {
         var emailTypes       = com.gContactSync.gdata.contacts.EMAIL_TYPES,
             primaryEmailBox  = this.getBox("PrimaryEmail"),
             secondEmailBox   = this.getBox("SecondEmail"),
@@ -137,6 +140,11 @@ com.gContactSync.CardDialogOverlay = {
     }
     catch (ex0) {
       com.gContactSync.alertError("Unable to setup email types: " + ex0);
+    }
+    // Hide the gContactSync tab for Postbox
+    // TODO - implement full support for Postbox instead.
+    if (this.mIsPostbox) {
+      document.getElementById("gContactSyncTab").collapsed = true;
     }
     var newDialog      = false, // post-Mailnews Core Bug 63941 - TODO - can this be removed (Postbox?)
         showPhoneTypes = com.gContactSync.Preferences.mSyncPrefs.phoneTypes.value,
