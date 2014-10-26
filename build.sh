@@ -8,7 +8,7 @@
 
 # NOTE: The VERSION here is just used for the package name
 # Edit install.rdf and content/synonyms.js to change the actual VERSION
-VERSION=1.1.0
+VERSION=1.1.1
 SRC_DIR=./src
 
 # Dest should be absolute or relative to SRC_DIR
