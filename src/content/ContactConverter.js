@@ -746,18 +746,17 @@ com.gContactSync.ContactConverter = {
     // TB can have all three, just a day/month, or just a year through the UI
     var birthDay    = parseInt(aTBContact.getValue("BirthDay"), 10),
         birthMonth  = (isNaN(birthDay) || (birthDay > 31)) ?
-                      null : aTBContact.getValue("BirthMonth"),
+                      NaN : parseInt(aTBContact.getValue("BirthMonth"), 10),
         birthdayVal = null;
     // if the contact has a birth month (and birth day) add it to the contact
     // from Google
-    if (birthMonth && !isNaN(parseInt(birthMonth, 10)) && (birthMonth <= 12)) {
+    if (!isNaN(birthMonth) && (birthMonth <= 12)) {
       var birthYear = parseInt(aTBContact.getValue("BirthYear"), 10);
       // if the birth year is NaN or 0, use '-'
+      // otherwise pad it to 4 characters
       if (!birthYear) {
         birthYear = "-";
-      }
-      // otherwise pad it to 4 characters
-      else {
+      } else {
         birthYear = String(birthYear);
         while (birthYear.length < 4) {
           birthYear = "0" + birthYear;
@@ -765,12 +764,12 @@ com.gContactSync.ContactConverter = {
       }
       // Pad the birth month to 2 characters
       birthMonth = String(birthMonth);
-      while (birthMonth.length < 2) {
+      if (birthMonth.length < 2) {
         birthMonth = "0" + birthMonth;
       }
       // Pad the birth day to 2 characters
       birthDay = String(birthDay);
-      while (birthDay.length < 2) {
+      if (birthDay.length < 2) {
         birthDay = "0" + birthDay;
       }
       // form the birthday string: year-month-day
@@ -789,20 +788,25 @@ com.gContactSync.ContactConverter = {
   setGoogleAnniversary: function ContactConverter_setGoogleAnniversary(aGContact, aTBContact) {
     var anniversaryDay = parseInt(aTBContact.getValue("AnniversaryDay"), 10);
     var anniversaryMonth = (isNaN(anniversaryDay) || anniversaryDay > 31) ?
-                             null :
+                             NaN :
                              parseInt(aTBContact.getValue("AnniversaryMonth"), 10);
     var anniversaryYear = (isNaN(anniversaryMonth) || anniversaryMonth > 13) ?
-                            null :
+                            NaN :
                             parseInt(aTBContact.getValue("AnniversaryYear"), 10);
-    anniversaryDay = String(anniversaryDay);
-    anniversaryMonth = String(anniversaryMonth);
-    while (anniversaryDay.length < 2) {
-      anniversaryDay = "0" + anniversaryDay;
+    var anniversaryVal = null;
+
+    if (anniversaryYear) {
+      anniversaryDay = String(anniversaryDay);
+      anniversaryMonth = String(anniversaryMonth);
+      if (anniversaryDay.length < 2) {
+        anniversaryDay = "0" + anniversaryDay;
+      }
+      if (anniversaryMonth.length < 2) {
+        anniversaryMonth = "0" + anniversaryMonth;
+      }
+      anniversaryVal = anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay;
     }
-    while (anniversaryMonth.length < 2) {
-      anniversaryMonth = "0" + anniversaryMonth;
-    }
-    var anniversaryVal = anniversaryYear ? anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay : null;
+
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Anniversary: " + anniversaryVal);
     aGContact.setValue("event", 0, "anniversary", anniversaryVal);
     return anniversaryVal;
