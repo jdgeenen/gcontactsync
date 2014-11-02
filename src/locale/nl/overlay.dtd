@@ -23,7 +23,7 @@
 <!ENTITY Anniversary.label "Verjaardag">
 <!ENTITY Anniversary.accesskey "j">
 <!-- Note: these are only displayed in Thunderbird 3/Seamonkey 2 (not Postbox or TB 2) -->
-<!ENTITY initialStatus.label "">
+<!ENTITY initialStatus.label "Klik op Sync om te starten">
 <!-- LOCALIZATION NOTE: Please try to keep the number of characters down (around 60) to avoid making the window too wide -->
 <!ENTITY relations.box "Personen">
 <!-- This can be blank or something like "Click on Sync to begin" -->
