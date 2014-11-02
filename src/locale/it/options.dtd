@@ -33,20 +33,20 @@
 <!ENTITY enableMenu.accesskey "A">
 <!ENTITY enableMenuLinks.label "Aggiunge altre voci al menu di gContactSync (Modulo di report degli errori, FAQ, ecc…)">
 <!ENTITY enableMenuLinks.accesskey "l">
-<!ENTITY addReset.label "Aggiunge al menu contestuale della rubrica le voci 'Modifica sul server' e 'Modifica dal server'">
-<!ENTITY addReset.accesskey "M">
+<!ENTITY addReset.label "Aggiunge al menu contestuale della rubrica le voci 'Sostituzione dal server' e 'Sostituzione sul server'">
+<!ENTITY addReset.accesskey "m">
 <!ENTITY abResults.label "Elenco contatti">
 <!ENTITY phoneColLabels.label "Rinomina le etichette dei campi dei telefoni">
 <!ENTITY phoneColLabels.accesskey "R">
-<!ENTITY newColLabels.label "Aggiunge i nuovi campi alla colonna delle etichette">
+<!ENTITY newColLabels.label "Aggiunge il nome dei nuovi campi all'etichetta delle colonne">
 <!ENTITY newColLabels.accesskey "N">
 <!ENTITY advanced.tab "Avanzate">
-<!ENTITY warning.value "Avvertenza - sezione dedicata ad utenti esperti">
+<!ENTITY warning.value "Avvertenza - Sezione dedicata ad utenti esperti">
 <!ENTITY backup.label "Criteri di backup della rubrica">
 <!ENTITY backupInterval.value "Intervallo di backup (in giorni) (-1 per disabilitare) [14]">
 <!ENTITY backupInterval.accesskey "B">
 <!ENTITY other.label "Varie">
-<!ENTITY chromeTime.value "Ritardo nella comparsa della scritta 'Unresponsive Script' (0 per disabilitare)">
+<!ENTITY chromeTime.value "Ritardo nella comparsa del messaggio 'Unresponsive Script' (0 per disabilitare)">
 <!ENTITY chromeTime.accesskey "U">
 <!ENTITY confirmDeleteThreshold.value "Massimo numero di contatti che possono essere eliminati senza richiedere il permesso [5]">
 <!ENTITY confirmDeleteThreshold.accesskey "M">
@@ -56,7 +56,7 @@
 <!ENTITY httpRequestDelay.accesskey "R">
 <!ENTITY resetAll.label "Azzeramento di tutte le rubriche sincronizzate">
 <!ENTITY resetAll.accesskey "A">
-<!ENTITY cleanOldPrefs.label "Pulizia delle preferenze delle vecchie rubriche">
+<!ENTITY cleanOldPrefs.label "Pulizia delle vecchie preferenze delle rubriche">
 <!ENTITY cleanOldPrefs.accesskey "P">
 <!ENTITY cleanOldPhotos.label "Eliminazione delle foto dei vecchi contatti">
 <!ENTITY cleanOldPhotos.accesskey "E">
