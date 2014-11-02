@@ -794,12 +794,12 @@ com.gContactSync.GContact.prototype = {
    * @returns {string} The ID of this contact.
    */
   getID: function GContact_getID(aFull) {
-    var val   = this.getValue("id").value;
+    var val = this.getValue("id").value || "";
+    val = val.toLowerCase();
     if (aFull) {
       return com.gContactSync.fixURL(val); // make sure to change http to https
     }
-    var index = val.lastIndexOf("/");
-    return val.substr(index + 1);
+    return val.substr(val.lastIndexOf("/") + 1);
   },
   /**
    * Sets the photo for this contact.  Note that this may not immediately take

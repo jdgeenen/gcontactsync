@@ -114,8 +114,8 @@ com.gContactSync.TBContact.prototype = {
    * @returns {string} The GoogleID of this contact using https
    */
   getID: function TBContact_getID() {
-    // get the GoogleID then force http: -> https:
-    return com.gContactSync.fixURL(this.getValue("GoogleID"));
+    var id = this.getValue("GoogleID") || "";
+    return com.gContactSync.fixURL(id.toLowerCase());
   },
   /**
    * Sets the value of the requested attribute of this contact and optionally
