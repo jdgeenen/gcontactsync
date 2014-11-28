@@ -38,7 +38,7 @@
 <?xml-stylesheet href="chrome://gcontactsync/skin/Accounts.css" type="text/css"?>
 
 <!--<?xml-stylesheet href="chrome://gcontactsync/skin/AccountSetupWizard.css" type="text/css"?>-->
-<!DOCTYPE window [
+<!DOCTYPE wizard [
   <!ENTITY % initialSetupDTD SYSTEM "chrome://gcontactsync/locale/AccountSetupWizard.dtd">
   %initialSetupDTD;
   <!ENTITY % accountsDTD SYSTEM "chrome://gcontactsync/locale/Accounts.dtd">
@@ -49,7 +49,9 @@
 
 <wizard id="newAccountWizard" title="&title.label;"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        onwizardfinish="com.gContactSync.AccountSetupWizard.finish();">
+        onwizardfinish="com.gContactSync.AccountSetupWizard.finish();"
+        height="740px"
+        width="700px">
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/synonyms.js"/>
   <script type="application/x-javascript"
@@ -92,8 +94,11 @@
     <stringbundle id="gContactSyncStringBundle"
                   src="chrome://gContactSync/locale/gcontactsync.properties"/>
   </stringbundleset>
+
   <wizardpage onpageadvanced="return com.gContactSync.AccountSetupWizard.advanceAccountPage();"
-              id="accountPage">
+              pageid="accountPage"
+              id="accountPage"
+              next="oauthPage">
     <description>
       &account.description;
     </description>
@@ -110,28 +115,27 @@
       </menulist>
       <spacer height="5px"/>
       <radio id="newAccount" label="&newAccount.label;" accesskey="&newAccount.accesskey;" value="new"/>
-      <grid flex="1" id="newAccountGrid">
-        <columns>
-          <column/>
-          <column/>
-        </columns>
-        <rows>
-          <row align="center">
-            <label id="emailLabel" value="&email.value;" control="email" accesskey="&email.accesskey;"/>
-            <textbox id="email"/>
-          </row>
-          <row align="center">
-            <label id="passwordLabel" value="&password.value;" control="password" accesskey="&password.accesskey;"/>
-            <textbox id="password" type="password"/>
-          </row>
-        </rows>
-      </grid>
+        <vbox>
+          <label id="emailLabel" value="&email.value;" control="email" accesskey="&email.accesskey;"/>
+          <textbox id="email"/>
+        </vbox>
     </radiogroup>
   </wizardpage>
-
+  <wizardpage description="&accountSettings.description;"
+              onpagerewound="document.getElementById('newAccountWizard').canAdvance = true;"
+              onpageshow="com.gContactSync.AccountSetupWizard.loadOAuthPage();"
+              pageid="oauthPage"
+              id="oauthPage"
+              next="settingsPage">
+    <hbox flex="1">
+      <browser id="browser" type="content" src="" flex="1" />
+    </hbox>
+  </wizardpage>
   <wizardpage description="&accountSettings.description;"
               onpagerewound="com.gContactSync.AccountSetupWizard.mAuthToken='';"
-              onpageshow="com.gContactSync.AccountSetupWizard.setupAccountSettings();">
+              onpageshow="com.gContactSync.AccountSetupWizard.setupAccountSettings();"
+              id="settingsPage"
+              pageid="settingsPage">
     <label control="abName" value="&abName.value;" accesskey="&abName.accesskey;"/>
     <hbox>
       <menulist id="abName">

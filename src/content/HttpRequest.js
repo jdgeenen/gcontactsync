@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
  * Sets up an HTTP request.<br>
@@ -75,11 +75,16 @@ if (!com.gContactSync) com.gContactSync = {};
  * @class
  */
 com.gContactSync.HttpRequest = function gCS_HttpRequest() {
-  if (window.XMLHttpRequest)
+  if (window.XMLHttpRequest) {
     this.mHttpRequest = new XMLHttpRequest();
-  if (!this.mHttpRequest)
+  }
+
+  if (!this.mHttpRequest) {
     throw "Error - could not create an XMLHttpRequest" +
           com.gContactSync.StringBundle.getStr("pleaseReport");
+  }
+
+  this.mParameters = [];
 };
 
 com.gContactSync.HttpRequest.prototype = {
@@ -125,18 +130,42 @@ com.gContactSync.HttpRequest.prototype = {
     this.mHeaderValues.push(aValue);
   },
   /**
+   * Adds a parameter/value pair to the request.
+   * @param aParameter {string} The parameter.
+   * @param aValue {string} The value.
+   */
+  addParameter: function HttpRequest_addParameter(aLabel, aValue) {
+    if (aValue) {
+      this.mParameters.push(aLabel + "=" + encodeURIComponent(aValue));
+    } else {
+      this.mParameters.push(aLabel);
+    }
+  },
+  /**
    * Sends the HTTP Request with the information stored in the object.<br>
    * Note: Setup everything, including the callbacks for different statuses
    *       including mOnSuccess, mOnError, mOnFail, and mOnCreated first.<br>
    * See the class documentation for a sample request.
    */
   send: function HttpRequest_send() {
+
+    var params = this.mParameters.join("&");
+
     // log the basic info for debugging purposes
     com.gContactSync.LOGGER.VERBOSE_LOG("HTTP Request being formed");
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Caller is: " + this.send.caller.name);
     com.gContactSync.LOGGER.VERBOSE_LOG(" * URL: " + this.mUrl);
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Type: " + this.mType);
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Content-Type: " + this.mContentType);
+
+    if (params.length) {
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Parameters: " + params);
+      if (this.mType === "POST") {
+        this.mBody = this.mBody ? params + this.mBody : params;
+      } else {
+        this.mUrl = this.mUrl + "?" + params;
+      }
+    }
     
     this.mHttpRequest.open(this.mType, this.mUrl, true); // open the request
 
@@ -164,8 +193,7 @@ com.gContactSync.HttpRequest.prototype = {
     httpReq.timeout = com.gContactSync.Preferences.mSyncPrefs.httpRequestTimeout.value;
 
     httpReq.onreadystatechange = function httpReq_readyState() {
-      var callback = [],
-          i;
+      var callback = [];
       // if the request is done then check the status
       if (httpReq.readyState === 4) {
         // this may be called after the address book window is closed
@@ -204,7 +232,12 @@ com.gContactSync.HttpRequest.prototype = {
         }
       } // end of readyState
     };
-    this.mHttpRequest.send(this.mBody); // send the request
+    try {
+      this.mHttpRequest.send(this.mBody); // send the request
+    } catch (e) {
+      com.gContactSync.LOGGER.LOG_ERROR(" * Error sending request", e);
+      this.mOnError(this.mHttpRequest);
+    }
     com.gContactSync.LOGGER.VERBOSE_LOG(" * Request Sent");
   }
 };

@@ -6,12 +6,10 @@
 <!ENTITY existingAccount.accesskey   "a">
 <!ENTITY newAccount.label            "Use a new account">
 <!ENTITY newAccount.accesskey        "w">
+
+<!ENTITY accountSettings.description "gContactSync Settings">
 <!ENTITY email.value                 "E-mail Address:">
 <!ENTITY email.accesskey             "m">
-<!ENTITY password.value              "Password:">
-<!ENTITY password.accesskey          "P">
-
-<!ENTITY accountSettings.description "Account Settings">
 <!ENTITY newABButton.label           "New">
 <!ENTITY newABButton.accesskey       "N">
 <!ENTITY finish.value                "Click Finish to add the account and synchronize.">

@@ -45,9 +45,9 @@ if (!com.gContactSync) {com.gContactSync = {};}
  */
 com.gContactSync.LoginManager = {
   /** The hostname used in the login manager */
-  mHostname:      "chrome://gContactSync",
+  mHostname:      "chrome://gContactSync/oauth",
   /** The URL in the login manager */
-  mSubmitURL:     "User Auth Token",
+  mSubmitURL:     "User Refresh Token",
   /** The HTTP realm */
   mHttpRealm:     null,
   /** The username field */

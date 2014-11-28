@@ -677,3 +677,17 @@ com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
   com.gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", false);
 };
 
+/**
+ * Parses the parameters in the given URL and returns them in a map.
+ *
+ * @param aURL {string} The URL to parse.
+ */
+com.gContactSync.parseURLParameters = function gCS_parseURLParameters(aURL) {
+  var ret = {};
+  var params = aURL.split("?")[1].split("&");
+  for (var i in params) {
+    var param = params[i].split("=");
+    ret[param[0]] = param[1];
+  }
+  return ret;
+};

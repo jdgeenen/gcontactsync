@@ -52,16 +52,24 @@ false);
  * @class
  */
 com.gContactSync.gdata = {
-  AUTH_URL:              "https://www.google.com/accounts/ClientLogin",
-  AUTH_REQUEST_TYPE:     "POST",
-  AUTH_SUB_SESSION_URL:  "https://www.google.com/accounts/AuthSubSessionToken",
-  AUTH_SUB_SESSION_TYPE: "GET",
-  AUTH_SUB_REVOKE_URL:   "https://www.google.com/accounts/AuthSubRevokeToken",
-  AUTH_SUB_REVOKE_TYPE:  "GET",
-  O_AUTH_URL:            "https://www.google.com/accounts/AuthSubRequest?scope=https%3A%" +
-                         "2F%2Fwww.google.com%2Fm8%2Ffeeds%2F&session=1&secure=0&next=" +
-                         "http%3A%2F%2Fpirules.org%2Ftools%2Fgcs%2Findex.php",
-  O_AUTH_TYPE:           "GET",
+  CLIENT_ID:                  "874495714229-5m7jmsjebv6nrf61q14siutq43bi1gvt.apps.googleusercontent.com",
+  CLIENT_SECRET:              "vayAK3lt9f4tMcMK1HZ4XZqG",
+  REDIRECT_URI:               "http://localhost",
+  RESPONSE_TYPE:              "code",
+  SCOPE:                      "https://www.google.com/m8/feeds",
+  OAUTH_URL:                  "https://accounts.google.com/o/oauth2/auth",
+  TOKEN_REQUEST_URL:          "https://accounts.google.com/o/oauth2/token",
+  TOKEN_REQUEST_TYPE:         "POST",
+  TOKEN_REQUEST_GRANT_TYPE:   "authorization_code",
+  REFRESH_REQUEST_URL:        "https://accounts.google.com/o/oauth2/token",
+  REFRESH_REQUEST_TYPE:       "POST",
+  REFRESH_REQUEST_GRANT_TYPE: "refresh_token",
+  AUTH_URL:                   "https://www.google.com/accounts/ClientLogin",
+  AUTH_REQUEST_TYPE:          "POST",
+  AUTH_SUB_SESSION_URL:       "https://www.google.com/accounts/AuthSubSessionToken",
+  AUTH_SUB_SESSION_TYPE:      "GET",
+  AUTH_SUB_REVOKE_URL:        "https://www.google.com/accounts/AuthSubRevokeToken",
+  AUTH_SUB_REVOKE_TYPE:       "GET",
   /**
    * Sets up the body for an authentication request given the e-mail address
    * and password.

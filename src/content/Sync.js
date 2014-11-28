@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
  * Synchronizes a Thunderbird Address Book with Google Contacts.
@@ -101,6 +101,10 @@ com.gContactSync.Sync = {
   mManualSync:    false,
   /** Stores a snapshot of the error count from synchronization up to, not including, the current AB */
   mPrevErrorCount: 0,
+  /** The access token */
+  mAccessToken: {},
+  /** The access token type */
+  mTokenType: {},
   /**
    * Performs the first steps of the sync process.
    * @param aManualSync {boolean} Set this to true if the sync was run manually.
@@ -188,7 +192,7 @@ com.gContactSync.Sync = {
     com.gContactSync.LOGGER.LOG("Starting synchronization for " + com.gContactSync.Sync.mCurrentUsername +
                                 " at: " + new Date().getTime() + " (" + Date() + ")\n");
     com.gContactSync.Sync.mCurrentAb        = obj.ab;
-    com.gContactSync.Sync.mCurrentAuthToken = com.gContactSync.LoginManager.getAuthTokens()[com.gContactSync.Sync.mCurrentUsername];
+    var refreshToken                        = com.gContactSync.LoginManager.getAuthTokens()[com.gContactSync.Sync.mCurrentUsername];
     com.gContactSync.Sync.mContactsUrl      = null;
     com.gContactSync.Sync.mBackup           = false;
     com.gContactSync.LOGGER.VERBOSE_LOG("Found Address Book with name: " +
@@ -203,9 +207,11 @@ com.gContactSync.Sync = {
     }
     // If an authentication token cannot be found for this username then
     // offer to let the user login with that account
-    if (!com.gContactSync.Sync.mCurrentAuthToken) {
+    if (!refreshToken) {
+      // TODO FIXME
       com.gContactSync.LOGGER.LOG_WARNING("Unable to find the auth token for: " +
                                           com.gContactSync.Sync.mCurrentUsername);
+      /*
       if (com.gContactSync.confirm(com.gContactSync.StringBundle.getStr("noTokenFound") +
                   ": " + com.gContactSync.Sync.mCurrentUsername +
                   "\n" + com.gContactSync.StringBundle.getStr("ab") +
@@ -262,6 +268,8 @@ com.gContactSync.Sync = {
       }
       else
         com.gContactSync.Sync.syncNextUser();
+        */
+      com.gContactSync.Sync.syncNextUser();
       return;
     }
     var lastBackup = parseInt(obj.ab.mPrefs.lastBackup, 10),
@@ -277,16 +285,38 @@ com.gContactSync.Sync = {
                                            prefix,
                                            ".bak");
     }
-    // getGroups must be called if the myContacts pref is set so it can find the
-    // proper group URL
-    if (com.gContactSync.Sync.mCurrentAb.mPrefs.syncGroups === "true" ||
-        (com.gContactSync.Sync.mCurrentAb.mPrefs.myContacts !== "false" &&
-         com.gContactSync.Sync.mCurrentAb.mPrefs.myContactsName !== "false")) {
-      com.gContactSync.Sync.getGroups();
-    }
-    else {
-      com.gContactSync.Sync.getContacts();
-    }
+    com.gContactSync.Sync.getAccessToken(refreshToken);
+  },
+  /**
+   * Exchanges the refresh token for an access token.  On success, continues synchronization.
+   *
+   * @param aRefreshToken {string} A refresh token.
+   */
+  getAccessToken: function Sync_getAccessToken(aRefreshToken) {
+    com.gContactSync.LOGGER.VERBOSE_LOG("Requesting access token");
+    // Fetch an access token from the refresh token
+    var request = new com.gContactSync.GHttpRequest("REFRESH_REQUEST", aRefreshToken);
+    request.mOnSuccess = function getAccessTokenSuccess(aHttpRequest) {
+      var response = JSON.parse(aHttpRequest.responseText);
+      com.gContactSync.Sync.mCurrentAuthToken = response.token_type + " " + response.access_token;
+      // getGroups must be called if the myContacts pref is set so it can find the
+      // proper group URL
+      if (com.gContactSync.Sync.mCurrentAb.mPrefs.syncGroups === "true" ||
+          (com.gContactSync.Sync.mCurrentAb.mPrefs.myContacts !== "false" &&
+           com.gContactSync.Sync.mCurrentAb.mPrefs.myContactsName !== "false")) {
+        com.gContactSync.Sync.getGroups();
+      }
+      else {
+        com.gContactSync.Sync.getContacts();
+      }
+    };
+    request.mOnError = function getAccessTokenError(httpReq) {
+      com.gContactSync.LOGGER.LOG_ERROR(httpReq.responseText);
+      com.gContactSync.Sync.syncNextUser(httpReq.responseText);
+    };
+    request.mOnOffline = com.gContactSync.Sync.mOfflineFunction;
+    request.mOn503 = com.gContactSync.Sync.m503Function;
+    request.send();
   },
   /**
    * Sends an HTTP Request to Google for a feed of all of the user's groups.

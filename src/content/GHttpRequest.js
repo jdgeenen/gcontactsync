@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
  * Sets up an HTTP request to send to Google.
@@ -64,14 +64,36 @@ com.gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aB
   com.gContactSync.HttpRequest.call(this);  // call the superclass' constructor
   this.mBody = aBody;
   // all urls in gdata use SSL.  If a URL is supplied, make sure it uses SSL
-  if (aUrl && aUrl.indexOf("https://") < 0)
+  if (aUrl && aUrl.indexOf("https://") < 0) {
     aUrl = aUrl.replace("http://", "https://");
+  }
   switch (aType) {
   case "AUTH_SUB_SESSION":
   case "authsubsession":
     this.mContentType = this.CONTENT_TYPES.URL_ENC;
     this.mUrl         = com.gContactSync.gdata.AUTH_SUB_SESSION_URL;
     this.mType        = com.gContactSync.gdata.AUTH_SUB_SESSION_TYPE;
+    break;
+  case "TOKEN_REQUEST":
+  case "tokenrequest":
+    this.mContentType = this.CONTENT_TYPES.URL_ENC;
+    this.mUrl         = com.gContactSync.gdata.TOKEN_REQUEST_URL;
+    this.mType        = com.gContactSync.gdata.TOKEN_REQUEST_TYPE;
+    this.addParameter("code", aAuth);
+    this.addParameter("client_id", com.gContactSync.gdata.CLIENT_ID);
+    this.addParameter("client_secret", com.gContactSync.gdata.CLIENT_SECRET);
+    this.addParameter("redirect_uri", com.gContactSync.gdata.REDIRECT_URI);
+    this.addParameter("grant_type", com.gContactSync.gdata.TOKEN_REQUEST_GRANT_TYPE);
+    break;
+  case "REFRESH_REQUEST":
+  case "tokenrequest":
+    this.mContentType = this.CONTENT_TYPES.URL_ENC;
+    this.mUrl         = com.gContactSync.gdata.REFRESH_REQUEST_URL;
+    this.mType        = com.gContactSync.gdata.REFRESH_REQUEST_TYPE;
+    this.addParameter("refresh_token", aAuth);
+    this.addParameter("client_id", com.gContactSync.gdata.CLIENT_ID);
+    this.addParameter("client_secret", com.gContactSync.gdata.CLIENT_SECRET);
+    this.addParameter("grant_type", com.gContactSync.gdata.REFRESH_REQUEST_GRANT_TYPE);
     break;
   case "AUTHENTICATE":
   case "authenticate":
@@ -151,16 +173,19 @@ com.gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aB
   this.addHeaderItem("GData-Version", "3");
   // handle Token Expired errors
   this.mOn401 = com.gContactSync.handle401;
-  if (!this.mUrl)
+  if (!this.mUrl) {
     throw "Error - no URL was found for the HTTP Request";
-  if (aUsername && this.mUrl)
+  }
+  if (aUsername && this.mUrl) {
     this.mUrl = this.mUrl.replace("default",
                                   encodeURIComponent(com.gContactSync.fixUsername(aUsername)));
+  }
 };
 
 // get the superclass' prototype
 com.gContactSync.GHttpRequest.prototype = new com.gContactSync.HttpRequest();
 
+// TODO - rewrite, need to request a refresh_token
 /**
  * Handles 'Token Expired' errors.
  * If a sync is in progress:
@@ -172,6 +197,7 @@ com.gContactSync.GHttpRequest.prototype = new com.gContactSync.HttpRequest();
  */
 com.gContactSync.handle401 = function gCS_handle401(httpRequest) {
   com.gContactSync.LOGGER.LOG("***Found an expired token***");
+  /*
   // If there is a synchronization in process
   if (com.gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
     // Get the current username
@@ -229,6 +255,7 @@ com.gContactSync.handle401 = function gCS_handle401(httpRequest) {
     };
     httpReq.send();
   }
+  */
 };
 
 /**
@@ -239,6 +266,7 @@ com.gContactSync.handle401 = function gCS_handle401(httpRequest) {
 com.gContactSync.finish401 = function gCS_finish401(aUsername, aAuthToken) {
   com.gContactSync.LOGGER.VERBOSE_LOG(" * finish401 called: " + aUsername +
                                       " - " + aAuthToken);
+  /*
   if (aUsername && aAuthToken) {
     // Remove the auth token if it wasn't already
     if (com.gContactSync.LoginManager.mAuthTokens[aUsername]) {
@@ -254,4 +282,5 @@ com.gContactSync.finish401 = function gCS_finish401(aUsername, aAuthToken) {
     else
       com.gContactSync.Sync.getContacts();
   }
+  */
 };

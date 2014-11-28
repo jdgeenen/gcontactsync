@@ -34,6 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
 if (!com.gContactSync) {com.gContactSync = {};}
@@ -42,7 +44,6 @@ window.addEventListener("load",
   /** Initializes the AccountSetupWizard class when the window has finished loading */
   function gCS_AccountSetupWizardLoadListener(e) {
     com.gContactSync.AccountSetupWizard.init();
-    window.sizeToContent();
   },
 false);
 
@@ -50,7 +51,7 @@ false);
  * Provides helper functions for the new account wizard.
  */
 com.gContactSync.AccountSetupWizard = {
-  NEW_ACCOUNT_IDS:      ["emailLabel", "email", "passwordLabel", "password"],
+  NEW_ACCOUNT_IDS:      ["emailLabel", "email"],
   EXISTING_ACCOUNT_IDS: ["existingAccountList"],
   mAuthToken:           "",
   mEmailAddress:        "",
@@ -122,6 +123,76 @@ com.gContactSync.AccountSetupWizard = {
     }
   },
   /**
+   * Loads the OAuth2 page and adds a listener that handles successful authentication.
+   */
+  loadOAuthPage: function AccountSetupWizard_loadOAuthPage() {
+
+    var wizard = document.getElementById("newAccountWizard");
+
+    var url = com.gContactSync.gdata.OAUTH_URL +
+              "?response_type=" + com.gContactSync.gdata.RESPONSE_TYPE +
+              "&client_id=" + com.gContactSync.gdata.CLIENT_ID +
+              "&redirect_uri=" + com.gContactSync.gdata.REDIRECT_URI +
+              "&scope=" + com.gContactSync.gdata.SCOPE +
+              "&login_hint=" + this.mEmailAddress;
+
+    var browser = document.getElementById("browser");
+    browser.setAttribute("src", url);
+    browser.addProgressListener(com.gContactSync.AccountSetupWizard.listener);
+    wizard.canAdvance = false;
+  },
+
+  /**
+   * Notify that an authorization code was received.  Sends a token request using the code.
+   *
+   * @param aCode {string} The authorization code.
+   */
+  onCodeReceived: function AccountSetupWizard_onCodeReceived(aCode) {
+    com.gContactSync.LOGGER.LOG("Received an authorization code");
+    var browser = document.getElementById("browser");
+    browser.removeProgressListener(com.gContactSync.AccountSetupWizard.listener);
+    browser.setAttribute("src", "");
+    var request = new com.gContactSync.GHttpRequest("TOKEN_REQUEST", aCode);
+    request.mOnSuccess = com.gContactSync.AccountSetupWizard.onTokenReceived;
+    request.mOnError = function onTokenError(aHttpReq) {
+      com.gContactSync.alertError(aHttpReq.responseText);
+    };
+    request.send();
+  },
+  /**
+   * Notify that an access token was received.  Saves the refresh token and advances the wizard.
+   *
+   * @param aHttpReq {XmlHttpRequest} The HTTP request.
+   */
+  onTokenReceived: function AccountSetupWizard_onTokenReceived(aHttpReq) {
+    com.gContactSync.LOGGER.LOG("Received an access token");
+    var response = JSON.parse(aHttpReq.responseText);
+    com.gContactSync.LoginManager.addAuthToken(com.gContactSync.AccountSetupWizard.mEmailAddress, response.refresh_token);
+    var wizard = document.getElementById("newAccountWizard");
+    wizard.canAdvance = true;
+    wizard.advance();
+  },
+  /**
+   * A nsIWebProgressListener that listens for a location change to the redirect URI.
+   * Notifies the AccountSetupWizard.
+   */
+  listener: {
+
+    QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsIWebProgressListener,
+                                           Components.interfaces.nsISupportsWeakReference]),
+
+    onLocationChange: function (aWebProgress, aRequest, aLocation) {
+      if (aLocation.spec.indexOf(com.gContactSync.gdata.REDIRECT_URI) === 0) {
+        var code = com.gContactSync.parseURLParameters(aLocation.spec)["code"];
+        com.gContactSync.AccountSetupWizard.onCodeReceived(code);
+      }
+    },
+    onStateChange: function () {},
+    onProgressChange: function () {},
+    onStatusChange: function () {},
+    onSecurityChange: function () {},
+  },
+  /**
    * Gets an auth token for the selected username if necessary (and possible), then returns whether the page may
    * advance now.  If this function must get an auth token it will advance the page upon successful completion
    * of the HTTP request.
@@ -130,13 +201,9 @@ com.gContactSync.AccountSetupWizard = {
   advanceAccountPage: function AccountSetupWizard_advancedAccountPage() {
 
     // Try to get a token for the account
-    // If there's already a token it was advanced by a successful authentication.
-    if (this.mAuthToken !== "") {
-      return true;
-    }
 
     var option = document.getElementById("accountOption");
-    var password = "";
+    var nextPage = "oauthPage";
 
     com.gContactSync.LOGGER.VERBOSE_LOG("Advancing account page using a(n) " + option.value + " account.");
 
@@ -146,14 +213,11 @@ com.gContactSync.AccountSetupWizard = {
       if ("token" in this.mAccounts[index]) {
         com.gContactSync.LOGGER.VERBOSE_LOG(" * Already have a token");
         this.mAuthToken = this.mAccounts[index].token;
-        return true;
+        nextPage = "settingsPage";
       }
-      password = this.mAccounts[index].password;
     } else {
       var emailElem    = document.getElementById("email");
-      var passwordElem = document.getElementById("password");
       this.mEmailAddress = emailElem.value;
-      password = passwordElem.value;
       // This is a primitive way of validating an e-mail address, but Google takes
       // care of the rest.  It seems to allow getting an auth token w/ only the
       // username, but returns an error when trying to do anything w/ that token
@@ -164,35 +228,10 @@ com.gContactSync.AccountSetupWizard = {
       }
     }
 
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Requesting a token for " + this.mEmailAddress);
+    com.gContactSync.LOGGER.VERBOSE_LOG(" * Selected e-mail address: " + this.mEmailAddress);
+    document.getElementById("accountPage").setAttribute("next", nextPage);
 
-    var body    = com.gContactSync.gdata.makeAuthBody(this.mEmailAddress, password);
-    var httpReq = new com.gContactSync.GHttpRequest("authenticate", null, null, body);
-    // Move to the next page in the wizard upon successful authentication
-    httpReq.mOnSuccess = function authSuccess(httpReq) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(httpReq.responseText);
-      com.gContactSync.AccountSetupWizard.mAuthToken = httpReq.responseText.split("\n")[2];
-      com.gContactSync.LoginManager.addAuthToken(com.gContactSync.AccountSetupWizard.mEmailAddress,
-		                                 'GoogleLogin ' + com.gContactSync.AccountSetupWizard.mAuthToken);
-      document.getElementById("newAccountWizard").advance();
-    };
-    // if it fails, alert the user and prompt them to try again
-    httpReq.mOnError = function authError(httpReq) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr('authErr'));
-      com.gContactSync.LOGGER.LOG_ERROR('Authentication Error - ' +
-                                        httpReq.status,
-                                        httpReq.responseText);
-    };
-    // if the user is offline, alert them and quit
-    httpReq.mOnOffline = function authOffline(httpReq) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr('offlineStatusText'));
-      com.gContactSync.LOGGER.LOG_ERROR('Authentication Error (offline) - ' +
-                                        httpReq.status,
-                                        httpReq.responseText);
-    };
-    httpReq.send();
-    // Don't let the page advance until a successful response is returned.
-    return false;
+    return true;
   },
   /**
    * Initializes the account settings (address books and groups) and selects the AB with
