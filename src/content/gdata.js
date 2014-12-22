@@ -456,18 +456,23 @@ com.gContactSync.gdata = {
                                 aAccount + "\nto:\n" + destFile.path);
     return com.gContactSync.FileIO.writeToFile(destFile, aFeed);
   },
+  /**
+   * Requests a new refresh token.
+   * @param aEmail {string} The email address to request a token for.
+   * @param aCallback {function} The function to call once there is a new token.
+   */
   requestNewRefreshToken: function gdata_requestNewRefreshToken(aEmail, aCallback) {
     var wizard = window.open("chrome://gcontactsync/content/NewRefreshToken.xul",
                              "NewRefreshTokenWindow",
                              "chrome,resizable=yes,scrollbars=no,status=no");
     // when the setup window loads, set its onunload property to begin a sync
-    wizard.onload = function onloadListener() {
+    wizard.addEventListener("load", function onloadListener() {
       var browser = wizard.document.getElementById("browser");
+      browser.loadURI(com.gContactSync.gdata.getOAuthURL(aEmail));
       com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, function callback(aResponse) {
         wizard.close();
         aCallback(aResponse);
       });
-      browser.setAttribute("src", com.gContactSync.gdata.getOAuthURL(aEmail));
-    };
+    });
   },
 };

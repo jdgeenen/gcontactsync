@@ -127,7 +127,7 @@ com.gContactSync.AccountSetupWizard = {
 
     var wizard = document.getElementById("newAccountWizard");
     var browser = document.getElementById("browser");
-    browser.setAttribute("src", com.gContactSync.gdata.getOAuthURL(this.mEmailAddress));
+    browser.loadURI(com.gContactSync.gdata.getOAuthURL(this.mEmailAddress));
     com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, this.onSuccessfulAuthentication);
     wizard.canAdvance = false;
   },

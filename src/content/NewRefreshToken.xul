@@ -44,6 +44,6 @@
         height="740px"
         width="700px">
   <hbox flex="1">
-    <browser id="browser" src="" flex="1"/>
+    <browser id="browser" src="" flex="1" type="content"/>
   </hbox>
 </window>
