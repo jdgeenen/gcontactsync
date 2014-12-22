@@ -71,20 +71,18 @@ com.gContactSync.gdata = {
   AUTH_SUB_REVOKE_URL:        "https://www.google.com/accounts/AuthSubRevokeToken",
   AUTH_SUB_REVOKE_TYPE:       "GET",
   /**
-   * Sets up the body for an authentication request given the e-mail address
-   * and password.
-   * @param aEmail     {string} The user's e-mail address
-   * @param aPassword  {string} The user's password
-   * @returns {string} The body for an authentication request.
+   * Returns an OAuth URL for the given e-mail addres.
+   *
+   * @param aEmail {string} The e-mail address.
+   * @return {string} The OAuth URL.
    */
-  makeAuthBody: function gdata_makeAuthBody(aEmail, aPassword) {
-    // NOTE: leave accountType as HOSTED_OR_GOOGLE or Google Apps for your
-    // domain accounts won't work
-    // fix the username (remove whitespace)
-    aEmail = com.gContactSync.fixUsername(aEmail);
-    return "accountType=HOSTED_OR_GOOGLE&Email=" + encodeURIComponent(aEmail) +
-           "&Passwd=" + encodeURIComponent(aPassword) +
-           "&service=cp&source=Josh-gContactSync-0-3";
+  getOAuthURL: function gdata_getOAuthURL(aEmail) {
+    return com.gContactSync.gdata.OAUTH_URL +
+           "?response_type=" + com.gContactSync.gdata.RESPONSE_TYPE +
+           "&client_id=" + com.gContactSync.gdata.CLIENT_ID +
+           "&redirect_uri=" + com.gContactSync.gdata.REDIRECT_URI +
+           "&scope=" + com.gContactSync.gdata.SCOPE +
+           "&login_hint=" + aEmail;
   },
   /**
    * Returns the email address of the given ID.
@@ -457,5 +455,19 @@ com.gContactSync.gdata = {
     com.gContactSync.LOGGER.LOG("Beginning a backup of the Google Account:\n" +
                                 aAccount + "\nto:\n" + destFile.path);
     return com.gContactSync.FileIO.writeToFile(destFile, aFeed);
-  }
+  },
+  requestNewRefreshToken: function gdata_requestNewRefreshToken(aEmail, aCallback) {
+    var wizard = window.open("chrome://gcontactsync/content/NewRefreshToken.xul",
+                             "NewRefreshTokenWindow",
+                             "chrome,resizable=yes,scrollbars=no,status=no");
+    // when the setup window loads, set its onunload property to begin a sync
+    wizard.onload = function onloadListener() {
+      var browser = wizard.document.getElementById("browser");
+      com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, function callback(aResponse) {
+        wizard.close();
+        aCallback(aResponse);
+      });
+      browser.setAttribute("src", com.gContactSync.gdata.getOAuthURL(aEmail));
+    };
+  },
 };

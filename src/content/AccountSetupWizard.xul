@@ -89,6 +89,8 @@
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/Accounts.js"/>
   <script type="application/x-javascript"
+          src="chrome://gcontactsync/content/OAuth2.js"/>
+  <script type="application/x-javascript"
           src="chrome://gcontactsync/content/AccountSetupWizard.js"/>
   <stringbundleset id="stringbundleset">
     <stringbundle id="gContactSyncStringBundle"

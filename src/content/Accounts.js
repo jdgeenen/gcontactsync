@@ -90,6 +90,7 @@ com.gContactSync.Accounts = {
    * @returns {boolean} True if an authentication HTTP request was sent.
    */
   newUsername: function Accounts_newUsername() {
+    /*
     var prompt   = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                              .getService(Components.interfaces.nsIPromptService)
                              .promptUsernameAndPassword,
@@ -140,6 +141,7 @@ com.gContactSync.Accounts = {
       com.gContactSync.LOGGER.LOG_ERROR(com.gContactSync.StringBundle.getStr('offlineErr'));
     };
     httpReq.send();
+    */
     return true;
   },
   /**

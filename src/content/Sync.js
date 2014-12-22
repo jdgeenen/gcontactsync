@@ -110,10 +110,6 @@ com.gContactSync.Sync = {
    * @param aManualSync {boolean} Set this to true if the sync was run manually.
    */
   begin: function Sync_begin(aManualSync, aAddressBooks) {
-    if (!com.gContactSync.gdata.isAuthValid()) {
-      com.gContactSync.alert(com.gContactSync.StringBundle.getStr("pleaseAuth"));
-      return;
-    }
     // quit if still syncing.
     if (com.gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
       return;
@@ -147,6 +143,12 @@ com.gContactSync.Sync = {
     }
 
     com.gContactSync.Overlay.updateVersion();
+
+    if (com.gContactSync.Sync.mAddressBooks.length === 0) {
+      com.gContactSync.alert(com.gContactSync.StringBundle.getStr("pleaseAuth"));
+      return;
+    }
+
     com.gContactSync.Sync.syncNextUser();
   },
   /**
@@ -156,7 +158,7 @@ com.gContactSync.Sync = {
   syncNextUser: function Sync_syncNextUser() {
 
     // If the sync was successful, set the previous address book's last sync date (if it exists)
-    if (com.gContactSync.Sync.mPrevErrorCount == com.gContactSync.LOGGER.mErrorCount &&
+    if (com.gContactSync.Sync.mPrevErrorCount === com.gContactSync.LOGGER.mErrorCount &&
         com.gContactSync.Sync.mCurrentAb &&
         com.gContactSync.Sync.mCurrentAb.setLastSyncDate) {
       com.gContactSync.Sync.mCurrentAb.setLastSyncDate((new Date()).getTime());
@@ -208,68 +210,20 @@ com.gContactSync.Sync = {
     // If an authentication token cannot be found for this username then
     // offer to let the user login with that account
     if (!refreshToken) {
-      // TODO FIXME
       com.gContactSync.LOGGER.LOG_WARNING("Unable to find the auth token for: " +
                                           com.gContactSync.Sync.mCurrentUsername);
-      /*
       if (com.gContactSync.confirm(com.gContactSync.StringBundle.getStr("noTokenFound") +
                   ": " + com.gContactSync.Sync.mCurrentUsername +
                   "\n" + com.gContactSync.StringBundle.getStr("ab") +
                   ": " + com.gContactSync.Sync.mCurrentAb.getName())) {
-        // Now let the user login
-        var prompt   = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
-                                 .getService(Components.interfaces.nsIPromptService)
-                                 .promptUsernameAndPassword,
-            username = {value: com.gContactSync.Sync.mCurrentUsername},
-            password = {},
-        // opens a username/password prompt
-            ok = prompt(window, com.gContactSync.StringBundle.getStr("loginTitle"),
-                        com.gContactSync.StringBundle.getStr("loginText"), username, password, null,
-                        {value: false});
-        if (!ok) {
-          com.gContactSync.Sync.syncNextUser();
-          return;
-        }
-        // Decrement the index so Sync.syncNextUser runs on this AB again
         com.gContactSync.Sync.mIndex--;
-        // This is a primitive way of validating an e-mail address, but Google takes
-        // care of the rest.  It seems to allow getting an auth token w/ only the
-        // username, but returns an error when trying to do anything w/ that token
-        // so this makes sure it is a full e-mail address.
-        if (username.value.indexOf("@") < 1) {
-          com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("invalidEmail"));
+        com.gContactSync.gdata.requestNewRefreshToken(com.gContactSync.Sync.mCurrentUsername, function newRefreshToken(aResponse) {
+          com.gContactSync.LoginManager.addAuthToken(com.gContactSync.Sync.mCurrentUsername, aResponse.refresh_token);
           com.gContactSync.Sync.syncNextUser();
-          return;
-        }
-        // fix the username before authenticating
-        username.value = com.gContactSync.fixUsername(username.value);
-        var body    = com.gContactSync.gdata.makeAuthBody(username.value, password.value);
-        var httpReq = new com.gContactSync.GHttpRequest("authenticate", null, null, body);
-        // if it succeeds and Google returns the auth token, store it and then start
-        // a new sync
-        httpReq.mOnSuccess = function reauth_onSuccess(httpReq) {
-          com.gContactSync.LoginManager.addAuthToken(username.value,
-                                                     'GoogleLogin' +
-                                                     httpReq.responseText.split("\n")[2]);
-          com.gContactSync.Sync.syncNextUser();
-        };
-        // if it fails, alert the user and prompt them to try again
-        httpReq.mOnError   = function reauth_onError(httpReq) {
-          com.gContactSync.alertError(com.gContactSync.StringBundle.getStr('authErr'));
-          com.gContactSync.LOGGER.LOG_ERROR('Authentication Error - ' +
-                                            httpReq.status,
-                                            httpReq.responseText);
-          com.gContactSync.Sync.syncNextUser();
-        };
-        // if the user is offline, alert them and quit
-        httpReq.mOnOffline = com.gContactSync.Sync.mOfflineFunction;
-        httpReq.mOn503 = com.gContactSync.Sync.m503Function;
-        httpReq.send();
-      }
-      else
+        });
+      } else {
         com.gContactSync.Sync.syncNextUser();
-        */
-      com.gContactSync.Sync.syncNextUser();
+      }
       return;
     }
     var lastBackup = parseInt(obj.ab.mPrefs.lastBackup, 10),

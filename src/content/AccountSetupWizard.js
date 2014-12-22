@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2013
+ * Portions created by the Initial Developer are Copyright (C) 2013-2014
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -33,8 +33,6 @@
  * the terms of any one of the MPL, the GPL or the LGPL.
  *
  * ***** END LICENSE BLOCK ***** */
-
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
@@ -128,69 +126,21 @@ com.gContactSync.AccountSetupWizard = {
   loadOAuthPage: function AccountSetupWizard_loadOAuthPage() {
 
     var wizard = document.getElementById("newAccountWizard");
-
-    var url = com.gContactSync.gdata.OAUTH_URL +
-              "?response_type=" + com.gContactSync.gdata.RESPONSE_TYPE +
-              "&client_id=" + com.gContactSync.gdata.CLIENT_ID +
-              "&redirect_uri=" + com.gContactSync.gdata.REDIRECT_URI +
-              "&scope=" + com.gContactSync.gdata.SCOPE +
-              "&login_hint=" + this.mEmailAddress;
-
     var browser = document.getElementById("browser");
-    browser.setAttribute("src", url);
-    browser.addProgressListener(com.gContactSync.AccountSetupWizard.listener);
+    browser.setAttribute("src", com.gContactSync.gdata.getOAuthURL(this.mEmailAddress));
+    com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, this.onSuccessfulAuthentication);
     wizard.canAdvance = false;
   },
-
   /**
-   * Notify that an authorization code was received.  Sends a token request using the code.
+   * Callback for OAuth2.  Adds the refresh token to the login manager and advances the wizard.
    *
-   * @param aCode {string} The authorization code.
+   * @param aResponse {object} The parsed JSON object.
    */
-  onCodeReceived: function AccountSetupWizard_onCodeReceived(aCode) {
-    com.gContactSync.LOGGER.LOG("Received an authorization code");
-    var browser = document.getElementById("browser");
-    browser.removeProgressListener(com.gContactSync.AccountSetupWizard.listener);
-    browser.setAttribute("src", "");
-    var request = new com.gContactSync.GHttpRequest("TOKEN_REQUEST", aCode);
-    request.mOnSuccess = com.gContactSync.AccountSetupWizard.onTokenReceived;
-    request.mOnError = function onTokenError(aHttpReq) {
-      com.gContactSync.alertError(aHttpReq.responseText);
-    };
-    request.send();
-  },
-  /**
-   * Notify that an access token was received.  Saves the refresh token and advances the wizard.
-   *
-   * @param aHttpReq {XmlHttpRequest} The HTTP request.
-   */
-  onTokenReceived: function AccountSetupWizard_onTokenReceived(aHttpReq) {
-    com.gContactSync.LOGGER.LOG("Received an access token");
-    var response = JSON.parse(aHttpReq.responseText);
-    com.gContactSync.LoginManager.addAuthToken(com.gContactSync.AccountSetupWizard.mEmailAddress, response.refresh_token);
+  onSuccessfulAuthentication: function AccountSetupWizard_onSuccessfulAuthentication(aResponse) {
+    com.gContactSync.LoginManager.addAuthToken(com.gContactSync.AccountSetupWizard.mEmailAddress, aResponse.refresh_token);
     var wizard = document.getElementById("newAccountWizard");
     wizard.canAdvance = true;
     wizard.advance();
-  },
-  /**
-   * A nsIWebProgressListener that listens for a location change to the redirect URI.
-   * Notifies the AccountSetupWizard.
-   */
-  listener: {
-
-    QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsIWebProgressListener,
-                                           Components.interfaces.nsISupportsWeakReference]),
-
-    onLocationChange: function (aWebProgress, aRequest, aLocation) {
-      if (aLocation.spec.indexOf(com.gContactSync.gdata.REDIRECT_URI) === 0) {
-        var code = com.gContactSync.parseURLParameters(aLocation.spec)["code"];
-        com.gContactSync.AccountSetupWizard.onCodeReceived(code);
-      }
-    },
-    onStateChange: function () {},
-    onProgressChange: function () {},
-    onStatusChange: function () {},
-    onSecurityChange: function () {},
   },
   /**
    * Gets an auth token for the selected username if necessary (and possible), then returns whether the page may
