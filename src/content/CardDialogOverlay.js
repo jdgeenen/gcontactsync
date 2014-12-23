@@ -342,7 +342,13 @@ com.gContactSync.CardDialogOverlay = {
     anniversaryElem._constrainValue = birthdayElem._constrainValue;
     anniversaryElem._setFieldValue = birthdayElem._setFieldValue;
 
-    // fix the width of the dialog
+    // Set the height of the Notes field
+    var notesElem = document.getElementById("Notes");
+    if (notesElem && com.gContactSync.Preferences.mSyncPrefs.notesHeight.value) {
+      notesElem.style.height = com.gContactSync.Preferences.mSyncPrefs.notesHeight.value;
+    }
+
+    // Update the size of the dialog
     window.sizeToContent();
 
     // override the check and set card values function
