@@ -15,8 +15,6 @@
 <!-- Basic Settings -->
 <!ENTITY Username.label          "Choose an Account">
 <!ENTITY Username.accesskey      "C">
-<!ENTITY NewUsername.label       "Add a New Account">
-<!ENTITY NewUsername.accesskey   "A">
 <!ENTITY NoUsername.label        "No usernames found">
 
 <!ENTITY Groups.label            "Groups and Contacts to Synchronize">

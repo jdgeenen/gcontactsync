@@ -86,65 +86,6 @@ com.gContactSync.Accounts = {
     }
   },
   /**
-   * Create a new username/account for the selected plugin.
-   * @returns {boolean} True if an authentication HTTP request was sent.
-   */
-  newUsername: function Accounts_newUsername() {
-    /*
-    var prompt   = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
-                             .getService(Components.interfaces.nsIPromptService)
-                             .promptUsernameAndPassword,
-        username = {},
-        password = {},
-        // opens a username/password prompt
-        ok = prompt(window, com.gContactSync.StringBundle.getStr("loginTitle"),
-                    com.gContactSync.StringBundle.getStr("loginText"), username, password, null,
-                    {value: false});
-    if (!ok) {
-      return false;
-    }
-    if (com.gContactSync.LoginManager.getAuthToken(username.value)) { // the username already exists
-      com.gContactSync.alertWarning(com.gContactSync.StringBundle.getStr("usernameExists"));
-      return false;
-    }
-    // This is a primitive way of validating an e-mail address, but Google takes
-    // care of the rest.  It seems to allow getting an auth token w/ only the
-    // username, but returns an error when trying to do anything w/ that token
-    // so this makes sure it is a full e-mail address.
-    if (username.value.indexOf("@") < 1) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("invalidEmail"));
-      return this.newUsername();
-    }
-    // fix the username before authenticating
-    username.value = com.gContactSync.fixUsername(username.value);
-    var body    = com.gContactSync.gdata.makeAuthBody(username.value, password.value),
-        httpReq = new com.gContactSync.GHttpRequest("authenticate", null, null, body);
-    // if it succeeds and Google returns the auth token, store it and then start
-    // a new sync
-    httpReq.mOnSuccess = function newUsernameSuccess(httpReq) {
-      com.gContactSync.LoginManager.addAuthToken(username.value,
-                                                 'GoogleLogin' + httpReq.responseText.split("\n")[2]);
-      com.gContactSync.Accounts.selectedAbChange();
-      com.gContactSync.Accounts.fillUsernames();
-    };
-    // if it fails, alert the user and prompt them to try again
-    httpReq.mOnError   = function newUsernameError(httpReq) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr('authErr'));
-      com.gContactSync.LOGGER.LOG_ERROR('Authentication Error - ' +
-                                        httpReq.status,
-                                        httpReq.responseText);
-      com.gContactSync.Accounts.newUsername();
-    };
-    // if the user is offline, alert them and quit
-    httpReq.mOnOffline = function newUsernameOffline(httpReq) {
-      com.gContactSync.alertWarning(com.gContactSync.StringBundle.getStr('offlineErr'));
-      com.gContactSync.LOGGER.LOG_ERROR(com.gContactSync.StringBundle.getStr('offlineErr'));
-    };
-    httpReq.send();
-    */
-    return true;
-  },
-  /**
    * Returns the GAddressBook corresponding to the currently-selected address
    * book in the accounts tree.
    * @returns {com.gContactSync.GAddressBook} A GAddressBook if one is selected, else false.

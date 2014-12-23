@@ -71,8 +71,6 @@
     <vbox>
       <hbox>
         <label control="Username" value="&Username.label;" accesskey="&Username.accesskey;"/>
-        <label id="link-label"    value="&NewUsername.label;" accesskey="&NewUsername.accesskey;"
-               onclick="com.gContactSync.Accounts.newUsername();"/>
       </hbox>
       <menulist id="Username"
                 oncommand="com.gContactSync.Accounts.restoreGroups();
