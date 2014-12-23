@@ -185,102 +185,37 @@ com.gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aB
 // get the superclass' prototype
 com.gContactSync.GHttpRequest.prototype = new com.gContactSync.HttpRequest();
 
-// TODO - rewrite, need to request a refresh_token
 /**
  * Handles 'Token Expired' errors.
  * If a sync is in progress:
- *  - Get the username
  *  - Alert the user
- *  - Prompt for the password
- *  - Get a new auth token to replace the old one
+ *  - Show the OAuth dialog
+ *  - Save the new refresh token
  *  - Restart the sync
  */
-com.gContactSync.handle401 = function gCS_handle401(httpRequest) {
+com.gContactSync.handle401 = function gCS_handle401() {
   com.gContactSync.LOGGER.LOG("***Found an expired token***");
-  /*
-  // If there is a synchronization in process
-  if (com.gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
-    // Get the current username
-    var username = com.gContactSync.Sync.mCurrentUsername;
-    com.gContactSync.alertWarning(com.gContactSync.StringBundle.getStr("tokenExpiredMsg"));
-    // Prompt for the username and password
-    var prompt   = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
-                             .getService(Components.interfaces.nsIPromptService)
-                             .promptUsernameAndPassword,
-        password = {};
-    // set the username
-    username = { value: username };
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Showing a username/password prompt");
-    // opens a username/password prompt
-    var ok = prompt(window, com.gContactSync.StringBundle.getStr("loginTitle"),
-                    com.gContactSync.StringBundle.getStr("loginText"), username,
-                    password, null, {value: false});
-    if (!ok) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * User canceled the prompt");
-      com.gContactSync.Sync.finish(com.gContactSync.StringBundle.getStr("tokenExpired"), false);
-      return false;
-    }
-    // This is a primitive way of validating an e-mail address, but Google takes
-    // care of the rest.  It seems to allow getting an auth token w/ only the
-    // username, but returns an error when trying to do anything w/ that token
-    // so this makes sure it is a full e-mail address.
-    if (username.value.indexOf("@") < 1) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("invalidEmail"));
-      return com.gContactSync.handle401();
-    }
-    // fix the username before authenticating
-    username.value = com.gContactSync.fixUsername(username.value);
-    var body    = com.gContactSync.gdata.makeAuthBody(username.value, password.value);
-    var httpReq = new com.gContactSync.GHttpRequest("authenticate", null, null, body);
-    // if it succeeds and Google returns the auth token, store it and then start
-    // a new sync
-    httpReq.mOnSuccess = function fix401Success(httpReq) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(com.gContactSync
-                                             .serializeFromText(httpReq.responseText));
-      com.gContactSync.finish401(username.value,
-                                 httpReq.responseText.split("\n")[2]);
-    };
-    // if it fails, alert the user and prompt them to try again
-    httpReq.mOnError   = function fix401Error(httpReq) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr('authErr'));
-      com.gContactSync.LOGGER.LOG_ERROR('Authentication Error - ' +
-                                         httpReq.status,
-                                         httpReq.responseText);
-      com.gContactSync.handle401();
-    };
-    // if the user is offline, alert them and quit
-    httpReq.mOnOffline = function fix401Offline(httpReq) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr('offlineErr'));
-      com.gContactSync.LOGGER.LOG_ERROR(com.gContactSync.StringBundle.getStr('offlineErr'));
-    };
-    httpReq.send();
+  if (!com.gContactSync.Preferences.mSyncPrefs.synchronizing.value || !com.gContactSync.Sync.mCurrentUsername) {
+    return;
   }
-  */
+  com.gContactSync.alertWarning(com.gContactSync.StringBundle.getStr("tokenExpiredMsg"));
+  com.gContactSync.gdata.requestNewRefreshToken(com.gContactSync.Sync.mCurrentUsername, com.gContactSync.finish401);
 };
 
 /**
  * Called after the re-authentication HTTP request is sent after a 401 error
- * @param aUsername {string}  The account's username.
- * @param aAuthToken {string} An authentication token for the account.
+ * @param aResponse {object} The JSON response to the OAuth2 request.
  */
-com.gContactSync.finish401 = function gCS_finish401(aUsername, aAuthToken) {
-  com.gContactSync.LOGGER.VERBOSE_LOG(" * finish401 called: " + aUsername +
-                                      " - " + aAuthToken);
-  /*
-  if (aUsername && aAuthToken) {
+com.gContactSync.finish401 = function gCS_finish401(aResponse) {
+  var username = com.gContactSync.Sync.mCurrentUsername;
+  if (username && aResponse) {
     // Remove the auth token if it wasn't already
-    if (com.gContactSync.LoginManager.mAuthTokens[aUsername]) {
+    if (com.gContactSync.LoginManager.mAuthTokens[username]) {
       com.gContactSync.LOGGER.VERBOSE_LOG(" * Removing old auth token");
-      com.gContactSync.LoginManager.removeAuthToken(aUsername);
+      com.gContactSync.LoginManager.removeAuthToken(username);
     }
-    var token = 'GoogleLogin ' + aAuthToken;
-    com.gContactSync.LoginManager.addAuthToken(aUsername, token);
-    com.gContactSync.Sync.mCurrentAuthToken = token;
-    if (com.gContactSync.Preferences.mSyncPrefs.syncGroups.value ||
-        com.gContactSync.Preferences.mSyncPrefs.myContacts)
-      com.gContactSync.Sync.getGroups();
-    else
-      com.gContactSync.Sync.getContacts();
+    com.gContactSync.LoginManager.addAuthToken(username, aResponse.refresh_token);
+    com.gContactSync.Sync.mIndex--;
+    com.gContactSync.Sync.syncNextUser();
   }
-  */
 };
