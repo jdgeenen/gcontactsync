@@ -468,7 +468,9 @@ com.gContactSync.gdata = {
     // when the setup window loads, set its onunload property to begin a sync
     wizard.addEventListener("load", function onloadListener() {
       var browser = wizard.document.getElementById("browser");
-      browser.loadURI(com.gContactSync.gdata.getOAuthURL(aEmail));
+      var url = com.gContactSync.gdata.getOAuthURL(aEmail);
+      com.gContactSync.LOGGER.VERBOSE_LOG("Opening browser with URL: " + url);
+      browser.loadURI(url);
       com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, function callback(aResponse) {
         wizard.close();
         aCallback(aResponse);

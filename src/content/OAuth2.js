@@ -65,7 +65,7 @@ com.gContactSync.OAuth2 = {
    * @param aCode {string} The authorization code.
    */
   onCodeReceived: function OAuth2_onCodeReceived(aCode) {
-    com.gContactSync.LOGGER.LOG("Received an authorization code");
+    com.gContactSync.LOGGER.LOG("Received an authorization code: " + aCode);
     this.mBrowserElem.removeProgressListener(com.gContactSync.OAuth2.mListener);
     this.mBrowserElem.loadURI("");
     var request = new com.gContactSync.GHttpRequest("TOKEN_REQUEST", aCode);
@@ -81,7 +81,7 @@ com.gContactSync.OAuth2 = {
    * @param aHttpReq {XmlHttpRequest} The HTTP request.
    */
   onTokenReceived: function OAuth2_onTokenReceived(aHttpReq) {
-    com.gContactSync.LOGGER.LOG("Received an access token");
+    com.gContactSync.LOGGER.LOG("Received an access token + " + aHttpReq.responseText);
     com.gContactSync.OAuth2.mCallback(JSON.parse(aHttpReq.responseText));
   },
   /**
@@ -100,6 +100,7 @@ com.gContactSync.OAuth2 = {
      * @param aLocation The location.
      */
     onLocationChange: function (aWebProgress, aRequest, aLocation) {
+      com.gContactSync.LOGGER.LOG("Observed a location change: " + aLocation.spec);
       if (aLocation.spec.indexOf(com.gContactSync.OAuth2.mRedirectURI) === 0) {
         var code = com.gContactSync.parseURLParameters(aLocation.spec).code;
         com.gContactSync.OAuth2.onCodeReceived(code);
