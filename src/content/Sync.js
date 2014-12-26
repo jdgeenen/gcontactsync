@@ -447,24 +447,26 @@ com.gContactSync.Sync = {
     com.gContactSync.Sync.mContactsToUpdate = [];
     var gContact,
      // get the strings outside of the loop so they are only found once
-        found       = " * Found a match, last modified:",
-        bothChanged = " * Conflict detected: the contact has been updated in " +
-                      "both Google and Thunderbird",
-        bothGoogle  = "  - The Google contact will be updated",
-        bothTB      = "  - The Thunderbird contact will be updated",
-        gContacts   = {};
-    // Step 1: get all contacts from Google into GContact objects in an object
+        gContacts   = {},
+        gContactInfo = {},
+        abCardInfo = [];
+
+    // Get all contacts from Google into GContact objects in an object
     // keyed by ID.
     for (var i = 0, length = googleContacts.length; i < length; i++) {
       gContact               = new com.gContactSync.GContact(googleContacts[i]);
       gContact.lastModified  = gContact.getLastModifiedDate();
       gContact.id            = gContact.getID(true);
       gContacts[gContact.id] = gContact;
+      gContactInfo[gContact.id] = {name: gContact.getName(), lastModified: gContact.lastModified};
+    }
+    for (i = 0, length = abCards.length; i < length; ++i) {
+      abCardInfo.push({id: abCards[i].getID(), name: abCards[i].getName(), lastModified: abCards[i].getValue("LastModifiedDate")});
     }
     // re-initialize the contact converter (in case a pref changed)
     com.gContactSync.ContactConverter.init();
 
-    // Step 1.5: If this is the first sync then iterate through TB contacts
+    // If this is the first sync then iterate through TB contacts
     // If the contact matches a Google contact then set the TB contact's
     // GoogleID to its matching contact and LastModifiedDate to 0.
     // This prevents some duplicates on the first sync by basically overwritting
@@ -477,7 +479,7 @@ com.gContactSync.Sync = {
 
         // If this address book was previously synchronized with gContactSync there's no need to merge.
         // The contacts will conflict and the updateGoogleInConflicts pref will be used to resolve.
-        if (abCards[i].getValue("GoogleID")) continue;
+        if (abCards[i].getValue("GoogleID")) {continue;}
 
         for (var id in gContacts) {
           if (gContacts[id] && abCards[i] &&
@@ -513,162 +515,80 @@ com.gContactSync.Sync = {
 
     com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("syncing"));
 
-    // Step 2: iterate through TB Contacts and check for matches
-    for (i = 0, length = abCards.length; i < length; i++) {
-      var tbContact  = abCards[i],
-          id         = tbContact.getID(),
-          tbCardDate = tbContact.getValue("LastModifiedDate");
-      com.gContactSync.LOGGER.LOG(tbContact.getName() + ": " + id);
-      tbContact.id = id;
-      // no ID = new contact
-      if (!id) {
-        if (ab.mPrefs.readOnly === "true") {
-          com.gContactSync.LOGGER.LOG(" * The contact is new. " +
-                                      "Ignoring since read-only mode is on.");
-          this.mCurrentSummary.mLocal.mIgnored++;
-        }
-        else {
-          // this.mCurrentSummary.mRemote.mAdded++; This is done after the contact is
-          // successfully added
-          com.gContactSync.LOGGER.LOG(" * This contact is new and will be added to Google.");
-          this.mCurrentSummary.mRemote.mAdded++;
-          com.gContactSync.Sync.mContactsToAdd.push(tbContact);
-        }
-      }
-      // if there is a matching Google Contact
-      else if (gContacts[id]) {
-        gContact   = gContacts[id];
-        // remove it from gContacts
-        gContacts[id]  = null;
-        // note that this returns 0 if readOnly is set
-        gCardDate  = ab.mPrefs.writeOnly !== "true" ? gContact.lastModified : 0; // TODO - should this be a 1?
-        // 4 options
-        // if both were updated
-        com.gContactSync.LOGGER.LOG(found +
-                                    "\n   - Google:      " + gCardDate +
-                                    " (" + new Date(gCardDate) + ")" +
-                                    "\n   - Thunderbird: " + (tbCardDate * 1000) +
-                                    " (" + new Date(tbCardDate * 1000) + ")");
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * Google ID: " + id);
-        // If there is a conflict, looks at the updateGoogleInConflicts
-        // preference and updates Google if it's true, or Thunderbird if false
-        if (gCardDate > lastSync && tbCardDate > lastSync / 1000) {
-          com.gContactSync.LOGGER.LOG(bothChanged);
-          this.mCurrentSummary.mConflicted++;
-          if (ab.mPrefs.writeOnly  === "true" || ab.mPrefs.updateGoogleInConflicts === "true") {
-            com.gContactSync.LOGGER.LOG(bothGoogle);
-            var toUpdate = {};
-            toUpdate.gContact = gContact;
-            toUpdate.abCard   = tbContact;
-            this.mCurrentSummary.mRemote.mUpdated++;
-            com.gContactSync.Sync.mContactsToUpdate.push(toUpdate);
-          }
-          // update Thunderbird if writeOnly is off and updateGoogle is off
-          else {
-            com.gContactSync.LOGGER.LOG(bothTB);
-            this.mCurrentSummary.mLocal.mUpdated++;
-            com.gContactSync.ContactConverter.makeCard(gContact, tbContact);
-          }
-        }
-        // if the contact from Google is newer update the TB card
-        else if (gCardDate > lastSync) {
-          com.gContactSync.LOGGER.LOG(" * The contact from Google is newer...Updating the" +
-                                      " contact from Thunderbird");
-          this.mCurrentSummary.mLocal.mUpdated++;
-          com.gContactSync.ContactConverter.makeCard(gContact, tbContact);
-        }
-        // if the TB card is newer update Google
-        else if (tbCardDate > lastSync / 1000) {
-          com.gContactSync.LOGGER.LOG(" * The contact from Thunderbird is newer...Updating the" +
-                                      " contact from Google");
-          var toUpdate = {};
-          toUpdate.gContact = gContact;
-          toUpdate.abCard   = tbContact;
-          this.mCurrentSummary.mRemote.mUpdated++;
-          com.gContactSync.Sync.mContactsToUpdate.push(toUpdate);
-        }
-        // otherwise nothing needs to be done
-        else {
-          com.gContactSync.LOGGER.LOG(" * Neither contact has changed");
-          this.mCurrentSummary.mNotChanged++;
-        }
-      }
-      // if there isn't a match, but the card is new, add it to Google
-      else if (tbContact.getValue("LastModifiedDate") > lastSync / 1000 ||
-               isNaN(lastSync)) {
-        com.gContactSync.LOGGER.LOG(" * Contact is new, adding to Google.");
-        this.mCurrentSummary.mRemote.mAdded++;
-        com.gContactSync.Sync.mContactsToAdd.push(tbContact);
-      }
-      // Otherwise, delete the contact from the address book if writeOnly
-      // mode isn't on
-      else if (ab.mPrefs.writeOnly !== "true") {
-        com.gContactSync.LOGGER.LOG(" * Contact deleted from Google, " +
-                                    "deleting local copy");
-        this.mCurrentSummary.mLocal.mRemoved++;
-        cardsToDelete.push(tbContact);
-      } else {
-        this.mCurrentSummary.mRemote.mIgnored++;
-        com.gContactSync.LOGGER.LOG(" * Contact deleted from Google, ignoring" +
-                                    " since write-only mode is enabled");
-      }
-    }
+    var worker = new Worker("chrome://gcontactsync/content/SyncWorker.js");
+    var workerData = {
+      mABCards:                 abCardInfo,
+      mGContacts:               gContactInfo,
+      mLastSync:                lastSync,
+      mReadOnly:                ab.mPrefs.readOnly === "true",
+      mWriteOnly:               ab.mPrefs.writeOnly === "true",
+      mUpdateGoogleInConflicts: ab.mPrefs.updateGoogleInConflicts === "true",
+      mCurrentSummary:          this.mCurrentSummary,
+    };
 
-    // STEP 3: Check for old Google contacts to delete and new contacts to add to TB
-    com.gContactSync.LOGGER.LOG("**Looking for unmatched Google contacts**");
-    for (var id in gContacts) {
-      var gContact = gContacts[id];
-      if (gContact) {
-      
-        // If writeOnly is on, then set the last modified date to 1 so TB grabs
-        // all the contacts from Google during the first sync.
-        var gCardDate = ab.mPrefs.writeOnly != "true" ? gContact.lastModified : 1;
-        com.gContactSync.LOGGER.LOG(gContact.getName() + " - " + gCardDate +
-                                    "\n" + id);
-        if (gCardDate > lastSync || isNaN(lastSync)) {
-          com.gContactSync.LOGGER.LOG(" * The contact is new and will be added to Thunderbird");
-          this.mCurrentSummary.mLocal.mAdded++;
-          var newCard = ab.newContact();
-          com.gContactSync.ContactConverter.makeCard(gContact, newCard);
-        }
-        else if (ab.mPrefs.readOnly != "true") {
-          com.gContactSync.LOGGER.LOG(" * The contact is old and will be deleted");
-          this.mCurrentSummary.mLocal.mRemoved++;
-          com.gContactSync.Sync.mContactsToDelete.push(gContact);
-        }
-        else {
-          com.gContactSync.LOGGER.LOG (" * The contact was deleted in Thunderbird.  " +
-                                       "Ignoring since read-only mode is on.");
-          this.mCurrentSummary.mLocal.mIgnored++;
-        }
-      }
-    }
-    var threshold = com.gContactSync.Preferences.mSyncPrefs
-                                                .confirmDeleteThreshold.value;
-    // Request permission from the user to delete > threshold contacts from a
-    // single source
-    // If the user clicks Cancel the AB is disabled
-    if (threshold > -1 &&
-          (cardsToDelete.length >= threshold ||
-           com.gContactSync.Sync.mContactsToDelete.length >= threshold) &&
-          !com.gContactSync.Sync.requestDeletePermission(cardsToDelete.length,
-                                                         com.gContactSync.Sync.mContactsToDelete.length)) {
-        // If canceled here then reset most remote counts and local deleted to 0
-        this.mCurrentSummary.mLocal.mRemoved  = 0;
-        this.mCurrentSummary.mRemote.mAdded   = 0;
-        this.mCurrentSummary.mRemote.mRemoved = 0;
-        this.mCurrentSummary.mRemote.mUpdated = 0;
-        com.gContactSync.Sync.syncNextUser();
-        return;
-    }
-    // delete the old contacts from Thunderbird
-    if (cardsToDelete.length > 0) {
-      ab.deleteContacts(cardsToDelete);
-    }
+    // Make this == Sync when receiving messages from the worker
+    var self = this;
+    worker.onmessage = function(event) {
+      self.onworkermessage.call(self, event);
+    };
 
-    com.gContactSync.LOGGER.LOG("***Deleting contacts from Google***");
-    // delete contacts from Google
-    com.gContactSync.Sync.processDeleteQueue();
+    this.onworkermessage = function syncWorkerOnMessage(event) {
+      if (event.data.mType === "log") {
+        com.gContactSync.LOGGER.LOG(event.data.mMessage);
+      } else if (event.data.mType === "newTBContact") {
+        var newCard = ab.newContact();
+        com.gContactSync.ContactConverter.makeCard(gContacts[event.data.mID], newCard);
+      } else if (event.data.mType === "updateTBCard") {
+        var tbContact = abCards[event.data.mTBCardIndex];
+        com.gContactSync.ContactConverter.makeCard(gContacts[tbContact.getID()], tbContact);
+      } else if (event.data.mType === "done") {
+
+        for (var i in event.data.mCurrentSummary) {
+          if (event.data.mCurrentSummary.hasOwnProperty(i)) {this.mCurrentSummary[i] = event.data.mCurrentSummary[i];}
+        }
+        for (i = 0, length = event.data.mContactsToAdd.length; i < length; ++i) {
+          this.mContactsToAdd.push(abCards[event.data.mContactsToAdd[i]]);
+        }
+        for (i = 0, length = event.data.mContactsToUpdate.length; i < length; ++i) {
+          var abCard = abCards[event.data.mContactsToUpdate[i]];
+          this.mContactsToUpdate.push({abCard: abCard, gContact: gContacts[abCard.getID()]});
+        }
+        for (i = 0, length = event.data.mContactsToDelete.length; i < length; ++i) {
+          this.mContactsToDelete.push(gContacts[event.data.mContactsToDelete[i]]);
+        }
+        for (i = 0, length = event.data.mCardsToDelete.length; i < length; ++i) {
+          cardsToDelete.push(abCards[event.data.mCardsToDelete[i]]);
+        }
+
+        var threshold = com.gContactSync.Preferences.mSyncPrefs
+                                                    .confirmDeleteThreshold.value;
+        // Request permission from the user to delete > threshold contacts from a
+        // single source
+        // If the user clicks Cancel the AB is disabled
+        if (threshold > -1 &&
+              (cardsToDelete.length >= threshold ||
+               com.gContactSync.Sync.mContactsToDelete.length >= threshold) &&
+              !com.gContactSync.Sync.requestDeletePermission(cardsToDelete.length,
+                                                             com.gContactSync.Sync.mContactsToDelete.length)) {
+          // If canceled here then reset most remote counts and local deleted to 0
+          this.mCurrentSummary.mLocal.mRemoved  = 0;
+          this.mCurrentSummary.mRemote.mAdded   = 0;
+          this.mCurrentSummary.mRemote.mRemoved = 0;
+          this.mCurrentSummary.mRemote.mUpdated = 0;
+          com.gContactSync.Sync.syncNextUser();
+          return;
+        }
+        // delete the old contacts from Thunderbird
+        if (cardsToDelete.length > 0) {
+          ab.deleteContacts(cardsToDelete);
+        }
+
+        com.gContactSync.LOGGER.LOG("***Deleting contacts from Google***");
+        // delete contacts from Google
+        com.gContactSync.Sync.processDeleteQueue();
+      }
+    };
+    worker.postMessage(workerData);
   },
   /**
    * Shows a confirmation dialog asking the user to give gContactSync permission
@@ -688,12 +608,14 @@ com.gContactSync.Sync = {
     com.gContactSync.LOGGER.LOG("Requesting permission to delete " +
                                 "TB: " + aNumTB + ", Google: " + aNumGoogle +
                                 " contacts...");
+
     if (!com.gContactSync.confirm(warning)) {
       com.gContactSync.LOGGER.LOG(" * Permission denied, disabling AB");
       com.gContactSync.Sync.mCurrentAb.savePref("Disabled", true);
       com.gContactSync.alert(com.gContactSync.StringBundle.getStr("deleteCancel"));
       return false;
     }
+
     com.gContactSync.LOGGER.LOG(" * Permission granted");
     return true;
   },
