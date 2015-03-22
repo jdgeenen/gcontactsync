@@ -47,6 +47,8 @@ com.gContactSync.Sync = {
   mContactsToDelete: [],
   /** New contacts to add to Google */
   mContactsToAdd:    [],
+  /** Contacts whose photos need to be written */
+  mContactsToUploadPhoto: [],
   /** Contacts to update */
   mContactsToUpdate: [],
   /** Groups to delete */
@@ -442,12 +444,12 @@ com.gContactSync.Sync = {
       com.gContactSync.Sync.finish("Max Contacts too low...resynchronizing", true);
       return;
     }
-    com.gContactSync.Sync.mContactsToAdd    = [];
+    com.gContactSync.Sync.mContactsToAdd = [];
+    com.gContactSync.Sync.mContactsToUploadPhoto = [];
     com.gContactSync.Sync.mContactsToDelete = [];
     com.gContactSync.Sync.mContactsToUpdate = [];
     var gContact,
-     // get the strings outside of the loop so they are only found once
-        gContacts   = {},
+        gContacts = {},
         gContactInfo = {},
         abCardInfo = [];
 
@@ -727,22 +729,15 @@ com.gContactSync.Sync = {
           gcontact = new com.gContactSync.GContact(httpReq.responseXML);
       contact.setValue('GoogleID', gcontact.getID(true));
       contact.update();
-      // if photos are allowed to be uploaded to Google then do so
-      if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
-        gcontact.setPhoto(com.gContactSync.Sync.mNewPhotoURI);
-      }
-      // reset the new photo URI variable
-      com.gContactSync.Sync.mNewPhotoURI = null;
-      // NOTE - Google has an undocumented limit on the rate at which photos
-      // can be added.  Add a small wait here.
+      // if photos are allowed to be uploaded to Google then queue the request
       if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value &&
-          com.gContactSync.Preferences.mSyncPrefs.newContactPhotoDelay.value > 0) {
-        setTimeout(com.gContactSync.Sync.processAddQueue,
-                   com.gContactSync.Preferences.mSyncPrefs.newContactPhotoDelay.value);
-      } else {
-        com.gContactSync.Sync.delayedProcessQueue(com.gContactSync.Sync.processAddQueue);
+          com.gContactSync.Sync.mNewPhotoURI) {
+        com.gContactSync.Sync.mContactsToUploadPhoto.push({abCard: com.gContactSync.ContactConverter.mCurrentCard,
+                                                          gContact: gcontact,
+                                                          uri: com.gContactSync.Sync.mNewPhotoURI});
       }
-    }
+      com.gContactSync.Sync.delayedProcessQueue(com.gContactSync.Sync.processAddQueue);
+    };
     httpReq.mOnCreated = onCreated;
     httpReq.mOnError   = function contactCreatedError(httpReq) {
       com.gContactSync.LOGGER.LOG_ERROR('Error while adding contact',
@@ -755,26 +750,21 @@ com.gContactSync.Sync = {
   },
   /**
    * Updates all cards to Google included in the mContactsToUpdate array one at
-   * a time to avoid timing conflicts.  Calls
-   * com.gContactSync.Sync.syncNextUser() when done.
+   * a time to avoid timing conflicts.
    */
   processUpdateQueue: function Sync_processUpdateQueue() {
+
     var ab = com.gContactSync.Sync.mCurrentAb;
-    if (!com.gContactSync.Sync.mContactsToUpdate
-        || com.gContactSync.Sync.mContactsToUpdate.length == 0
-        || ab.mPrefs.readOnly == "true") {
-      if (com.gContactSync.Sync.mAddressBooks[com.gContactSync.Sync.mIndex]) {
-        var delay = com.gContactSync.Preferences.mSyncPrefs.accountDelay.value;
-        com.gContactSync.LOGGER.LOG("**About to wait " + delay +
-                                    " ms before synchronizing the next account**");
-        com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("waiting"));
-        setTimeout(com.gContactSync.Sync.syncNextUser, delay);
-      }
-      else {
-        com.gContactSync.Sync.syncNextUser();
-      }
+
+    if (!com.gContactSync.Sync.mContactsToUpdate ||
+        (com.gContactSync.Sync.mContactsToUpdate.length === 0) ||
+        (ab.mPrefs.readOnly === "true")) {
+
+      com.gContactSync.LOGGER.LOG("***Uploading contact photos to Google***");
+      com.gContactSync.Sync.processUpdatePhotoQueue();
       return;
     }
+
     com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("updating") + " " +
                                               com.gContactSync.Sync.mContactsToUpdate.length + " " +
                                               com.gContactSync.StringBundle.getStr("remaining"));
@@ -792,8 +782,11 @@ com.gContactSync.Sync = {
     }
 
     var string = com.gContactSync.serialize(gContact.xml);
-    if (com.gContactSync.Preferences.mSyncPrefs.verboseLog.value)
+    if (com.gContactSync.Preferences.mSyncPrefs.verboseLog.value) {
       com.gContactSync.LOGGER.LOG(" * XML of contact being updated:\n" + string + "\n");
+    }
+    com.gContactSync.Sync.mNewPhotoURI = com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value ?
+                                         gContact.mNewPhotoURI : null;
     var httpReq = new com.gContactSync.GHttpRequest("update",
                                                     com.gContactSync.Sync.mCurrentAuthToken,
                                                     editURL,
@@ -801,6 +794,16 @@ com.gContactSync.Sync = {
                                                     com.gContactSync.Sync.mCurrentUsername);
     httpReq.addHeaderItem("If-Match", "*");
     httpReq.mOnSuccess = function processUpdateSuccess(httpReq) {
+
+      // if photos are allowed to be uploaded to Google then queue the request
+      if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value &&
+          com.gContactSync.Sync.mNewPhotoURI) {
+
+        var gcontact = new com.gContactSync.GContact(httpReq.responseXML);
+        com.gContactSync.Sync.mContactsToUploadPhoto.push({abCard: com.gContactSync.ContactConverter.mCurrentCard,
+                                                          gContact: gcontact,
+                                                          uri: com.gContactSync.Sync.mNewPhotoURI});
+      }
       com.gContactSync.Sync.delayedProcessQueue(com.gContactSync.Sync.processUpdateQueue);
     };
     httpReq.mOnError   = function processUpdateError(httpReq) {
@@ -811,6 +814,38 @@ com.gContactSync.Sync = {
     httpReq.mOnOffline = com.gContactSync.Sync.mOfflineFunction;
     httpReq.mOn503 = com.gContactSync.Sync.m503Function;
     httpReq.send();
+  },
+  /**
+   * Uploads new and updated photos to Google.
+   * Calls com.gContactSync.Sync.syncNextUser() when done.
+   */
+  processUpdatePhotoQueue: function Sync_processUpdatePhotoQueue() {
+
+    var ab = com.gContactSync.Sync.mCurrentAb;
+
+    if (!com.gContactSync.Sync.mContactsToUploadPhoto ||
+        (com.gContactSync.Sync.mContactsToUploadPhoto.length === 0) ||
+        (ab.mPrefs.readOnly === "true")) {
+
+      if (com.gContactSync.Sync.mAddressBooks[com.gContactSync.Sync.mIndex]) {
+        var delay = com.gContactSync.Preferences.mSyncPrefs.accountDelay.value;
+        com.gContactSync.LOGGER.LOG("**About to wait " + delay +
+                                    " ms before synchronizing the next account**");
+        com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("waiting"));
+        setTimeout(com.gContactSync.Sync.syncNextUser, delay);
+      } else {
+        com.gContactSync.Sync.syncNextUser();
+      }
+      return;
+    }
+
+    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("uploadingPhotos") + " " +
+                                              com.gContactSync.Sync.mContactsToAdd.length + " " +
+                                              com.gContactSync.StringBundle.getStr("remaining"));
+    var obj = com.gContactSync.Sync.mContactsToUploadPhoto.shift();
+    com.gContactSync.LOGGER.LOG("\n" + obj.abCard.getName());
+    obj.gContact.uploadPhoto(obj.uri);
+    com.gContactSync.Sync.delayedProcessQueue(com.gContactSync.Sync.processUpdatePhotoQueue);
   },
   /**
    * Syncs all contact groups with mailing lists.

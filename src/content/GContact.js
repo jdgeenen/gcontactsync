@@ -802,24 +802,25 @@ com.gContactSync.GContact.prototype = {
     return val.substr(val.lastIndexOf("/") + 1);
   },
   /**
-   * Sets the photo for this contact.  Note that this may not immediately take
+   * Sets the photo for this contact.  Note that this will not immediately take
    * effect as contacts must be added to Google and then retrieved before a
-   * photo can be added.
+   * photo can be added, and Google throttles requests.
    *
    * @param aURI {string|nsIURI} A string with the URI of a contact photo.
    */
   setPhoto: function GContact_setPhoto(aURI) {
     com.gContactSync.LOGGER.VERBOSE_LOG("Entering GContact.setPhoto:");
-    var photoInfo = this.getPhotoInfo();
     // If the URI is empty or a chrome URL remove the photo, if present
     // TODO - this should probably just check if it is the default photo
     if (!aURI) {
+      var photoInfo = this.getPhotoInfo();
       // Easy case: URI is empty and this contact doesn't have a photo
       if (!photoInfo || !(photoInfo.etag)) {
         com.gContactSync.LOGGER.VERBOSE_LOG(" * URI is empty, contact has no photo");
         return;
       }
       com.gContactSync.LOGGER.VERBOSE_LOG(" * URI is empty, photo will be removed");
+      // TODO - this needs to be queued
       // Remove the photo
       var httpReq = new com.gContactSync.GHttpRequest("delete",
                                                       com.gContactSync.Sync.mCurrentAuthToken,
@@ -837,54 +838,54 @@ com.gContactSync.GContact.prototype = {
       httpReq.mOn503 = com.gContactSync.Sync.m503Function;
       httpReq.addHeaderItem("If-Match", "*");
       httpReq.send();
+    } else {
+      // The URI exists, so update or add the photo
+      // NOTE: A photo cannot be added until the contact has been added
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo will be uploaded");
+      this.mNewPhotoURI = aURI;
+    }
+  },
+  /**
+   * Uploads the photo at the given URI.
+   *
+   * @param aURI {string|nsIURI} A string with the URI of a contact photo.
+   */
+  uploadPhoto: function GContact_uploadPhoto(aURI) {
+    var photoInfo = this.getPhotoInfo();
+    // Send the PUT request
+    // TODO - this really needs error handling...
+    var ios = Components.classes["@mozilla.org/network/io-service;1"]
+                        .getService(Components.interfaces.nsIIOService),
+        outChannel = ios.newChannel(photoInfo.url, null, null),
+        inChannel  = aURI instanceof Components.interfaces.nsIURI ?
+                       ios.newChannelFromURI(aURI) :
+                       ios.newChannel(aURI, null, null);
+    outChannel = outChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
+    // Set the upload data
+    outChannel = outChannel.QueryInterface(Components.interfaces.nsIUploadChannel);
+    // Set the input stream as the photo URI
+    // See https://www.mozdev.org/bugs/show_bug.cgi?id=22757 for the try/catch
+    // block, I didn't see a way to tell if the item pointed to by aURI exists
+    try {
+      outChannel.setUploadStream(inChannel.open(), photoInfo.type, -1);
+    }
+    catch (e) {
+      com.gContactSync.LOGGER.LOG_WARNING("The photo at '" + aURI + "' doesn't exist", e);
       return;
     }
-    // The URI exists, so update or add the photo
-    // NOTE: A photo cannot be added until the contact has been added
-    else {
-      // If this is a new contact then nothing can be done until the contact is
-      // added to Google
-      if (this.mIsNew || !photoInfo) {
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo will be added after the contact is created");
-        this.mNewPhotoURI = aURI;
-        return;
-      }
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo will be updated");
-      // Otherwise send the PUT request
-      // TODO - this really needs error handling...
-      var ios = Components.classes["@mozilla.org/network/io-service;1"]
-                          .getService(Components.interfaces.nsIIOService),
-          outChannel = ios.newChannel(photoInfo.url, null, null),
-          inChannel  = aURI instanceof Components.interfaces.nsIURI ?
-                         ios.newChannelFromURI(aURI) :
-                         ios.newChannel(aURI, null, null);
-      outChannel = outChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
-      // Set the upload data
-      outChannel = outChannel.QueryInterface(Components.interfaces.nsIUploadChannel);
-      // Set the input stream as the photo URI
-      // See https://www.mozdev.org/bugs/show_bug.cgi?id=22757 for the try/catch
-      // block, I didn't see a way to tell if the item pointed to by aURI exists
-      try {
-        outChannel.setUploadStream(inChannel.open(), photoInfo.type, -1);
-      }
-      catch (e) {
-        com.gContactSync.LOGGER.LOG_WARNING("The photo at '" + aURI + "' doesn't exist", e);
-        return;
-      }
-      // set the request type to PUT (this has to be after setting the upload data)
-      outChannel = outChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
-      outChannel.requestMethod = "PUT";
-      // Setup the header: Authorization and Content-Type: image/*
-      outChannel.setRequestHeader("Authorization", com.gContactSync.Sync.mCurrentAuthToken, false);
-      outChannel.setRequestHeader("Content-Type",  photoInfo.type, false);
-      outChannel.setRequestHeader("If-Match",      "*", false);
-      outChannel.open();
-      try {
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * Update status: " + outChannel.responseStatus);
-      }
-      catch (e) {
-        com.gContactSync.LOGGER.LOG_WARNING(" * outChannel.responseStatus failed", e);
-      }
+    // set the request type to PUT (this has to be after setting the upload data)
+    outChannel = outChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
+    outChannel.requestMethod = "PUT";
+    // Setup the header: Authorization and Content-Type: image/*
+    outChannel.setRequestHeader("Authorization", com.gContactSync.Sync.mCurrentAuthToken, false);
+    outChannel.setRequestHeader("Content-Type",  photoInfo.type, false);
+    outChannel.setRequestHeader("If-Match",      "*", false);
+    outChannel.open();
+    try {
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Update status: " + outChannel.responseStatus);
+    }
+    catch (e) {
+      com.gContactSync.LOGGER.LOG_WARNING(" * outChannel.responseStatus failed", e);
     }
   },
   /**
