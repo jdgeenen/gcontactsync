@@ -135,18 +135,6 @@ com.gContactSync.FileIO = {
     }
   },
   /**
-   * Gets the the file in the extension's directory with the given name.
-   * @param aName {string} The name of the file to get.
-   * @returns {nsIFile} The file with the given name in the extension's
-   *                   directory.
-   */
-  getFileInExtDir: function FileIO_getFileInExtDir(aName) {
-    var MY_ID = "gContactSync@pirules.net",
-        em    = Components.classes["@mozilla.org/extensions/manager;1"]
-                       .getService(Components.interfaces.nsIExtensionManager);
-    return em.getInstallLocation(MY_ID).getItemFile(MY_ID, aName);
-  },
-  /**
    * Returns an nsIFile of the current profile directory of the application.
    * @returns {nsIFile} The current profile directory of the application.
    */
