@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2014
+ * Portions created by the Initial Developer are Copyright (C) 2008-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,15 +34,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 window.addEventListener("load",
   /**
    * Registers the pref observer and loads the preferences
    */
-  function gCS_PreferencesLoadListener(e) {
+  function gCS_PreferencesLoadListener() {
+    window.removeEventListener("load", gCS_PreferencesLoadListener, false);
     com.gContactSync.Preferences.register();
     com.gContactSync.Preferences.getSyncPrefs();
   },
@@ -52,7 +53,8 @@ window.addEventListener("unload",
   /**
    * Unregisters the pref observer.
    */
-  function gCS_PreferencesUnloadListener(e) {
+  function gCS_PreferencesUnloadListener() {
+    window.removeEventListener("unload", gCS_PreferencesUnloadListener, false);
     com.gContactSync.Preferences.unregister();
   },
 false);

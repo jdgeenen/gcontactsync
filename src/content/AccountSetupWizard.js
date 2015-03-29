@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2013-2014
+ * Portions created by the Initial Developer are Copyright (C) 2013-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -40,7 +40,8 @@ if (!com.gContactSync) {com.gContactSync = {};}
 
 window.addEventListener("load",
   /** Initializes the AccountSetupWizard class when the window has finished loading */
-  function gCS_AccountSetupWizardLoadListener(e) {
+  function gCS_AccountSetupWizardLoadListener() {
+    window.removeEventListener("load", gCS_AccountSetupWizardLoadListener, false);
     com.gContactSync.AccountSetupWizard.init();
   },
 false);

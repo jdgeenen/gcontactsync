@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2014
+ * Portions created by the Initial Developer are Copyright (C) 2008-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,13 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 window.addEventListener("load",
   /** Initializes the FileIO class when the window has finished loading */
-  function gCS_overlayLoadListener(e) {
+  function gCS_overlayLoadListener() {
+    window.removeEventListener("load", gCS_overlayLoadListener, false);
     com.gContactSync.Overlay.initialize();
   },
 false);
@@ -71,6 +72,7 @@ com.gContactSync.Overlay = {
 
     // call the unload function when the address book window is shut
     window.addEventListener("unload", function unloadListener(e) {
+      window.removeEventListener("unload", unloadListener, false);
       com.gContactSync.Overlay.unload();
     }, false);
   },
