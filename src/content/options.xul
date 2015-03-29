@@ -16,7 +16,7 @@
    -
    - The Initial Developer of the Original Code is
    - Josh Geenen <gcontactsync@pirules.org>.
-   - Portions created by the Initial Developer are Copyright (C) 2008-2013
+   - Portions created by the Initial Developer are Copyright (C) 2008-2015
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s):
@@ -225,6 +225,9 @@
       <preference id="httpRequestDelay"
                   name="extensions.gContactSync.httpRequestDelay"
                   type="int"/>
+      <preference id="authenticationPort"
+                  name="extensions.gContactSync.authenticationPort"
+                  type="int"/>
     </preferences>
     <vbox>
       <label value="&warning.value;"/>
@@ -306,6 +309,17 @@
                         accesskey="&throttleTest.accesskey;"
                         oncommand="com.gContactSync.ThrottleTest.start(0);"/>
               </hbox>
+            </row>
+            <row align="center">
+              <label control="authenticationPortBox"
+                     value="&authenticationPort.value;"
+                     accesskey="&authenticationPort.accesskey;"/>
+            </row>
+            <row align="center">
+              <textbox preference="authenticationPort"
+                       id="authenticationPortBox"
+                       maxlength="5"
+                       maxwidth="60"/>
             </row>
           </rows>
         </grid>

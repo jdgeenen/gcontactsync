@@ -82,6 +82,7 @@ com.gContactSync.gdata = {
            "?response_type=" + com.gContactSync.gdata.RESPONSE_TYPE +
            "&client_id=" + com.gContactSync.gdata.CLIENT_ID +
            "&redirect_uri=" + com.gContactSync.gdata.REDIRECT_URI +
+           ":" + com.gContactSync.Preferences.mSyncPrefs.authenticationPort.value +
            "&scope=" + com.gContactSync.gdata.SCOPE +
            "&login_hint=" + aEmail;
   },

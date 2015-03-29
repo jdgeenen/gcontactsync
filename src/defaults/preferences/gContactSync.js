@@ -99,6 +99,8 @@ pref("extensions.gContactSync.numLogsInRotation", 3);
 pref("extensions.gContactSync.selectFirstCardAfterDrop", true);
 // The style for the notes field in the edit contact dialog
 pref("extensions.gContactSync.notesHeight", "");
+// The port used for the redirect_uri during OAuth
+pref("extensions.gContactSync.authenticationPort", 80);
 // extended properties to sync
 pref("extensions.gContactSync.extended1", "Custom1");
 pref("extensions.gContactSync.extended2", "Custom2");
