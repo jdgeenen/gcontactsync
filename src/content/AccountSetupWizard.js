@@ -200,13 +200,13 @@ com.gContactSync.AccountSetupWizard = {
     aSearch = (aSearch || this.mEmailAddress).toLowerCase();
     for (var uri in abs) {
       // Skip over address books that are already synchronized
-      if (abs.hasOwnProperty(uri) && !abs[uri].mPrefs.Username) {
+      if (abs.hasOwnProperty(uri) && (!abs[uri].mPrefs.Username || abs[uri].mPrefs.Username === "none")) {
         abNameElem.appendItem(abs[uri].getName(), uri);
         if (abs[uri].getName().toLowerCase() === aSearch) {
           selectedIndex = i;
         }
+        ++i;
       }
-      ++i;
     }
     if (selectedIndex === -1) {
       var name = aSearch;
