@@ -169,6 +169,8 @@ function SyncWorker(aData) {
                mContactsToDelete: contactsToDelete,
                mContactsToUpdate: contactsToUpdate,
                mCardsToDelete:    cardsToDelete});
+
+  close();
 }
 
 /**
