@@ -54,12 +54,14 @@ com.gContactSync.AccountSetupWizard = {
   mAuthToken:           "",
   mEmailAddress:        "",
   mAccounts:            [],
+  mBrowserLoaded:       false,
   /**
    * Initializes the first page of the wizard.
    */
   init: function AccountSetupWizard_init() {
     this.updateAccountIDs();
     this.addAccounts();
+    this.mBrowserLoaded = false;
   },
   /**
    * Adds IMAP, POP3, and gContactSync accounts from the login manager to the dropdown.
@@ -124,14 +126,18 @@ com.gContactSync.AccountSetupWizard = {
    * Loads the OAuth2 page and adds a listener that handles successful authentication.
    */
   loadOAuthPage: function AccountSetupWizard_loadOAuthPage() {
-
     var wizard = document.getElementById("newAccountWizard");
     var browser = document.getElementById("browser");
     var url = com.gContactSync.gdata.getOAuthURL(this.mEmailAddress);
+
+    wizard.canAdvance = false;
     com.gContactSync.LOGGER.VERBOSE_LOG("Opening browser with URL: " + url);
     browser.loadURI(url);
-    com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, this.onSuccessfulAuthentication);
-    wizard.canAdvance = false;
+
+    if (!this.mWizardLoaded) {
+      com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, this.onSuccessfulAuthentication);
+      this.mWizardLoaded = true;
+    }
   },
   /**
    * Callback for OAuth2.  Adds the refresh token to the login manager and advances the wizard.
