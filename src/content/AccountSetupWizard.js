@@ -175,7 +175,7 @@ com.gContactSync.AccountSetupWizard = {
         nextPage = "settingsPage";
       }
     } else {
-      var emailElem    = document.getElementById("email");
+      var emailElem = document.getElementById("email");
       this.mEmailAddress = emailElem.value;
       // This is a primitive way of validating an e-mail address, but Google takes
       // care of the rest.  It seems to allow getting an auth token w/ only the
@@ -183,6 +183,9 @@ com.gContactSync.AccountSetupWizard = {
       // so this makes sure it is a full e-mail address.
       if (this.mEmailAddress.indexOf("@") < 1) {
         com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("invalidEmail"));
+        return false;
+      } else if (this.accountAlreadyExists(this.mEmailAddress)) {
+        com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("emailAlreadyExists"));
         return false;
       }
     }
