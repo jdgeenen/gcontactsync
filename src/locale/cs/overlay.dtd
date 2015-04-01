@@ -1,0 +1,63 @@
+<!-- The name of the extension (should just be gContactSync) -->
+<!ENTITY gContactSyncTab.label "gContactSync">
+<!-- Ordinal numbers -->
+<!ENTITY first.label "První">
+<!ENTITY second.label "Druhý">
+<!ENTITY third.label "Třetí">
+<!ENTITY fourth.label "Čtvrtý">
+<!ENTITY fifth.label "Pátý">
+<!ENTITY sixth.label "Šestý">
+<!ENTITY seventh.label "Sedmý">
+<!ENTITY eighth.label "Osmý">
+<!-- Different address types -->
+<!ENTITY home.label "Doma">
+<!ENTITY work.label "Práce">
+<!ENTITY other.label "Další">
+<!-- A label for extra screenname fields -->
+<!ENTITY screenname.box "Další přezdívky">
+<!-- A label for extra e-mail address fields -->
+<!ENTITY email.box "Další e-mailové adresy">
+<!-- A label for extra phone number fields -->
+<!ENTITY numbers.box "Další čísla">
+<!-- A label for extra postal address fields -->
+<!ENTITY Anniversary.label "Výročí">
+<!ENTITY Anniversary.accesskey "r">
+<!-- Note: these are only displayed in Thunderbird 3/Seamonkey 2 (not Postbox or TB 2) -->
+<!ENTITY initialStatus.label "Pro začátek klikněte na Sync">
+<!-- LOCALIZATION NOTE: Please try to keep the number of characters down (around 60) to avoid making the window too wide -->
+<!ENTITY relations.box "Lidé">
+<!-- This can be blank or something like "Click on Sync to begin" -->
+<!ENTITY sync.label "Sync">
+<!ENTITY sync.tooltip "Synchronizovat vaše kontakty s gContactSync">
+<!-- People who are somehow related to or associated with the contact -->
+<!ENTITY status.tooltip "Zobrazit protokol logování">
+<!-- Used for the Sync button on the Address Book toolbar -->
+<!ENTITY gContactSyncMenu.label "gContactSync">
+<!ENTITY gContactSyncMenu.accesskey "g">
+<!ENTITY syncMenuItem.label "Sync">
+<!ENTITY syncMenuItem.accesskey "S">
+<!ENTITY newAcctMenuItem.label "Nový účet">
+<!ENTITY newAcctMenuItem.accesskey "N">
+<!ENTITY acctMenuItem.label "Účty">
+<!ENTITY acctMenuItem.accesskey "Ú">
+<!ENTITY prefMenuItem.label "Možnosti">
+<!ENTITY prefMenuItem.accesskey "M">
+<!ENTITY forumMenuItem.label "Fórum podpory">
+<!ENTITY forumMenuItem.accesskey "F">
+<!ENTITY faqMenuItem.label "FAQ">
+<!ENTITY faqMenuItem.accesskey "Q">
+<!ENTITY errorMenuItem.label "Formulář pro hlášení chyb">
+<!ENTITY errorMenuItem.accesskey "o">
+<!ENTITY logMenuItem.label "Log">
+<!ENTITY logMenuItem.accesskey "L">
+<!ENTITY gcMenuItem.label "Google kontakty online">
+<!ENTITY gcMenuItem.accesskey "G">
+<!-- A tooltip on the status bar -->
+<!---->
+<!ENTITY Import.label "Zahájit import z (experimentální)">
+<!ENTITY Import.accesskey "i">
+<!ENTITY FinishImport.label "Dokončit import">
+<!ENTITY FinishImport.accesskey "D">
+<!ENTITY Facebook.label "Facebook">
+<!ENTITY LinkedIn.label "LinkedIn">
+<!ENTITY Twitter.label "Twitter">

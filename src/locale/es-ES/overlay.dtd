@@ -1,0 +1,63 @@
+<!---->
+<!ENTITY gContactSyncTab.label "gContactSync">
+<!---->
+<!ENTITY first.label "Primero">
+<!ENTITY second.label "Segundo">
+<!ENTITY third.label "Tercero">
+<!ENTITY fourth.label "Cuarto">
+<!ENTITY fifth.label "Quinto">
+<!ENTITY sixth.label "Sexto">
+<!ENTITY seventh.label "Séptimo">
+<!ENTITY eighth.label "Octavo">
+<!---->
+<!ENTITY home.label "Casa">
+<!ENTITY work.label "Trabajo">
+<!ENTITY other.label "Otro">
+<!---->
+<!ENTITY screenname.box "Nombres de pantalla adicionales">
+<!---->
+<!ENTITY email.box "Direcciones de Correo-e Adicionales">
+<!---->
+<!ENTITY numbers.box "Números Adicionales">
+<!---->
+<!ENTITY Anniversary.label "Aniversario">
+<!ENTITY Anniversary.accesskey "a">
+<!---->
+<!ENTITY initialStatus.label "Para emprzar haga click en Aceptar">
+<!---->
+<!ENTITY relations.box "Gente">
+<!---->
+<!ENTITY sync.label "Sincronizar">
+<!ENTITY sync.tooltip "Sincronice sus contactos con gContactSync">
+<!---->
+<!ENTITY status.tooltip "Haga click aquí para ver el archivo de registro">
+<!---->
+<!ENTITY gContactSyncMenu.label "gContactSync">
+<!ENTITY gContactSyncMenu.accesskey "g">
+<!ENTITY syncMenuItem.label "Sincronizar">
+<!ENTITY syncMenuItem.accesskey "S">
+<!ENTITY newAcctMenuItem.label "Nueva Cuenta">
+<!ENTITY newAcctMenuItem.accesskey "N">
+<!ENTITY acctMenuItem.label "Cuentas">
+<!ENTITY acctMenuItem.accesskey "C">
+<!ENTITY prefMenuItem.label "Preferencias">
+<!ENTITY prefMenuItem.accesskey "P">
+<!ENTITY forumMenuItem.label "Foro de Soporte">
+<!ENTITY forumMenuItem.accesskey "F">
+<!ENTITY faqMenuItem.label "FAQs">
+<!ENTITY faqMenuItem.accesskey "Q">
+<!ENTITY errorMenuItem.label "Formulario de Informe de Errores">
+<!ENTITY errorMenuItem.accesskey "r">
+<!ENTITY logMenuItem.label "Log">
+<!ENTITY logMenuItem.accesskey "L">
+<!ENTITY gcMenuItem.label "Google Contacts Conectado">
+<!ENTITY gcMenuItem.accesskey "C">
+<!---->
+<!---->
+<!ENTITY Import.label "Iniciar importación(EXPERIMENTAL)">
+<!ENTITY Import.accesskey "I">
+<!ENTITY FinishImport.label "Finalizar Importación">
+<!ENTITY FinishImport.accesskey "F">
+<!ENTITY Facebook.label "Facebook">
+<!ENTITY LinkedIn.label "LinkedIn">
+<!ENTITY Twitter.label "Twitter">

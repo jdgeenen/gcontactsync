@@ -1,0 +1,46 @@
+<!ENTITY title.label "Cuentas gContactSync">
+<!ENTITY accounts.tab "Cuentas">
+<!ENTITY addressBook.label "Libreta de Direcciones">
+<!ENTITY abSynced.label "Cuenta Google">
+<!---->
+<!ENTITY addAB.label "Nueva Libreta de Direcciones">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "Refrescar">
+<!ENTITY refreshTree.accesskey "R">
+<!---->
+<!---->
+<!ENTITY Username.label "Seleccione una Cuenta">
+<!ENTITY Username.accesskey "C">
+<!ENTITY NoUsername.label "No se encontraron nombres de usuario">
+<!ENTITY Groups.label "Grupos y contactos a Sincronizar">
+<!ENTITY Groups.accesskey "G">
+<!ENTITY AllGroups.label "Todos los grupos y contactos">
+<!ENTITY NoGroups.label "Solo contactos (no grupos)">
+<!ENTITY Contacts.label "Mis Contactos">
+<!ENTITY Coworkers.label "Compañeros de Trabajo">
+<!ENTITY Family.label "Familia">
+<!ENTITY Friends.label "Amigos">
+<!ENTITY GetGroups.label "Buscar todos los Grupos">
+<!ENTITY GetGroups.accesskey "B">
+<!ENTITY Plugin.label "Seleccione un Plugin para usar">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "Seleccione la dirección de sincronización">
+<!ENTITY SyncDirection.accesskey "P">
+<!ENTITY DirectionHelp.label "¿Que es esto?">
+<!ENTITY Complete.label "Completa (tanto su cliente como google son actualizados)">
+<!ENTITY ReadOnly.label "Solo-Lectura (su cliente recibe actualizaciones desde Google)">
+<!ENTITY WriteOnly.label "Solo-Escritura (Su cliente envía actualizaciones a Google)">
+<!ENTITY Disable.label "Deshabilitar temporalmente la sincronización con esta libreta de direcciones">
+<!ENTITY Disable.accesskey "D">
+<!ENTITY Disable.tooltiptext "Seleccione esta casilla para omitir esta libreta de direcciones. Deseleccione cuando quiera sincronizarla de nuevo.">
+<!ENTITY updateG.label "Los cambios locales tienen prioridad sobre los remotos">
+<!ENTITY updateG.accesskey "L">
+<!ENTITY updateG.tooltiptext "Cuando un contacto ha sido actualizad localmente y remotamente tras la última sincronización, gContactSync necesita saber que cambio conservar. Active esta casilla para que el cambio local sobreescriba al cambio remoto.">
+<!---->
+<!ENTITY deleteAB.label "Borrar esta libreta de direcciones">
+<!ENTITY removeLogin.label "Eliminar configuración">
+<!ENTITY saveChanges.label "Guardar cambios">
+<!ENTITY saveChanges.accesskey "G">
+<!---->
+<!ENTITY Close.label "Cerrar">
+<!ENTITY Close.accesskey "C">

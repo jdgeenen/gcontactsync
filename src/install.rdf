@@ -7,6 +7,10 @@
         <em:name>gContactSync</em:name>
         <em:description>Synchronizes Google Contacts with Thunderbird</em:description>
         <em:creator>Josh Geenen</em:creator>
+        <em:translator>Michal Stanke (michal.stanke@mikk.cz) - cs</em:translator>
+        <em:translator>Scooter - es-ES</em:translator>
+        <em:translator>ZaZy- it</em:translator>
+        <em:translator>Leopoldo Saggin - it</em:translator>
         <em:optionsURL>chrome://gcontactsync/content/options.xul</em:optionsURL>
         <em:iconURL>chrome://gcontactsync/skin/logo_main.png</em:iconURL>
         <em:homepageURL>http://www.pirules.org/addons/gcontactsync/</em:homepageURL>
