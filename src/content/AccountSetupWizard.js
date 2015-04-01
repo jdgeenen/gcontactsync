@@ -136,7 +136,11 @@ com.gContactSync.AccountSetupWizard = {
     browser.loadURI(url);
 
     if (!this.mWizardLoaded) {
-      com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, this.onSuccessfulAuthentication);
+
+      com.gContactSync.OAuth2.init(browser,
+                                   com.gContactSync.gdata.REDIRECT_URI,
+                                   this.onSuccessfulAuthentication,
+                                   com.gContactSync.gdata.REDIRECT_TITLE);
       this.mWizardLoaded = true;
     }
   },

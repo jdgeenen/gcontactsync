@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2014
+ * Portions created by the Initial Developer are Copyright (C) 2014-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -53,11 +53,12 @@ com.gContactSync.OAuth2 = {
    * @param aRedirectURI {string} The redirect URI to watch for.
    * @param aCallback {function} The function to call when the browser's source changes to the redirect URI.
    */
-  init: function OAuth2_init(aBrowserElem, aRedirectURI, aCallback) {
+  init: function OAuth2_init(aBrowserElem, aRedirectURI, aCallback, aBrowserTitle) {
     this.mBrowserElem = aBrowserElem;
     this.mRedirectURI = aRedirectURI;
     this.mCallback = aCallback;
-    this.mBrowserElem.addProgressListener(this.mListener);
+    this.mBrowserTitle = aBrowserTitle;
+    setTimeout(this.checkTitle, 1000);
   },
   /**
    * Notify that an authorization code was received.  Sends a token request using the code.
@@ -66,7 +67,6 @@ com.gContactSync.OAuth2 = {
    */
   onCodeReceived: function OAuth2_onCodeReceived(aCode) {
     com.gContactSync.LOGGER.LOG("Received an authorization code: " + aCode);
-    this.mBrowserElem.removeProgressListener(com.gContactSync.OAuth2.mListener);
     this.mBrowserElem.loadURI("");
     var request = new com.gContactSync.GHttpRequest("TOKEN_REQUEST", aCode);
     request.mOnSuccess = com.gContactSync.OAuth2.onTokenReceived;
@@ -85,30 +85,16 @@ com.gContactSync.OAuth2 = {
     com.gContactSync.OAuth2.mCallback(JSON.parse(aHttpReq.responseText));
   },
   /**
-   * A nsIWebProgressListener that listens for a location change to the redirect URI.
-   * Notifies OAuth2.
+   * Checks the title of the browser for the requested title indicating a code.
    */
-  mListener: {
-    /** Implements nsIWebProgressListener, nsISupportsWeakRefrence */
-    QueryInterface: XPCOMUtils.generateQI([Components.interfaces.nsIWebProgressListener,
-                                           Components.interfaces.nsISupportsWeakReference]),
-    /**
-     * Watches for a location change to the redirect URI.
-     *
-     * @param aWebProgress The progress.
-     * @param aRequest The request.
-     * @param aLocation The location.
-     */
-    onLocationChange: function (aWebProgress, aRequest, aLocation) {
-      com.gContactSync.LOGGER.LOG("Observed a location change: " + aLocation.spec);
-      if (aLocation.spec.indexOf(com.gContactSync.OAuth2.mRedirectURI) === 0) {
-        var code = com.gContactSync.parseURLParameters(aLocation.spec).code;
-        com.gContactSync.OAuth2.onCodeReceived(code);
-      }
-    },
-    onStateChange: function () {},
-    onProgressChange: function () {},
-    onStatusChange: function () {},
-    onSecurityChange: function () {},
+  checkTitle: function OAuth2_checkTitle() {
+
+    var title = com.gContactSync.OAuth2.mBrowserElem.contentDocument.title;
+
+    if (title.indexOf(com.gContactSync.OAuth2.mBrowserTitle) === 0) {
+      com.gContactSync.OAuth2.onCodeReceived(title.substring(com.gContactSync.OAuth2.mBrowserTitle.length));
+    } else {
+      setTimeout(com.gContactSync.OAuth2.checkTitle, 500);
+    }
   }
 };

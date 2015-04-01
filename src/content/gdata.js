@@ -55,7 +55,8 @@ false);
 com.gContactSync.gdata = {
   CLIENT_ID:                  "874495714229-5m7jmsjebv6nrf61q14siutq43bi1gvt.apps.googleusercontent.com",
   CLIENT_SECRET:              "vayAK3lt9f4tMcMK1HZ4XZqG",
-  REDIRECT_URI:               "http://localhost",
+  REDIRECT_URI:               "urn:ietf:wg:oauth:2.0:oob",
+  REDIRECT_TITLE:             "Success code=",
   RESPONSE_TYPE:              "code",
   SCOPE:                      "https://www.google.com/m8/feeds",
   OAUTH_URL:                  "https://accounts.google.com/o/oauth2/auth",
@@ -82,7 +83,6 @@ com.gContactSync.gdata = {
            "?response_type=" + com.gContactSync.gdata.RESPONSE_TYPE +
            "&client_id=" + com.gContactSync.gdata.CLIENT_ID +
            "&redirect_uri=" + com.gContactSync.gdata.REDIRECT_URI +
-           ":" + com.gContactSync.Preferences.mSyncPrefs.authenticationPort.value +
            "&scope=" + com.gContactSync.gdata.SCOPE +
            "&login_hint=" + aEmail;
   },

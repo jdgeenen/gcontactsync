@@ -82,8 +82,7 @@ com.gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aB
     this.addParameter("code", aAuth);
     this.addParameter("client_id", com.gContactSync.gdata.CLIENT_ID);
     this.addParameter("client_secret", com.gContactSync.gdata.CLIENT_SECRET);
-    this.addParameter("redirect_uri", com.gContactSync.gdata.REDIRECT_URI +
-                      ":" + com.gContactSync.Preferences.mSyncPrefs.authenticationPort.value);
+    this.addParameter("redirect_uri", com.gContactSync.gdata.REDIRECT_URI);
     this.addParameter("grant_type", com.gContactSync.gdata.TOKEN_REQUEST_GRANT_TYPE);
     break;
   case "REFRESH_REQUEST":

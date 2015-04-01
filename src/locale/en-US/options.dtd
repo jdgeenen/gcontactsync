@@ -57,8 +57,6 @@
 <!ENTITY httpRequestTimeout.accesskey     "H">
 <!ENTITY httpRequestDelay.value           "Delay between HTTP requests (ms, 0 to disable) [100]">
 <!ENTITY httpRequestDelay.accesskey       "l">
-<!ENTITY authenticationPort.value         "Authentication port [80]">
-<!ENTITY authenticationPort.accesskey     "A">
 <!ENTITY resetAll.label                   "Reset All Synced ABs">
 <!ENTITY resetAll.accesskey               "R">
 <!ENTITY cleanOldPrefs.label              "Clean Old AB Preferences">
