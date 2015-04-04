@@ -473,10 +473,14 @@ com.gContactSync.gdata = {
       var url = com.gContactSync.gdata.getOAuthURL(aEmail);
       com.gContactSync.LOGGER.VERBOSE_LOG("Opening browser with URL: " + url);
       browser.loadURI(url);
-      com.gContactSync.OAuth2.init(browser, com.gContactSync.gdata.REDIRECT_URI, function callback(aResponse) {
-        wizard.close();
-        aCallback(aResponse);
-      });
+      com.gContactSync.OAuth2.init(browser,
+                                   com.gContactSync.gdata.REDIRECT_URI,
+                                   function callback(aResponse) {
+                                      wizard.close();
+                                      aCallback(aResponse);
+                                    },
+                                   com.gContactSync.gdata.REDIRECT_TITLE
+      );
     });
   },
 };

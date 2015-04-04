@@ -88,10 +88,8 @@ com.gContactSync.OAuth2 = {
    * Checks the title of the browser for the requested title indicating a code.
    */
   checkTitle: function OAuth2_checkTitle() {
-
-    var title = com.gContactSync.OAuth2.mBrowserElem.contentDocument.title;
-
-    if (title.indexOf(com.gContactSync.OAuth2.mBrowserTitle) === 0) {
+    var title = com.gContactSync.OAuth2.mBrowserElem.contentTitle;
+    if (title && title.indexOf(com.gContactSync.OAuth2.mBrowserTitle) === 0) {
       com.gContactSync.OAuth2.onCodeReceived(title.substring(com.gContactSync.OAuth2.mBrowserTitle.length));
     } else {
       setTimeout(com.gContactSync.OAuth2.checkTitle, 500);
