@@ -359,26 +359,59 @@ com.gContactSync.Accounts = {
    */
   getAllGroups: function Accounts_getAllGroups(aUsername) {
     this.restoreGroups();
-    if (!aUsername || aUsername === "none")
+    if (!aUsername || aUsername === "none") {
       return false;
+    }
     var token = com.gContactSync.LoginManager.getAuthTokens()[aUsername];
     if (!token) {
       com.gContactSync.LOGGER.LOG_WARNING("Unable to find the token for username " + aUsername);
       return false;
     }
+    this.getAccessToken(token, aUsername);
+    return true;
+  },
+  /**
+   * Exchanges the refresh token for an access token.  On success, continues synchronization.
+   *
+   * @param aRefreshToken {string} A refresh token.
+   */
+  getAccessToken: function Accounts_getAccessToken(aRefreshToken, aUsername) {
+    com.gContactSync.LOGGER.VERBOSE_LOG("Requesting access token");
+    // Fetch an access token from the refresh token
+    var request = new com.gContactSync.GHttpRequest("REFRESH_REQUEST", aRefreshToken);
+    request.mOnSuccess = function getAccessTokenSuccess(aHttpRequest) {
+      var response = JSON.parse(aHttpRequest.responseText);
+      var accessToken = response.token_type + " " + response.access_token;
+      com.gContactSync.Accounts.sendGetGroupsRequest(accessToken, aUsername);
+    };
+    request.mOnError = function getAccessTokenError(httpReq) {
+      com.gContactSync.LOGGER.LOG_WARNING(httpReq.responseText);
+    };
+    request.mOnOffline = null;
+    request.send();
+  },
+  /**
+   * Sends the request to get the groups for a given username.
+   *
+   * @param aAccessToken {string} The access token.
+   * @param aUsername {string The username.
+   */
+  sendGetGroupsRequest: function Accounts_finishGetAllGroups(aAccessToken, aUsername) {
     com.gContactSync.LOGGER.VERBOSE_LOG("Fetching groups for username: " + aUsername);
-    var httpReq = new com.gContactSync.GHttpRequest("getGroups", token, null,
-                                   null, aUsername);
+    var httpReq = new com.gContactSync.GHttpRequest("getGroups",
+                                                    aAccessToken,
+                                                    null,
+                                                    null,
+                                                    aUsername);
     httpReq.mOnSuccess = function getAllGroupsSuccess(httpReq) {
       com.gContactSync.LOGGER.VERBOSE_LOG(com.gContactSync.serializeFromText(httpReq.responseText));
       com.gContactSync.Accounts.addGroups(httpReq.responseXML, aUsername);
     };
     httpReq.mOnError   = function getAllGroupsError(httpReq) {
-      com.gContactSync.LOGGER.LOG_ERROR(httpReq.responseText);
+      com.gContactSync.LOGGER.LOG_WARNING(httpReq.responseText);
     };
     httpReq.mOnOffline = null;
     httpReq.send();
-    return true;
   },
   /**
    * Adds groups in the given atom feed to the Groups menulist provided the
