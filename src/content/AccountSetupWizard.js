@@ -259,6 +259,7 @@ com.gContactSync.AccountSetupWizard = {
   finish: function AccountSetupWizard_finish() {
     var abName = document.getElementById("abName").label;
     var group  = document.getElementById("Groups").value;
+    var directionElem = document.getElementById("SyncDirection");
     var syncGroups = String(group === "All"),
         myContacts = String(group !== "All" && group !== "false");
     // TODO combine with saveSelectedAccount
@@ -272,8 +273,8 @@ com.gContactSync.AccountSetupWizard = {
     ab.savePref("syncGroups", syncGroups);
     ab.savePref("myContacts", myContacts);
     ab.savePref("myContactsName", group);
-    ab.savePref("writeOnly", "false");
-    ab.savePref("readOnly",  "false");
+    ab.savePref("writeOnly", String(directionElem.value === "WriteOnly"));
+    ab.savePref("readOnly",  String(directionElem.value === "ReadOnly"));
     ab.setLastSyncDate(0);
     return true;
   }
