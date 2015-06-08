@@ -49,6 +49,8 @@ com.gContactSync.Sync = {
   mContactsToAdd:    [],
   /** Contacts whose photos need to be written */
   mContactsToUploadPhoto: [],
+  /** Contacts whose photos need to be downloaded */
+  mContactsToDownloadPhoto: [],
   /** Contacts to update */
   mContactsToUpdate: [],
   /** Groups to delete */
@@ -446,6 +448,7 @@ com.gContactSync.Sync = {
     }
     com.gContactSync.Sync.mContactsToAdd = [];
     com.gContactSync.Sync.mContactsToUploadPhoto = [];
+    com.gContactSync.Sync.mContactsToDownloadPhoto = [];
     com.gContactSync.Sync.mContactsToDelete = [];
     com.gContactSync.Sync.mContactsToUpdate = [];
     var gContact,
@@ -540,9 +543,15 @@ com.gContactSync.Sync = {
       } else if (event.data.mType === "newTBContact") {
         var newCard = ab.newContact();
         com.gContactSync.ContactConverter.makeCard(gContacts[event.data.mID], newCard);
+        if (newCard.mUpdatePhoto) {
+          this.mContactsToDownloadPhoto.push({abCard: newCard, gContact: gContacts[event.data.mID]});
+        }
       } else if (event.data.mType === "updateTBCard") {
         var tbContact = abCards[event.data.mTBCardIndex];
         com.gContactSync.ContactConverter.makeCard(gContacts[tbContact.getID()], tbContact);
+        if (tbContact.mUpdatePhoto) {
+          this.mContactsToDownloadPhoto.push({abCard: tbContact, gContact: gContacts[tbContact.getID()]});
+        }
       } else if (event.data.mType === "done") {
 
         for (var i in event.data.mCurrentSummary) {
@@ -817,7 +826,7 @@ com.gContactSync.Sync = {
   },
   /**
    * Uploads new and updated photos to Google.
-   * Calls com.gContactSync.Sync.syncNextUser() when done.
+   * Calls com.gContactSync.Sync.processDownloadPhotoQueue() when done.
    */
   processUpdatePhotoQueue: function Sync_processUpdatePhotoQueue() {
 
@@ -825,6 +834,31 @@ com.gContactSync.Sync = {
 
     if (!com.gContactSync.Sync.mContactsToUploadPhoto ||
         (com.gContactSync.Sync.mContactsToUploadPhoto.length === 0) ||
+        (ab.mPrefs.readOnly === "true")) {
+
+      com.gContactSync.LOGGER.LOG("***Download contact photos from Google***");
+      com.gContactSync.Sync.processDownloadPhotoQueue();
+      return;
+    }
+
+    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("uploadingPhotos") + " " +
+                                              com.gContactSync.Sync.mContactsToUploadPhoto.length + " " +
+                                              com.gContactSync.StringBundle.getStr("remaining"));
+    var obj = com.gContactSync.Sync.mContactsToUploadPhoto.shift();
+    com.gContactSync.LOGGER.LOG("\n" + obj.abCard.getName());
+    obj.gContact.uploadPhoto(obj.uri);
+    com.gContactSync.Sync.delayedProcessQueue(com.gContactSync.Sync.processUpdatePhotoQueue);
+  },
+  /**
+   * Downloads new photos from Google.
+   * Calls com.gContactSync.Sync.syncNextUser() when done.
+   */
+  processDownloadPhotoQueue: function Sync_processDownloadPhotoQueue() {
+
+    var ab = com.gContactSync.Sync.mCurrentAb;
+
+    if (!com.gContactSync.Sync.mContactsToDownloadPhoto ||
+        (com.gContactSync.Sync.mContactsToDownloadPhoto.length === 0) ||
         (ab.mPrefs.readOnly === "true")) {
 
       if (com.gContactSync.Sync.mAddressBooks[com.gContactSync.Sync.mIndex]) {
@@ -839,13 +873,33 @@ com.gContactSync.Sync = {
       return;
     }
 
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("uploadingPhotos") + " " +
-                                              com.gContactSync.Sync.mContactsToAdd.length + " " +
+    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("downloadingPhotos") + " " +
+                                              com.gContactSync.Sync.mContactsToDownloadPhoto.length + " " +
                                               com.gContactSync.StringBundle.getStr("remaining"));
-    var obj = com.gContactSync.Sync.mContactsToUploadPhoto.shift();
+
+    var obj = com.gContactSync.Sync.mContactsToDownloadPhoto.shift();
     com.gContactSync.LOGGER.LOG("\n" + obj.abCard.getName());
-    obj.gContact.uploadPhoto(obj.uri);
-    com.gContactSync.Sync.delayedProcessQueue(com.gContactSync.Sync.processUpdatePhotoQueue);
+    var file = obj.gContact.writePhoto(com.gContactSync.Sync.mCurrentAuthToken);
+
+    if (!file) {
+
+      com.gContactSync.LOGGER.LOG_WARNING("Failed to write contact photo");
+
+    } else {
+
+      com.gContactSync.LOGGER.VERBOSE_LOG("Wrote photo...name: " + file.leafName);
+      com.gContactSync.copyPhotoToPhotosDir(file);
+      obj.abCard.setValue("PhotoName", file.leafName);
+      obj.abCard.setValue("PhotoType", "file");
+      obj.abCard.setValue("PhotoURI",
+                          Components.classes["@mozilla.org/network/io-service;1"]
+                                    .getService(Components.interfaces.nsIIOService)
+                                    .newFileURI(file)
+                                    .spec);
+      obj.abCard.update();
+    }
+
+    com.gContactSync.Sync.delayedProcessQueue(com.gContactSync.Sync.processDownloadPhotoQueue);
   },
   /**
    * Syncs all contact groups with mailing lists.
