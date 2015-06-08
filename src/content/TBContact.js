@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2009-2014
+ * Portions created by the Initial Developer are Copyright (C) 2009-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
  * Makes a new TBContact object that has functions to get and set various values
@@ -61,6 +61,7 @@ com.gContactSync.TBContact = function gCS_TBContact(aCard, aDirectory) {
   this.mAddressBook = aDirectory;
   this.mContact     = aCard;
   this.mPostbox     = this.mContact.setAdditionalEmailAddresses;
+  this.mUpdatePhoto = false;
 };
 
 com.gContactSync.TBContact.prototype = {
@@ -191,5 +192,38 @@ com.gContactSync.TBContact.prototype = {
     if (primaryEmail)
       return primaryEmail;
     return this.getID();
+  },
+  /**
+   * Updates the photo for this contact from the given photo info.
+   *
+   * @param aInfo {Object} Photo information.
+   */
+  updatePhoto: function TBContact_updatePhoto(aInfo) {
+
+    // If the contact has a photo then save it to a local file and update
+    // the related attributes
+    // Thunderbird requires two copies of each photo.  A permanent copy must
+    // be kept outside of the Photos directory.  Each time a contact is edited
+    // Thunderbird will re-copy the original photo to the Photos directory and
+    // delete the old copy.
+
+    if (!aInfo || !aInfo.etag) {
+
+      // If the contact doesn't have a photo then clear the related attributes
+      this.setValue("PhotoName", "");
+      this.setValue("PhotoType", "");
+      this.setValue("PhotoURI",  "");
+      this.setValue("PhotoEtag", "");
+
+    } else if (aInfo.etag === this.getValue("PhotoEtag")) {
+
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo is already up-to-date");
+
+    } else {
+
+      com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo will be downloaded");
+      this.setValue("PhotoEtag", aInfo.etag);
+      this.mUpdatePhoto = true;
+    }
   }
 };
