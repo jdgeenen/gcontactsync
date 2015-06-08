@@ -73,7 +73,7 @@ function SyncWorker(aData) {
       gContact = aData.mGContacts[tbContact.id];
       // remove it from aData.mGContacts
       aData.mGContacts[tbContact.id]  = null;
-      gCardDate = aData.mReadOnly ? 0 : gContact.lastModified; // TODO - should this be a 1?
+      gCardDate = aData.mWriteOnly ? 1 : gContact.lastModified;
       // 4 options
       // if both were updated
       log(found +
