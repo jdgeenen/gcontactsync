@@ -652,9 +652,8 @@ com.gContactSync.Sync = {
    */
   processDeleteQueue: function Sync_processDeleteQueue() {
     var ab = com.gContactSync.Sync.mCurrentAb;
-    if (!com.gContactSync.Sync.mContactsToDelete
-        || com.gContactSync.Sync.mContactsToDelete.length == 0
-        || ab.mPrefs.readOnly == "true") {
+    if (!com.gContactSync.Sync.mContactsToDelete ||
+        com.gContactSync.Sync.mContactsToDelete.length === 0) {
       com.gContactSync.LOGGER.LOG("***Adding contacts to Google***");
       com.gContactSync.Sync.processAddQueue();
       return;
@@ -693,9 +692,8 @@ com.gContactSync.Sync = {
   processAddQueue: function Sync_processAddQueue() {
     var ab = com.gContactSync.Sync.mCurrentAb;
     // if all contacts were added then update all necessary contacts
-    if (!com.gContactSync.Sync.mContactsToAdd
-        || com.gContactSync.Sync.mContactsToAdd.length == 0
-        || ab.mPrefs.readOnly == "true") {
+    if (!com.gContactSync.Sync.mContactsToAdd ||
+        com.gContactSync.Sync.mContactsToAdd.length === 0) {
       com.gContactSync.LOGGER.LOG("***Updating contacts from Google***");
       com.gContactSync.Sync.processUpdateQueue();
       return;
@@ -766,8 +764,7 @@ com.gContactSync.Sync = {
     var ab = com.gContactSync.Sync.mCurrentAb;
 
     if (!com.gContactSync.Sync.mContactsToUpdate ||
-        (com.gContactSync.Sync.mContactsToUpdate.length === 0) ||
-        (ab.mPrefs.readOnly === "true")) {
+        (com.gContactSync.Sync.mContactsToUpdate.length === 0)) {
 
       com.gContactSync.LOGGER.LOG("***Uploading contact photos to Google***");
       com.gContactSync.Sync.processUpdatePhotoQueue();
@@ -833,8 +830,7 @@ com.gContactSync.Sync = {
     var ab = com.gContactSync.Sync.mCurrentAb;
 
     if (!com.gContactSync.Sync.mContactsToUploadPhoto ||
-        (com.gContactSync.Sync.mContactsToUploadPhoto.length === 0) ||
-        (ab.mPrefs.readOnly === "true")) {
+        (com.gContactSync.Sync.mContactsToUploadPhoto.length === 0)) {
 
       com.gContactSync.LOGGER.LOG("***Download contact photos from Google***");
       com.gContactSync.Sync.processDownloadPhotoQueue();
@@ -858,8 +854,7 @@ com.gContactSync.Sync = {
     var ab = com.gContactSync.Sync.mCurrentAb;
 
     if (!com.gContactSync.Sync.mContactsToDownloadPhoto ||
-        (com.gContactSync.Sync.mContactsToDownloadPhoto.length === 0) ||
-        (ab.mPrefs.readOnly === "true")) {
+        (com.gContactSync.Sync.mContactsToDownloadPhoto.length === 0)) {
 
       if (com.gContactSync.Sync.mAddressBooks[com.gContactSync.Sync.mIndex]) {
         var delay = com.gContactSync.Preferences.mSyncPrefs.accountDelay.value;
