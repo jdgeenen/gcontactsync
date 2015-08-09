@@ -211,12 +211,12 @@ com.gContactSync.AccountSetupWizard = {
     var abs = com.gContactSync.GAbManager.getAllAddressBooks();
     var selectedIndex = -1;
     var i = 0;
-    aSearch = (aSearch || this.mEmailAddress).toLowerCase();
+    aSearch = (aSearch || this.mEmailAddress);
     for (var uri in abs) {
       // Skip over address books that are already synchronized
       if (abs.hasOwnProperty(uri) && (!abs[uri].mPrefs.Username || abs[uri].mPrefs.Username === "none")) {
         abNameElem.appendItem(abs[uri].getName(), uri);
-        if (abs[uri].getName().toLowerCase() === aSearch) {
+        if (abs[uri].getName().toLowerCase() === aSearch.toLowerCase()) {
           selectedIndex = i;
         }
         ++i;
@@ -227,8 +227,8 @@ com.gContactSync.AccountSetupWizard = {
       // If an AB with the e-mail address doesn't already exist (or is synchronized) find
       // the first AB of the form <email (#)> that 
       for (var j = 1; true; ++j) {
-        var ab = com.gContactSync.GAbManager.getGAbByName(name, true);
-        if (!ab || !ab.mPrefs.Username) {break;}
+        var ab = com.gContactSync.GAbManager.getGAbByName(name.toLowerCase(), true);
+        if (!ab || (ab.mPrefs.Username === "none")) {break;}
         name = aSearch + " (" + j + ")";
       }
       abNameElem.insertItemAt(0, name, 0);
