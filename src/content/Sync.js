@@ -525,8 +525,8 @@ com.gContactSync.Sync = {
       mABCards:                 abCardInfo,
       mGContacts:               gContactInfo,
       mLastSync:                lastSync,
-      mReadOnly:                ab.mPrefs.readOnly === "true",
-      mWriteOnly:               ab.mPrefs.writeOnly === "true",
+      mReadOnly:                (ab.mPrefs.readOnly === "true") && (lastSync > 0),
+      mWriteOnly:               (ab.mPrefs.writeOnly === "true") && (lastSync > 0),
       mUpdateGoogleInConflicts: ab.mPrefs.updateGoogleInConflicts === "true",
       mCurrentSummary:          this.mCurrentSummary,
     };
