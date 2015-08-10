@@ -68,9 +68,6 @@ com.gContactSync.TBContact.prototype = {
   /**
    * Returns the value of the requested property of this contact.
    *
-   * If the readOnly preference is enabled, then this will return 0 for the
-   * LastModifiedDate.
-   * 
    * @param aAttribute {string} The attribute to get (PrimaryEmail, for example)
    *
    * @returns {string} The value of the attribute, or null if not set.
@@ -81,10 +78,7 @@ com.gContactSync.TBContact.prototype = {
     }
     if (aAttribute === "LastModifiedDate") {
       var ret = com.gContactSync.GAbManager.getCardValue(this.mContact, aAttribute);
-      if (this.mAddressBook.mPrefs && this.mAddressBook.mPrefs.readOnly === "true") {
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * Read only mode, setting LMD to 1");
-        ret = 1;
-      } else if (isNaN(ret) || !isFinite(ret)) {
+      if (isNaN(ret) || !isFinite(ret)) {
         com.gContactSync.LOGGER.LOG_WARNING(" * Couldn't parse date (" + ret + ")");
         ret = 1;
       }

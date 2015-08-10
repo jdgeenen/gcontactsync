@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2014
+ * Portions created by the Initial Developer are Copyright (C) 2014-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -37,141 +37,194 @@
 /**
  * A worker for synchronizing contacts.  Calls postMessage to send data back to the main thread.
  *
- * @param aData {object} The sync data.
+ * @param this.mData {object} The sync data.
  */
 function SyncWorker(aData) {
 
-  var found       = " * Found a match, last modified:",
-      bothChanged = " * Conflict detected: the contact has been updated in " +
-                    "both Google and Thunderbird",
-      bothGoogle  = "  - The Google contact will be updated",
-      bothTB      = "  - The Thunderbird contact will be updated";
+  this.mResult = {
+    mType: "done",
+    mCardsToDelete: [],
+    mContactsToDelete: [],
+    mContactsToUpdate: [],
+    mContactsToAdd: [],
+    mCurrentSummary: aData.mCurrentSummary
+  };
 
-  var cardsToDelete = [],
-      contactsToDelete = [],
-      contactsToUpdate = [],
-      contactsToAdd = [];
+  this.mData = aData;
+}
 
-  // Iterate through TB Contacts and check for matches
-  for (var i = 0, length = aData.mABCards.length; i < length; i++) {
-    var tbContact  = aData.mABCards[i];
-    log(tbContact.name + ": " + tbContact.id);
-    // no ID = new contact
-    if (!tbContact.id) {
-      if (aData.mReadOnly) {
-        log(" * The contact is new. Ignoring since read-only mode is on.");
-        aData.mCurrentSummary.mLocal.mIgnored++;
+SyncWorker.prototype = {
+
+  /**
+   * Runs the SyncWorker and posts the results.
+   */
+  execute: function SyncWorker_execute() {
+
+    this.loopThroughTBContacts();
+    this.findUnmatchedContacts();
+
+    postMessage(this.mResult);
+  },
+
+  /**
+   * Handles synchronizing a Google and TB contact.
+   *
+   * @param aTBContact {TBContact} The Thunderbird contact.
+   * @param aGContact {GContact} The Google contact.
+   * @param aIndex {int} The TB contact index.
+   */
+  contactMatchFound: function SyncWorker_contactMatchFound(aTBContact, aGContact, aIndex) {
+
+    log(" * Found a match, last modified:" +
+        "\n   - Google:      " + aGContact.lastModified +
+        " (" + new Date(aGContact.lastModified) + ")" +
+        "\n   - Thunderbird: " + (aTBContact.lastModified * 1000) +
+        " (" + new Date(aTBContact.lastModified * 1000) + ")");
+
+    // If both contacts have been updated use the readOnly, writeOnly, and updateGoogleInConflicts to determine
+    // which one has precedence.
+    if ((aGContact.lastModified > this.mData.mLastSync) && (aTBContact.lastModified > (this.mData.mLastSync / 1000))) {
+
+      log(" * Conflict detected: the contact has been updated in both Google and Thunderbird");
+
+      if (this.mData.mReadOnly) {
+        log("  - Pulling update into Thunderbird (read-only mode)");
+        this.mResult.mCurrentSummary.mLocal.mIgnored++;
+        this.mResult.mCurrentSummary.mLocal.mUpdated++;
+        postMessage({mType: "updateTBCard", mTBCardIndex: aIndex});
+      } else if (this.mData.mWriteOnly) {
+        log("  - Pushing update to Google (write-only mode)");
+        this.mResult.mCurrentSummary.mRemote.mIgnored++;
+        this.mResult.mContactsToUpdate.push(aIndex);
+      } else if (this.mData.mUpdateGoogleInConflicts) {
+        log("  - Pushing update to Google (update Google in conflicts selected)");
+        this.mResult.mCurrentSummary.mConflicted++;
+        this.mResult.mCurrentSummary.mRemote.mUpdated++;
+        this.mResult.mContactsToUpdate.push(aIndex);
+      } else {
+        log("  - Pulling update into Thunderbird (update TB in conflicts selected)");
+        this.mResult.mCurrentSummary.mConflicted++;
+        this.mResult.mCurrentSummary.mLocal.mUpdated++;
+        postMessage({mType: "updateTBCard", mTBCardIndex: aIndex});
       }
-      else {
-        log(" * This contact is new and will be added to Google.");
-        aData.mCurrentSummary.mRemote.mAdded++;
-        contactsToAdd.push(i);
+
+    } else if (aGContact.lastModified > this.mData.mLastSync) {
+
+      log(" * The Google contact has been updated");
+
+      if (this.mData.mWriteOnly) {
+        log("  - Ignoring due to write-only mode");
+        this.mResult.mCurrentSummary.mRemote.mIgnored++;
+      } else {
+        log("  - Pulling update into Thunderbird");
+        this.mResult.mCurrentSummary.mLocal.mUpdated++;
+        postMessage({mType: "updateTBCard", mTBCardIndex: aIndex});
       }
-    }
-    // if there is a matching Google Contact
-    else if (aData.mGContacts[tbContact.id]) {
-      gContact = aData.mGContacts[tbContact.id];
-      // remove it from aData.mGContacts
-      aData.mGContacts[tbContact.id]  = null;
-      gCardDate = aData.mWriteOnly ? 1 : gContact.lastModified;
-      // 4 options
-      // if both were updated
-      log(found +
-          "\n   - Google:      " + gCardDate +
-          " (" + new Date(gCardDate) + ")" +
-          "\n   - Thunderbird: " + (tbContact.lastModified * 1000) +
-          " (" + new Date(tbContact.lastModified * 1000) + ")");
-      // If there is a conflict, looks at the updateGoogleInConflicts
-      // preference and updates Google if it's true, or Thunderbird if false
-      if (gCardDate > aData.mLastSync && tbContact.lastModified > aData.mLastSync / 1000) {
-        log(bothChanged);
-        aData.mCurrentSummary.mConflicted++;
-        if (aData.mWriteOnly || aData.mUpdateGoogleInConflicts) {
-          log(bothGoogle);
-          aData.mCurrentSummary.mRemote.mUpdated++;
-          contactsToUpdate.push(i);
-        }
-        // update Thunderbird if writeOnly is off and updateGoogle is off
-        else {
-          log(bothTB);
-          aData.mCurrentSummary.mLocal.mUpdated++;
-          postMessage({mType: "updateTBCard", mTBCardIndex: i});
-        }
+
+    } else if (aTBContact.lastModified > (this.mData.mLastSync / 1000)) {
+
+      log(" * The Thunderbird contact has been updated");
+
+      if (this.mData.mReadOnly) {
+        log("  - Ignoring due to read-only mode");
+        this.mResult.mCurrentSummary.mLocal.mIgnored++;
+      } else {
+        log("  - Pushing update to Google");
+        this.mResult.mCurrentSummary.mRemote.mUpdated++;
+        this.mResult.mContactsToUpdate.push(aIndex);
       }
-      // if the contact from Google is newer update the TB card
-      else if (gCardDate > aData.mLastSync) {
-        log(" * The contact from Google is newer...Updating the contact from Thunderbird");
-        aData.mCurrentSummary.mLocal.mUpdated++;
-        postMessage({mType: "updateTBCard", mTBCardIndex: i});
-      }
-      // if the TB card is newer update Google
-      else if (tbContact.lastModified > aData.mLastSync / 1000) {
-        log(" * The contact from Thunderbird is newer...Updating the contact from Google");
-        aData.mCurrentSummary.mRemote.mUpdated++;
-        contactsToUpdate.push(i);
-      }
-      // otherwise nothing needs to be done
-      else {
-        log(" * Neither contact has changed");
-        aData.mCurrentSummary.mNotChanged++;
-      }
-    }
-    // if there isn't a match, but the card is new, add it to Google
-    else if (tbContact.lastModified > aData.mLastSync / 1000 ||
-             isNaN(aData.mLastSync)) {
-      log(" * Contact is new, adding to Google.");
-      aData.mCurrentSummary.mRemote.mAdded++;
-      contactsToAdd.push(i);
-    }
-    // Otherwise, delete the contact from the address book if writeOnly
-    // mode isn't on
-    else if (!aData.mWriteOnly) {
-      log(" * Contact deleted from Google, deleting local copy");
-      aData.mCurrentSummary.mLocal.mRemoved++;
-      cardsToDelete.push(i);
+
     } else {
-      aData.mCurrentSummary.mRemote.mIgnored++;
-      log(" * Contact deleted from Google, ignoring since write-only mode is enabled");
-    }
-  }
 
-  // Check for old Google contacts to delete and new contacts to add to TB
-  log("**Looking for unmatched Google contacts**");
-  for (var id in aData.mGContacts) {
-    var gContact = aData.mGContacts[id];
-    if (gContact) {
-    
+      log(" * Neither contact has changed");
+      this.mResult.mCurrentSummary.mNotChanged++;
+    }
+  },
+
+  /**
+   * Loops through each TB contact and handles it appropriately.
+   * New contacts are pushed to Google (if read-only mode is off).
+   * Contacts with a matching Google contact are updated if the LMD is 
+   * Remaining contacts are deleted if write-only mode isn't set.
+   */
+  loopThroughTBContacts: function SyncWorker_loopThroughTBContacts() {
+
+    // Iterate through TB Contacts and check for matches
+    for (var i = 0, length = this.mData.mABCards.length; i < length; i++) {
+
+      var tbContact  = this.mData.mABCards[i];
+      log(tbContact.name + ": " + tbContact.id);
+
+      // no ID = new contact
+      if (!tbContact.id) {
+
+        if (this.mData.mReadOnly) {
+          log(" * The contact is new. Ignoring since read-only mode is on.");
+          this.mResult.mCurrentSummary.mLocal.mIgnored++;
+        } else {
+          log(" * This contact is new and will be added to Google.");
+          this.mResult.mCurrentSummary.mRemote.mAdded++;
+          this.mResult.mContactsToAdd.push(i);
+        }
+
+      } else if (this.mData.mGContacts[tbContact.id]) {
+
+        // There is a matching Google Contact
+        this.contactMatchFound(tbContact, this.mData.mGContacts[tbContact.id], i);
+        delete this.mData.mGContacts[tbContact.id];
+
+      } else if (!this.mData.mWriteOnly) {
+
+        // Otherwise, delete the contact from the address book if writeOnly isn't set.
+        log(" * Contact deleted from Google, deleting local copy");
+        this.mResult.mCurrentSummary.mLocal.mRemoved++;
+        this.mResult.mCardsToDelete.push(i);
+
+      } else {
+
+        this.mResult.mCurrentSummary.mRemote.mIgnored++;
+        log(" * Contact deleted from Google, ignoring since write-only mode is enabled");
+      }
+    }
+  },
+
+  /**
+   * Searches for Google contacts that have no matching TB contact and deletes, adds, or ignores them.
+   */
+  findUnmatchedContacts: function SyncWorker_findUnmatchedContacts() {
+
+    log("**Looking for unmatched Google contacts**");
+
+    for (var id in this.mData.mGContacts) {
+
+      var gContact = this.mData.mGContacts[id];
+      
       // If writeOnly is on, then set the last modified date to 1 so TB grabs
       // all the contacts from Google during the first sync.
-      var gCardDate = aData.mWriteOnly ? 1 : gContact.lastModified;
+      var gCardDate = this.mData.mWriteOnly ? 1 : gContact.lastModified;
       log(gContact.name + " - " + gCardDate + "\n" + id);
-      if (gCardDate > aData.mLastSync || isNaN(aData.mLastSync)) {
+
+      if (gCardDate > this.mData.mLastSync || isNaN(this.mData.mLastSync)) {
+
         log(" * The contact is new and will be added to Thunderbird");
         postMessage({mType: "newTBContact", mID: id});
-        aData.mCurrentSummary.mLocal.mAdded++;
-      }
-      else if (!aData.mReadOnly) {
-        log(" * The contact is old and will be deleted");
-        aData.mCurrentSummary.mLocal.mRemoved++;
-        contactsToDelete.push(id);
-      }
-      else {
+        this.mResult.mCurrentSummary.mLocal.mAdded++;
+
+      } else if (this.mData.mReadOnly) {
+
         log (" * The contact was deleted in Thunderbird.  " +
              "Ignoring since read-only mode is on.");
-        aData.mCurrentSummary.mLocal.mIgnored++;
+        this.mResult.mCurrentSummary.mLocal.mIgnored++;
+
+      } else {
+
+        log(" * The contact is old and will be deleted");
+        this.mResult.mCurrentSummary.mLocal.mRemoved++;
+        this.mResult.contactsToDelete.push(id);
       }
     }
   }
-
-  postMessage({mType:             "done",
-               mCurrentSummary:   aData.mCurrentSummary,
-               mContactsToAdd:    contactsToAdd,
-               mContactsToDelete: contactsToDelete,
-               mContactsToUpdate: contactsToUpdate,
-               mCardsToDelete:    cardsToDelete});
-
-  close();
-}
+};
 
 /**
  * Logs the given message.
@@ -192,7 +245,9 @@ function log(aMessage) {
  */
 onmessage = function(event) {
   if (event.data) {
-    SyncWorker(event.data);
+    var syncWorker = new SyncWorker(event.data);
+    syncWorker.execute();
+    close();
   }
 };
 
