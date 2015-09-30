@@ -463,10 +463,6 @@ com.gContactSync.Sync = {
       gContact.lastModified  = gContact.getLastModifiedDate();
       gContact.id            = gContact.getID(true);
       gContacts[gContact.id] = gContact;
-      gContactInfo[gContact.id] = {name: gContact.getName(), lastModified: gContact.lastModified};
-    }
-    for (i = 0, length = abCards.length; i < length; ++i) {
-      abCardInfo.push({id: abCards[i].getID(), name: abCards[i].getName(), lastModified: abCards[i].getValue("LastModifiedDate")});
     }
     // re-initialize the contact converter (in case a pref changed)
     com.gContactSync.ContactConverter.init();
@@ -484,10 +480,10 @@ com.gContactSync.Sync = {
 
         // If this address book was previously synchronized with gContactSync there's no need to merge.
         // The contacts will conflict and the updateGoogleInConflicts pref will be used to resolve.
-        if (abCards[i].getValue("GoogleID")) {continue;}
+        if (!abCards[i] || abCards[i].getValue("GoogleID")) {continue;}
 
         for (var id in gContacts) {
-          if (gContacts[id] && abCards[i] &&
+          if (gContacts[id] &&
               com.gContactSync.GAbManager.compareContacts(
                 abCards[i],
                 gContacts[id],
@@ -509,13 +505,23 @@ com.gContactSync.Sync = {
             if (updated.thunderbird) {
               this.mCurrentSummary.mLocal.mUpdated++;
             }
-            gContacts[id] = null;
+            delete gContacts[id];
             abCards.splice(i, 1);
             --i;
             break;
           }
         }
       }
+    }
+
+    for (var gContactId in gContacts) {
+      if (gContacts[gContactId]) {
+        gContactInfo[gContactId] = {name: gContacts[gContactId].getName(), lastModified: gContacts[gContactId].lastModified};
+      }
+    }
+
+    for (i = 0, length = abCards.length; i < length; ++i) {
+      abCardInfo.push({id: abCards[i].getID(), name: abCards[i].getName(), lastModified: abCards[i].getValue("LastModifiedDate")});
     }
 
     com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("syncing"));

@@ -220,7 +220,7 @@ SyncWorker.prototype = {
 
         log(" * The contact is old and will be deleted");
         this.mResult.mCurrentSummary.mLocal.mRemoved++;
-        this.mResult.contactsToDelete.push(id);
+        this.mResult.mContactsToDelete.push(id);
       }
     }
   }
