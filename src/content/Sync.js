@@ -582,7 +582,7 @@ com.gContactSync.Sync = {
         // Request permission from the user to delete > threshold contacts from a
         // single source
         // If the user clicks Cancel the AB is disabled
-        if (threshold > -1 &&
+        if (threshold > 0 &&
               (cardsToDelete.length >= threshold ||
                com.gContactSync.Sync.mContactsToDelete.length >= threshold) &&
               !com.gContactSync.Sync.requestDeletePermission(cardsToDelete.length,
