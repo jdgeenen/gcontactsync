@@ -726,8 +726,8 @@ com.gContactSync.Sync = {
                                                     null,
                                                     string,
                                                     com.gContactSync.Sync.mCurrentUsername);
-    this.mNewPhotoURI = com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value ?
-                          gcontact.mNewPhotoURI : null;
+    com.gContactSync.Sync.mNewPhotoURI = com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value ?
+                                         gcontact.mNewPhotoURI : null;
     /* When the contact is successfully created:
      *  1. Get the card from which the contact was made
      *  2. Get a GContact object for the new contact
