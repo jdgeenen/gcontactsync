@@ -1,0 +1,46 @@
+<!ENTITY title.label "gContactSync-konton">
+<!ENTITY accounts.tab "Konton">
+<!ENTITY addressBook.label "Adressboken">
+<!ENTITY abSynced.label "Google-konto">
+<!-- Global buttons -->
+<!ENTITY addAB.label "Ny adressbok">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "Uppdatera">
+<!ENTITY refreshTree.accesskey "U">
+<!-- Account labels and options -->
+<!-- Basic Settings -->
+<!ENTITY Username.label "Välj ett konto">
+<!ENTITY Username.accesskey "k">
+<!ENTITY NoUsername.label "Inget användarnamn hittades">
+<!ENTITY Groups.label "Grupper och kontakter att synkronisera">
+<!ENTITY Groups.accesskey "G">
+<!ENTITY AllGroups.label "Alla grupper och kontakter">
+<!ENTITY NoGroups.label "Endast kontakter (inga grupper)">
+<!ENTITY Contacts.label "Mina kontakter">
+<!ENTITY Coworkers.label "Medarbetare">
+<!ENTITY Family.label "Släkt">
+<!ENTITY Friends.label "Vänner">
+<!ENTITY GetGroups.label "Hämta alla grupper">
+<!ENTITY GetGroups.accesskey "ö">
+<!ENTITY Plugin.label "Välj en insticksmodul att använda">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "Välj synkroniseringsriktning">
+<!ENTITY SyncDirection.accesskey "y">
+<!ENTITY DirectionHelp.label "Vad är det här?">
+<!ENTITY Complete.label "Fullständig (både Google och Thunderbird uppdateras)">
+<!ENTITY ReadOnly.label "Skrivskyddad (Thunderbird tar emot uppdateringar från Google)">
+<!ENTITY WriteOnly.label "Lässkyddad (Thunderbird skickar uppdateringar till Google)">
+<!ENTITY Disable.label "Inaktivera synkronisering med den här adressboken, temporärt">
+<!ENTITY Disable.accesskey "v">
+<!ENTITY Disable.tooltiptext "Markera den här kryssrutan för att hoppa över den här adressboken vid synkronisering.  Avmarkera den när du vill synkronisera adressboken igen.">
+<!ENTITY updateG.label "Lokala ändringar har företräde framför fjärrändringar">
+<!ENTITY updateG.accesskey "L">
+<!ENTITY updateG.tooltiptext "När en kontakt har uppdaterats både lokalt och på fjärrservern sedan den senaste synkroniseringen, behöver gContactSync få veta vilken ändring som skall behållas.  Markera den här kryssrutan för att låta den lokala ändringen ersätta fjärrändringen">
+<!-- Advanced Settings -->
+<!ENTITY deleteAB.label "Ta bort adressbok">
+<!ENTITY removeLogin.label "Ta bort inställningar">
+<!ENTITY saveChanges.label "Spara ändringar">
+<!ENTITY saveChanges.accesskey "S">
+<!-- Account buttons -->
+<!ENTITY Close.label "Stäng">
+<!ENTITY Close.accesskey "t">
