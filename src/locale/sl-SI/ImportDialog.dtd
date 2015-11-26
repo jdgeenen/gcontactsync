@@ -1,0 +1,12 @@
+<!ENTITY Title.label "Možnosti za uvoz gContactSync">
+<!ENTITY ABList.label "Imenik:">
+<!ENTITY ABList.accesskey "m">
+<!ENTITY NewABButton.label "Nov imenik">
+<!ENTITY NewABButton.accesskey "N">
+<!ENTITY MergeContacts.label "Združi stike">
+<!ENTITY MergeContacts.accesskey "Z">
+<!ENTITY Warning.value "OPOMBA: Uvoz stikov lahko traja nekaj časa. Če vidite opozorilo 'Neodziven skript', kliknite Nadaljuj.">
+<!ENTITY Finish.label "Končaj">
+<!ENTITY Finish.accesskey "K">
+<!ENTITY Cancel.label "Prekliči">
+<!ENTITY Cancel.accesskey "P">

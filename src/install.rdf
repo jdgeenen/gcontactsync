@@ -11,6 +11,14 @@
         <em:translator>Scooter - es-ES</em:translator>
         <em:translator>ZaZy- it</em:translator>
         <em:translator>Leopoldo Saggin - it</em:translator>
+        <em:translator>Andreas Nowack - de</em:translator>
+        <em:translator>Sebastian Zartner - de</em:translator>
+        <em:translator>Bert Visser - nl</em:translator>
+        <em:translator>markh van BabelZilla.org - nl</em:translator>
+        <em:translator>devezas - pt-PT</em:translator>
+        <em:translator>Peter Klofutar - sl-SI</em:translator>
+        <em:translator>Mikael Hiort af Ornäs - sv-SE</em:translator>
+        <em:translator>http://t.qq.com/HeartBlade - zh-CN</em:translator>
         <em:optionsURL>chrome://gcontactsync/content/options.xul</em:optionsURL>
         <em:iconURL>chrome://gcontactsync/skin/logo_main.png</em:iconURL>
         <em:homepageURL>http://www.pirules.org/addons/gcontactsync/</em:homepageURL>

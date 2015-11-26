@@ -2,13 +2,13 @@
 <!ENTITY accounts.tab "Účty">
 <!ENTITY addressBook.label "Adresář">
 <!ENTITY abSynced.label "Google účet">
-<!---->
+<!-- Global buttons -->
 <!ENTITY addAB.label "Nový adresář">
 <!ENTITY addAB.accesskey "N">
 <!ENTITY refreshTree.label "Aktualizovat">
 <!ENTITY refreshTree.accesskey "A">
-<!---->
-<!---->
+<!-- Account labels and options -->
+<!-- Basic Settings -->
 <!ENTITY Username.label "Vyberte účet">
 <!ENTITY Username.accesskey "V">
 <!ENTITY NoUsername.label "Uživ. jména nenalezena">
@@ -36,11 +36,11 @@
 <!ENTITY updateG.label "Místní změny mají přednost před vzdálenými">
 <!ENTITY updateG.accesskey "M">
 <!ENTITY updateG.tooltiptext "Pokud byl kontakt upraven místně i vzdáleně po poslední synchronizaci, gContactSync potřebuje vědět, které změny zachovat. Zaškrtněte, pokud mají místní změny přepsat vzdálené.">
-<!---->
+<!-- Account buttons -->
 <!ENTITY deleteAB.label "Smazat tento adresář">
 <!ENTITY removeLogin.label "Smazat nastavení">
 <!ENTITY saveChanges.label "Uložit změny">
 <!ENTITY saveChanges.accesskey "U">
-<!---->
+<!-- Other -->
 <!ENTITY Close.label "Zavřít">
 <!ENTITY Close.accesskey "Z">

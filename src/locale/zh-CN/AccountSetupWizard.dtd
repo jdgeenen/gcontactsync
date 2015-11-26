@@ -1,0 +1,13 @@
+<!ENTITY title.label "gContactSync 向导">
+<!ENTITY account.description "选择要同步的账户或在下方输入您的Google账户凭证。">
+<!ENTITY account2.description "稍候您可以设置另外的账户。">
+<!ENTITY existingAccount.label "使用已有账户(仅限Google账户)">
+<!ENTITY existingAccount.accesskey "a">
+<!ENTITY newAccount.label "使用新帐号">
+<!ENTITY newAccount.accesskey "w">
+<!ENTITY accountSettings.description "账户设定">
+<!ENTITY email.value "E-mail 地址:">
+<!ENTITY email.accesskey "m">
+<!ENTITY newABButton.label "新建">
+<!ENTITY newABButton.accesskey "N">
+<!ENTITY finish.value "点击Finish添加账户并同步。">

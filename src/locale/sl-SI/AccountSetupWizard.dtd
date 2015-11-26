@@ -1,0 +1,13 @@
+<!ENTITY title.label "Čarovnik gContactSync">
+<!ENTITY account.description "Izberite račun za usklajevanje ali spodaj vnesite svoja poverila računa Google.">
+<!ENTITY account2.description "Dodatne računa lahko ustvarite kasneje.">
+<!ENTITY existingAccount.label "Uporabi obstoječi račun (mora biti račun Google)">
+<!ENTITY existingAccount.accesskey "b">
+<!ENTITY newAccount.label "Uporabi nov račun">
+<!ENTITY newAccount.accesskey "n">
+<!ENTITY accountSettings.description "Nastavitve računa">
+<!ENTITY email.value "E-poštni naslov:">
+<!ENTITY email.accesskey "E">
+<!ENTITY newABButton.label "Nov">
+<!ENTITY newABButton.accesskey "N">
+<!ENTITY finish.value "Kliknite Končaj za dodajanje in usklajevanje računa.">

@@ -1,0 +1,63 @@
+<!-- The name of the extension (should just be gContactSync) -->
+<!ENTITY gContactSyncTab.label "gContactSync">
+<!-- Ordinal numbers -->
+<!ENTITY first.label "第一">
+<!ENTITY second.label "第二">
+<!ENTITY third.label "第三">
+<!ENTITY fourth.label "第四">
+<!ENTITY fifth.label "第五">
+<!ENTITY sixth.label "第六">
+<!ENTITY seventh.label "第七">
+<!ENTITY eighth.label "第八">
+<!-- Different address types -->
+<!ENTITY home.label "家庭">
+<!ENTITY work.label "工作">
+<!ENTITY other.label "其它">
+<!-- A label for extra screenname fields -->
+<!ENTITY screenname.box "额外显示名">
+<!-- A label for extra e-mail address fields -->
+<!ENTITY email.box "额外Email地址">
+<!-- A label for extra phone number fields -->
+<!ENTITY numbers.box "额外号码">
+<!-- A label for extra postal address fields -->
+<!ENTITY Anniversary.label "周年纪念日">
+<!ENTITY Anniversary.accesskey "Y">
+<!-- Note: these are only displayed in Thunderbird 3/Seamonkey 2 (not Postbox or TB 2) -->
+<!ENTITY initialStatus.label "">
+<!-- LOCALIZATION NOTE: Please try to keep the number of characters down (around 60) to avoid making the window too wide -->
+<!ENTITY relations.box "关系">
+<!-- This can be blank or something like "点击同步以开始" -->
+<!ENTITY sync.label "同步">
+<!ENTITY sync.tooltip "使用 gContactSync 同步联系人">
+<!-- People who are somehow related to or associated with the contact -->
+<!ENTITY status.tooltip "点击此处查看日志文件">
+<!-- Used for the Sync button on the Address Book toolbar -->
+<!ENTITY gContactSyncMenu.label "gContactSync">
+<!ENTITY gContactSyncMenu.accesskey "g">
+<!ENTITY syncMenuItem.label "同步">
+<!ENTITY syncMenuItem.accesskey "S">
+<!ENTITY newAcctMenuItem.label "新建账户">
+<!ENTITY newAcctMenuItem.accesskey "N">
+<!ENTITY acctMenuItem.label "账户">
+<!ENTITY acctMenuItem.accesskey "A">
+<!ENTITY prefMenuItem.label "首选项">
+<!ENTITY prefMenuItem.accesskey "P">
+<!ENTITY forumMenuItem.label "支持论坛">
+<!ENTITY forumMenuItem.accesskey "u">
+<!ENTITY faqMenuItem.label "常见问题">
+<!ENTITY faqMenuItem.accesskey "Q">
+<!ENTITY errorMenuItem.label "错误报告表格">
+<!ENTITY errorMenuItem.accesskey "r">
+<!ENTITY logMenuItem.label "日志">
+<!ENTITY logMenuItem.accesskey "L">
+<!ENTITY gcMenuItem.label "Google 在线联系人">
+<!ENTITY gcMenuItem.accesskey "C">
+<!-- A tooltip on the status bar -->
+<!-- The text for Import.label should match importNotStarted in gcontactsync.properties -->
+<!ENTITY Import.label "开始导入 (实验项目)">
+<!ENTITY Import.accesskey "I">
+<!ENTITY FinishImport.label "完成导入">
+<!ENTITY FinishImport.accesskey "F">
+<!ENTITY Facebook.label "Facebook">
+<!ENTITY LinkedIn.label "LinkedIn">
+<!ENTITY Twitter.label "Twitter">

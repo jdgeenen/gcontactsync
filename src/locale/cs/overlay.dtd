@@ -53,7 +53,7 @@
 <!ENTITY gcMenuItem.label "Google kontakty online">
 <!ENTITY gcMenuItem.accesskey "G">
 <!-- A tooltip on the status bar -->
-<!---->
+<!-- The text for Import.label should match importNotStarted in gcontactsync.properties -->
 <!ENTITY Import.label "Zahájit import z (experimentální)">
 <!ENTITY Import.accesskey "i">
 <!ENTITY FinishImport.label "Dokončit import">

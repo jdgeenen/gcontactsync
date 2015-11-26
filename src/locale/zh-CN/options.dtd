@@ -1,0 +1,66 @@
+<!ENTITY title.label "gContactSync 首选项">
+<!ENTITY main.tab "主要">
+<!ENTITY help.value "帮助">
+<!ENTITY help.accesskey "H">
+<!ENTITY autoSync.value "自动同步">
+<!ENTITY autoSync.label "自动同步联系人">
+<!ENTITY autoSync.accesskey "S">
+<!ENTITY refreshInterval.value "同步间隔 (分) [默认为 120 (2 小时)]">
+<!ENTITY refreshInterval.accesskey "I">
+<!ENTITY initialDelayMinutes.value "初始同步延迟(分) [默认为 5]">
+<!ENTITY initialDelayMinutes.accesskey "d">
+<!ENTITY abName.value "要同步的通讯录的名称(旧 或 新)">
+<!ENTITY abName.accesskey "A">
+<!ENTITY syncBehavior.label "同步行为">
+<!ENTITY syncAddresses.label "同步邮政地址 (实验项目, 慎重！)">
+<!ENTITY syncAddresses.accesskey "p">
+<!ENTITY alertSummary.label "手动同步后显示摘要">
+<!ENTITY alertSummary.accesskey "m">
+<!ENTITY phoneTypes.label "添加电话号码类型字段 (忽略已有字段名)">
+<!ENTITY phoneTypes.accesskey "n">
+<!ENTITY accountDelay.value "账号间延迟 (ms) [5000]">
+<!ENTITY accountDelay.accesskey "b">
+<!ENTITY logging.label "日志">
+<!ENTITY enableLogging.label "启用日志">
+<!ENTITY enableLogging.accesskey "L">
+<!ENTITY verboseLog.label "启用详细日志 (用于调试)">
+<!ENTITY verboseLog.accesskey "V">
+<!ENTITY showInConsole.label "在错误控制台中记录错误(供调试)">
+<!ENTITY showInConsole.accesskey "E">
+<!ENTITY interface.tab "界面">
+<!ENTITY buttons.label "按钮和菜单">
+<!ENTITY enableMenu.label "启用 gContactSync 菜单">
+<!ENTITY enableMenu.accesskey "E">
+<!ENTITY enableMenuLinks.label "添加链接 (Wiki, FAQ, 等.) 到 gContactSync 菜单">
+<!ENTITY enableMenuLinks.accesskey "l">
+<!ENTITY addReset.label "添加 替换到服务器 和 从服务器替换 链接到通讯录上下文菜单">
+<!ENTITY addReset.accesskey "R">
+<!ENTITY abResults.label "联系人列表">
+<!ENTITY phoneColLabels.label "重命名电话列标签">
+<!ENTITY phoneColLabels.accesskey "R">
+<!ENTITY newColLabels.label "添加新字段到列标签 (仅 TB 3/SM 2 )">
+<!ENTITY newColLabels.accesskey "n">
+<!ENTITY advanced.tab "高级">
+<!ENTITY warning.value "警告 - 仅计划给高级用户">
+<!ENTITY backup.label "通讯录备份策略">
+<!ENTITY backupInterval.value "备份间隔 (天, -1 为禁用) [14]">
+<!ENTITY backupInterval.accesskey "B">
+<!ENTITY other.label "其它">
+<!ENTITY chromeTime.value "'Unresponsive Script' (未响应脚本)警告延迟时间 (0 为禁用)">
+<!ENTITY chromeTime.accesskey "U">
+<!ENTITY confirmDeleteThreshold.value "提交请求前删除的最少联系人数目">
+<!ENTITY confirmDeleteThreshold.accesskey "d">
+<!ENTITY httpRequestTimeout.value "HTTP 请求超时 (ms, 0为禁用) [0]">
+<!ENTITY httpRequestTimeout.accesskey "H">
+<!ENTITY httpRequestDelay.value "HTTP请求间的延迟(ms,0为禁用)[100]">
+<!ENTITY httpRequestDelay.accesskey "I">
+<!ENTITY resetAll.label "重置所有已同步通讯录">
+<!ENTITY resetAll.accesskey "R">
+<!ENTITY cleanOldPrefs.label "清空旧通讯录首选项">
+<!ENTITY cleanOldPrefs.accesskey "C">
+<!ENTITY cleanOldPhotos.label "删除旧通讯录照片">
+<!ENTITY cleanOldPhotos.accesskey "P">
+<!ENTITY resetAllSettings.label "重置所有gContactSync设置">
+<!ENTITY resetAllSettings.accesskey "g">
+<!ENTITY throttleTest.label "运行Throttle测试">
+<!ENTITY throttleTest.accesskey "T">
