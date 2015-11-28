@@ -38,6 +38,8 @@
 <!ENTITY ReadOnly.label          "Read-only (your client receives updates from Google)">
 <!ENTITY WriteOnly.label         "Write-only (your client sends updates to Google)">
 
+<!ENTITY SkipContactsWithoutEmail.label "Skip contacts without an e-mail address">
+
 <!ENTITY Disable.label           "Disable synchronization with this address book">
 <!ENTITY Disable.accesskey       "D">
 <!ENTITY Disable.tooltiptext     "Check this box to skip over this address book when synchronizing.  Uncheck it when you want to synchronize it again.">

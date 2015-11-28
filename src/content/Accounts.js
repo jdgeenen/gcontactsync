@@ -66,6 +66,7 @@ com.gContactSync.Accounts = {
     "Groups",
     "Plugin",
     "SyncDirection",
+    "skipContactsWithoutEmail",
     "updateGoogleInConflicts",
     "disabled"
   ],
@@ -113,8 +114,9 @@ com.gContactSync.Accounts = {
    */
   newAddressBook: function Accounts_newAddressBook() {
     var name = com.gContactSync.prompt(com.gContactSync.StringBundle.getStr("newABPrompt"), null, window);
-    if (!name)
+    if (!name) {
       return false;
+    }
     var ab = com.gContactSync.AbManager.getAbByName(name);
     this.fillAbTree();
     return ab;
@@ -129,6 +131,7 @@ com.gContactSync.Accounts = {
         directionElem = document.getElementById("SyncDirection"),
         pluginElem    = document.getElementById("Plugin"),
         disableElem   = document.getElementById("disabled"),
+        skipCElem     = document.getElementById("skipContactsWithoutEmail"),
         updateGElem   = document.getElementById("updateGoogleInConflicts"),
         ab            = this.getSelectedAb();
 
@@ -137,15 +140,16 @@ com.gContactSync.Accounts = {
     }
 
     var syncGroups = String(groupElem.value === "All"),
-        myContacts = String(groupElem.value !== "All" && groupElem.value !== "false");;
+        myContacts = String(groupElem.value !== "All" && groupElem.value !== "false");
     // check if the AB should be reset based on the new values
-    var needsReset = this.needsReset(ab, usernameElem.value, syncGroups, myContacts, groupElem.value);
+    var needsReset = this.needsReset(ab, usernameElem.value, syncGroups, myContacts, groupElem.value, String(skipCElem.checked));
 
     // the simple preferences
-    ab.savePref("Username",                usernameElem.value);
-    ab.savePref("Plugin",                  pluginElem.value);
-    ab.savePref("Disabled",                String(disableElem.checked));
-    ab.savePref("updateGoogleInConflicts", String(updateGElem.checked));
+    ab.savePref("Username",                 usernameElem.value);
+    ab.savePref("Plugin",                   pluginElem.value);
+    ab.savePref("Disabled",                 String(disableElem.checked));
+    ab.savePref("skipContactsWithoutEmail", String(skipCElem.checked));
+    ab.savePref("updateGoogleInConflicts",  String(updateGElem.checked));
     // this is for backward compatibility
     ab.savePref("Primary",  "true");
     // Group to sync
@@ -160,7 +164,7 @@ com.gContactSync.Accounts = {
     this.mUnsavedChange = false;
     this.fillUsernames();
     this.fillAbTree();
-    this.selectedAbChange()
+    this.selectedAbChange();
 
     if (needsReset) {
       ab.reset();
@@ -199,6 +203,7 @@ com.gContactSync.Accounts = {
         directionElem = document.getElementById("SyncDirection"),
         pluginElem    = document.getElementById("Plugin"),
         disableElem   = document.getElementById("disabled"),
+        skipCElem     = document.getElementById("skipContactsWithoutEmail"),
         updateGElem   = document.getElementById("updateGoogleInConflicts"),
         ab            = this.getSelectedAb();
     this.restoreGroups();
@@ -221,6 +226,7 @@ com.gContactSync.Accounts = {
     com.gContactSync.selectMenuItem(directionElem, direction, true);
     // Temporarily disable synchronization with the address book
     disableElem.checked = ab.mPrefs.Disabled === "true";
+    skipCElem.checked = ab.mPrefs.skipContactsWithoutEmail === "true";
     // Overwrite remote changes with local changes in a conflict
     updateGElem.checked = ab.mPrefs.updateGoogleInConflicts === "true";
     // Select the correct plugin
@@ -477,11 +483,12 @@ com.gContactSync.Accounts = {
    * @param aSyncGroups {string}      The new value for the syncGroups pref.
    * @param aMyContacts {string}      The new value for the myContacts pref.
    * @param aMyContactsName {string}  The new value for the myContactsName pref.
+   * @param aSkipContacts {boolean}   The new value for the skipContactsWithoutEmail pref.
    *
    * @return {boolean} true if the AB should be reset.  See the detailed
    *                        description for more details.
    */
-  needsReset: function Accounts_needsReset(aAB, aUsername, aSyncGroups, aMyContacts, aMyContactsName) {
+  needsReset: function Accounts_needsReset(aAB, aUsername, aSyncGroups, aMyContacts, aMyContactsName, aSkipContacts) {
     // This should not be necessary, but it's better to be safe
     aAB.getPrefs();
     com.gContactSync.LOGGER.VERBOSE_LOG
@@ -492,6 +499,7 @@ com.gContactSync.Accounts = {
       "  * " + aSyncGroups     + " <- " + aAB.mPrefs.syncGroups + "\n" +
       "  * " + aMyContacts     + " <- " + aAB.mPrefs.myContacts + "\n" +
       "  * " + aMyContactsName + " <- " + aAB.mPrefs.myContactsName + "\n" +
+      "  * " + aSkipContacts + " <- " + aAB.mPrefs.skipContactsWithoutEmail + "\n" +
       "  * Last sync date: " + aAB.mPrefs.lastSync
      );
     if ((aAB.mPrefs.Username && aAB.mPrefs.Username !== "none") &&
@@ -501,7 +509,8 @@ com.gContactSync.Accounts = {
           aAB.mPrefs.Username !== aUsername ||
           aAB.mPrefs.syncGroups !== aSyncGroups ||
           aAB.mPrefs.myContacts !== aMyContacts ||
-          aAB.mPrefs.myContactsName !== aMyContactsName
+          aAB.mPrefs.myContactsName !== aMyContactsName ||
+          aAB.mPrefs.skipContactsWithoutEmail !== aSkipContacts
          )) {
       var reset = com.gContactSync.confirm(com.gContactSync.StringBundle.getStr("confirmABReset"));
       com.gContactSync.LOGGER.VERBOSE_LOG("  * Confirmation result: " + reset + "\n");

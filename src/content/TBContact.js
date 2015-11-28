@@ -113,6 +113,17 @@ com.gContactSync.TBContact.prototype = {
     return com.gContactSync.fixURL(id.toLowerCase());
   },
   /**
+   * Returns the first non-empty email address of this contact, if any.
+   *
+   * @returns {string} The first non-empty email address of this contact, if any.
+   */
+  getEmailAddress: function TBontact_getEmailAddress() {
+    return this.getValue("PrimaryEmail") ||
+           this.getValue("SecondEmail") ||
+           this.getValue("ThirdEmail") ||
+           this.getValue("FourthEmail");
+  },
+  /**
    * Sets the value of the requested attribute of this contact and optionally
    * updates the contact in its parent directory.
    *

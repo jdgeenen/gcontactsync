@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2014
+ * Portions created by the Initial Developer are Copyright (C) 2008-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -434,7 +434,7 @@ com.gContactSync.Sync = {
       lastSync = 0;
     }
     // mark the AB as not having been reset if it gets this far
-    com.gContactSync.Sync.mCurrentAb.savePref("reset", false);
+    ab.savePref("reset", false);
     
     // have to update the lists or TB 2 won't work properly
     com.gContactSync.Sync.mLists = ab.getAllLists();
@@ -467,6 +467,26 @@ com.gContactSync.Sync = {
     // re-initialize the contact converter (in case a pref changed)
     com.gContactSync.ContactConverter.init();
 
+    var gContactId;
+
+    // If the sync settings for this AB specify to skip contacts without e-mail addresses
+    // remove all the gContacts and cards without e-mail addresses.
+    if (ab.mPrefs.skipContactsWithoutEmail === "true") {
+      for (gContactId in gContacts) {
+        if (gContacts[gContactId] && !gContacts[gContactId].getEmailAddress()) {
+          com.gContactSync.LOGGER.VERBOSE_LOG("Skipping Google Contact '" + gContacts[gContactId].getName() + "' due to skipContactsWithoutEmail");
+          delete gContacts[gContactId];
+        }
+      }
+      for (i = 0; i < abCards.length; ++i) {
+        if (!abCards[i].getEmailAddress()) {
+          com.gContactSync.LOGGER.VERBOSE_LOG("Skipping TB Contact '" + abCards[i].getName() + "' due to skipContactsWithoutEmail");
+          abCards.splice(i, 1);
+          --i;
+        }
+      }
+    }
+
     // If this is the first sync then iterate through TB contacts
     // If the contact matches a Google contact then set the TB contact's
     // GoogleID to its matching contact and LastModifiedDate to 0.
@@ -476,7 +496,7 @@ com.gContactSync.Sync = {
     // in Google; it just matches with the first contact it finds, if any.
     if (lastSync === 0) {
       com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("firstSyncContacts"));
-      for (i = 0, length = abCards.length; i < length; i++) {
+      for (i = 0; i < abCards.length; i++) {
 
         // If this address book was previously synchronized with gContactSync there's no need to merge.
         // The contacts will conflict and the updateGoogleInConflicts pref will be used to resolve.
@@ -514,7 +534,7 @@ com.gContactSync.Sync = {
       }
     }
 
-    for (var gContactId in gContacts) {
+    for (gContactId in gContacts) {
       if (gContacts[gContactId]) {
         gContactInfo[gContactId] = {name: gContacts[gContactId].getName(), lastModified: gContacts[gContactId].lastModified};
       }

@@ -103,20 +103,32 @@ com.gContactSync.GContact.prototype = {
       if (titleElem && titleElem.childNodes[0]) {
         contactName = titleElem.childNodes[0].nodeValue;
       }
-      emailElem = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url,
-                                                      "email")[0];
-      if (emailElem && emailElem.getAttribute) {
-        if (contactName !== "")
+      var email = this.getEmailAddress();
+      if (email) {
+        if (contactName !== "") {
           contactName += " - ";
-        contactName += this.xml
-                           .getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url,
-                                                   "email")[0].getAttribute("address");
+        }
+        contactName += email;
       }
     }
     catch (e) {
       com.gContactSync.LOGGER.LOG_WARNING("Unable to get the name or e-mail address of a contact", e);
     }
     return contactName;
+  },
+  /**
+   * Returns the first email address of this contact, if any.
+   *
+   * @returns {string} Returns the first email address of this contact, if any.
+   */
+  getEmailAddress: function GContact_getEmailAddress() {
+    var email = "";
+    var emailElem = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url,
+                                                    "email")[0];
+    if (emailElem && emailElem.getAttribute) {
+      email = emailElem.getAttribute("address");
+    }
+    return email;
   },
   /**
    * Returns the value of an element with a type where the value is in the

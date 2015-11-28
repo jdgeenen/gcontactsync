@@ -121,6 +121,8 @@
         </menupopup>
       </menulist>
       <spacer height="5px"/>
+      <checkbox id="skipContactsWithoutEmail" label="&SkipContactsWithoutEmail.label;"/>
+      <spacer height="5px"/>
       <checkbox id="updateGoogleInConflicts"
                 label="&updateG.label;"
                 accesskey="&updateG.accesskey;"

@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2010
+ * Portions created by the Initial Developer are Copyright (C) 2008-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
+if (!com) {var com = {};} // A generic wrapper variable
 // A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
 * An extension of AddressBook that adds functionality specific to gContactSync.
@@ -71,10 +71,12 @@ com.gContactSync.GAddressBook = function gCS_GAddressBook(aDirectory, aNoPrefs) 
                                  // this pref determines which contact to update
     lastSync:       "", // The last time this AB was synchronized
     lastBackup:     "", // The last time this AB was backed up
-    reset:          ""  // Whether this AB has been reset since the last sync
+    reset:          "", // Whether this AB has been reset since the last sync
+    skipContactsWithoutEmail: ""  // Whether this AB has been reset since the last sync
   };
-  if (!aNoPrefs)
+  if (!aNoPrefs) {
     this.getPrefs();
+  }
 };
 
 // Copy the AB prototype (methods and member variables)
@@ -97,16 +99,14 @@ com.gContactSync.GAddressBook.prototype.getPrefs = function GAddressBook_getPref
     // getStringPref returns 0 iff the pref doesn't exist
     // if the pref doesn't exist, then use the global gContactSync pref
     // AND set this AB's pref so this doesn't fall through next time
-    // this behavior is mostly for backwards compatibility
+    // this behavior is mostly for forward compatibility
     if (val === 0) {
       com.gContactSync.LOGGER.VERBOSE_LOG("getPrefs fell through on " + i);
       var pref = com.gContactSync.Preferences.mSyncPrefs[i];
-      val  = pref ? String(pref.value) : "";
+      val = pref ? String(pref.value) : "";
+      if (!val && (i === "skipContactsWithoutEmail")) {val = "false";}
       this.savePref(i, val);
-    }
-    // Bug 22817 - Unexpected behavior when lastSync is NaN
-    // Make sure that lastSync isn't set to NaN
-    else if (isLastSync && isNaN(val)) {
+    } else if (isLastSync && isNaN(val)) {
       val = 0;
     }
     com.gContactSync.LOGGER.LOG(" * " + i + " = " + val);

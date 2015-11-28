@@ -260,6 +260,7 @@ com.gContactSync.AccountSetupWizard = {
     var abName = document.getElementById("abName").label;
     var group  = document.getElementById("Groups").value;
     var directionElem = document.getElementById("SyncDirection");
+    var skipCElem = document.getElementById("skipContactsWithoutEmail");
     var syncGroups = String(group === "All"),
         myContacts = String(group !== "All" && group !== "false");
     // TODO combine with saveSelectedAccount
@@ -268,6 +269,7 @@ com.gContactSync.AccountSetupWizard = {
     ab.savePref("Username", this.mEmailAddress);
     ab.savePref("Plugin", "Google");
     ab.savePref("Disabled", "false");
+    ab.savePref("skipContactsWithoutEmail", String(skipCElem.checked));
     ab.savePref("updateGoogleInConflicts", "true");
     ab.savePref("Primary",  "true");
     ab.savePref("syncGroups", syncGroups);
