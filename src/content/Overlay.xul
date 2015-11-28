@@ -40,7 +40,7 @@
 <overlay id="gContactSync-GlobalOverlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script type="application/x-javascript"
-          src="chrome://gcontactsync/content/synonyms.js"/>
+          src="chrome://gcontactsync/content/misc.js"/>
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/StringBundle.js"/>
   <script type="application/x-javascript"

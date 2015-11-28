@@ -334,7 +334,7 @@
     </vbox>
   </prefpane>
   <script type="application/x-javascript"
-          src="chrome://gcontactsync/content/synonyms.js"/>
+          src="chrome://gcontactsync/content/misc.js"/>
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/Logger.js"/>
   <script type="application/x-javascript"

@@ -53,7 +53,7 @@
         height="740px"
         width="700px">
   <script type="application/x-javascript"
-          src="chrome://gcontactsync/content/synonyms.js"/>
+          src="chrome://gcontactsync/content/misc.js"/>
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/LoginManager.js"/>
   <script type="application/x-javascript"

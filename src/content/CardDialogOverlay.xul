@@ -48,7 +48,7 @@
   <!-- since the tabbox doesn't have an ID, this overlay uses JavaScript to
        add a tab -->
   <script src="StringBundle.js"/>
-  <script src="synonyms.js"/>
+  <script src="misc.js"/>
   <script src="FileIO.js"/>
   <script src="Pref.js"/>
   <script src="Preferences.js"/>
