@@ -16,7 +16,7 @@
    -
    - The Initial Developer of the Original Code is
    - Josh Geenen <gcontactsync@pirules.org>.
-   - Portions created by the Initial Developer are Copyright (C) 2009-2014
+   - Portions created by the Initial Developer are Copyright (C) 2009-2015
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s):
@@ -121,7 +121,7 @@
         </menupopup>
       </menulist>
       <spacer height="5px"/>
-      <checkbox id="skipContactsWithoutEmail" label="&SkipContactsWithoutEmail.label;"/>
+      <checkbox id="skipContactsWithoutEmail" label="&SkipContactsWithoutEmail.label;" accesskey="&SkipContactsWithoutEmail.accesskey;"/>
       <spacer height="5px"/>
       <checkbox id="updateGoogleInConflicts"
                 label="&updateG.label;"

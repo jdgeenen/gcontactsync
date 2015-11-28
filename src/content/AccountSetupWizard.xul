@@ -179,7 +179,7 @@
         <menuitem value="WriteOnly" label="&WriteOnly.label;"/>
       </menupopup>
     </menulist>
-    <checkbox id="skipContactsWithoutEmail" label="&SkipContactsWithoutEmail.label;" checked="true"/>
+    <checkbox id="skipContactsWithoutEmail" label="&SkipContactsWithoutEmail.label;" accesskey="&SkipContactsWithoutEmail.accesskey;" checked="true"/>
     <spacer flex="1"/>
     <label align="end" value="&finish.value;"/>
   </wizardpage>
