@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2014
+ * Portions created by the Initial Developer are Copyright (C) 2008-2015
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -51,7 +51,7 @@ com.gContactSync.versionMinor   = "0";
 /** The release for the current version of gContactSync (ie 1 in 0.3.1a7) */
 com.gContactSync.versionRelease = "0";
 /** The suffix for the current version of gContactSync (ie a7 for Alpha 7) */
-com.gContactSync.versionSuffix  = "a1pre";
+com.gContactSync.versionSuffix  = "a1";
 /** The attribute where the dummy e-mail address is stored */
 com.gContactSync.dummyEmailName = "PrimaryEmail";
 
