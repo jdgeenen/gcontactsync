@@ -73,8 +73,7 @@ com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
   }
   var srcURI         = GetSelectedDirectory(),
       toDirectory    = GetDirectoryFromURI(targetURI),
-      srcDirectory   = GetDirectoryFromURI(srcURI),
-      ab             = new com.gContactSync.GAddressBook(toDirectory);
+      srcDirectory   = GetDirectoryFromURI(srcURI);
   // iterate through each dropped item from the session
   for (var i = 0, dropItems = dragSession.numDropItems; i < dropItems; i++) {
     dragSession.getData(trans, i);
@@ -196,10 +195,12 @@ com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
           } catch (e) { com.gContactSync.LOGGER.LOG_WARNING("Error while copying card", e); }
         }
         try {
-          var now = (new Date()).getTime()/1000,
+          var ab = new com.gContactSync.GAddressBook(toDirectory);
+          var now = (new Date()).getTime() / 1000,
               newContact = new com.gContactSync.TBContact(newCard, ab);
-          // now set the new card's last modified date and update it
+          // now set the new card's last modified date, clear the Google ID (if card was copied), and update it
           newContact.setValue("LastModifiedDate", now);
+          if (needToCopyCard) { newContact.setValue("GoogleID", null); }
           newContact.update();
         } catch (e) { com.gContactSync.LOGGER.LOG_WARNING('copy card error: ' + e); }
       }
@@ -242,7 +243,8 @@ com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
     // set the status text
     document.getElementById("statusText").label = cardsTransferredText;
   }
-}
+};
+
 /**
  * Deletes the given card from the given directory.
  * @param aDirectory {nsIAbDirectory} The directory from which the card is
