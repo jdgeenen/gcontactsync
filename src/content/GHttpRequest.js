@@ -51,7 +51,6 @@ if (!com.gContactSync) {com.gContactSync = {};}
  *                            request.  Not required for authenticate, getAll,
  *                            getGroups, and add.
  * @param aBody      {string} The body of the request.
- * @param aUsername  {string} Optional.  Replaces "default" in the URL.
  * @param aOther     {string} Additional parameter to use when needed.
  *                            Currently this is only used for GET requests for
  *                            obtaining contacts in a specified group (pass the
@@ -60,7 +59,7 @@ if (!com.gContactSync) {com.gContactSync = {};}
  * @class
  * @extends com.gContactSync.HttpRequest
  */
-com.gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aBody, aUsername, aOther) {
+com.gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aBody, aOther) {
   com.gContactSync.HttpRequest.call(this);  // call the superclass' constructor
   this.mBody = aBody;
   // all urls in gdata use SSL.  If a URL is supplied, make sure it uses SSL
@@ -175,10 +174,6 @@ com.gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aB
   this.mOn401 = com.gContactSync.handle401;
   if (!this.mUrl) {
     throw "Error - no URL was found for the HTTP Request";
-  }
-  if (aUsername && this.mUrl) {
-    this.mUrl = this.mUrl.replace("default",
-                                  encodeURIComponent(com.gContactSync.fixUsername(aUsername)));
   }
 };
 

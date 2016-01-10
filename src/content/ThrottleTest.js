@@ -99,8 +99,7 @@ com.gContactSync.ThrottleTest = {
     var httpReq = new com.gContactSync.GHttpRequest("get",
                                                     com.gContactSync.ThrottleTest.mToken,
                                                     com.gContactSync.ThrottleTest.mURL,
-                                                    null,
-                                                    com.gContactSync.ThrottleTest.mUsername);
+                                                    null);
     httpReq.addHeaderItem("If-Match", "*");
     httpReq.mOnSuccess = com.gContactSync.ThrottleTest.onSuccess;
     httpReq.mOnError   = com.gContactSync.ThrottleTest.onError;

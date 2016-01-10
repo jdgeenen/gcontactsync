@@ -401,8 +401,7 @@ com.gContactSync.Accounts = {
     var httpReq = new com.gContactSync.GHttpRequest("getGroups",
                                                     aAccessToken,
                                                     null,
-                                                    null,
-                                                    aUsername);
+                                                    null);
     httpReq.mOnSuccess = function getAllGroupsSuccess(httpReq) {
       com.gContactSync.LOGGER.VERBOSE_LOG(com.gContactSync.serializeFromText(httpReq.responseText));
       com.gContactSync.Accounts.addGroups(httpReq.responseXML, aUsername);
