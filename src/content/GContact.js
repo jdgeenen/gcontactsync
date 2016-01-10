@@ -837,8 +837,7 @@ com.gContactSync.GContact.prototype = {
       var httpReq = new com.gContactSync.GHttpRequest("delete",
                                                       com.gContactSync.Sync.mCurrentAuthToken,
                                                       photoInfo.url,
-                                                      null,
-                                                      com.gContactSync.Sync.mCurrentUsername);
+                                                      null);
       httpReq.mOnSuccess = function setPhotoSuccess() {
         com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo successfully removed");
       };

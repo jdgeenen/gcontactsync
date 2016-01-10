@@ -286,8 +286,7 @@ com.gContactSync.Sync = {
     var httpReq = new com.gContactSync.GHttpRequest("getGroups",
                                                     com.gContactSync.Sync.mCurrentAuthToken,
                                                     null,
-                                                    null,
-                                                    com.gContactSync.Sync.mCurrentUsername);
+                                                    null);
     httpReq.mOnSuccess = function getGroupsSuccess(httpReq) {
       var backup      = com.gContactSync.Sync.mBackup,
           firstBackup = com.gContactSync.Sync.mFirstBackup,
@@ -323,14 +322,13 @@ com.gContactSync.Sync = {
                                                   com.gContactSync.Sync.mCurrentAuthToken,
                                                   null,
                                                   null,
-                                                  com.gContactSync.Sync.mCurrentUsername, com.gContactSync.Sync.mContactsUrl);
+                                                  com.gContactSync.Sync.mContactsUrl);
     }
     else {
       httpReq = new com.gContactSync.GHttpRequest("getAll",
                                                   com.gContactSync.Sync.mCurrentAuthToken,
                                                   null,
-                                                  null,
-                                                  com.gContactSync.Sync.mCurrentUsername);
+                                                  null);
     }
     httpReq.mOnSuccess = function getContactsSuccess(httpReq) {
       // com.gContactSync.serializeFromText does not do anything if verbose
@@ -695,8 +693,8 @@ com.gContactSync.Sync = {
 
     var httpReq = new com.gContactSync.GHttpRequest("delete",
                                                     com.gContactSync.Sync.mCurrentAuthToken,
-                                                    editURL, null,
-                                                    com.gContactSync.Sync.mCurrentUsername);
+                                                    editURL,
+                                                    null);
     httpReq.addHeaderItem("If-Match", "*");
     httpReq.mOnSuccess = function processDeleteSuccess(httpReq) {
       com.gContactSync.Sync.delayedProcessQueue(com.gContactSync.Sync.processDeleteQueue);
@@ -744,8 +742,7 @@ com.gContactSync.Sync = {
     var httpReq = new com.gContactSync.GHttpRequest("add",
                                                     com.gContactSync.Sync.mCurrentAuthToken,
                                                     null,
-                                                    string,
-                                                    com.gContactSync.Sync.mCurrentUsername);
+                                                    string);
     com.gContactSync.Sync.mNewPhotoURI = com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value ?
                                          gcontact.mNewPhotoURI : null;
     /* When the contact is successfully created:
@@ -822,8 +819,7 @@ com.gContactSync.Sync = {
     var httpReq = new com.gContactSync.GHttpRequest("update",
                                                     com.gContactSync.Sync.mCurrentAuthToken,
                                                     editURL,
-                                                    string,
-                                                    com.gContactSync.Sync.mCurrentUsername);
+                                                    string);
     httpReq.addHeaderItem("If-Match", "*");
     httpReq.mOnSuccess = function processUpdateSuccess(httpReq) {
 
@@ -1162,8 +1158,7 @@ com.gContactSync.Sync = {
     var httpReq = new com.gContactSync.GHttpRequest("delete",
                                                     com.gContactSync.Sync.mCurrentAuthToken,
                                                     group.getEditURL(),
-                                                    null,
-                                                    com.gContactSync.Sync.mCurrentUsername);
+                                                    null);
     httpReq.mOnSuccess = com.gContactSync.Sync.deleteGroups;
     httpReq.mOnError   = function deleteGroupsError(httpReq) {
       com.gContactSync.LOGGER.LOG_ERROR('Error while deleting group',
@@ -1196,8 +1191,7 @@ com.gContactSync.Sync = {
     var httpReq = new com.gContactSync.GHttpRequest("addGroup",
                                                     com.gContactSync.Sync.mCurrentAuthToken,
                                                     null,
-                                                    body,
-                                                    com.gContactSync.Sync.mCurrentUsername);
+                                                    body);
     httpReq.mOnCreated = com.gContactSync.Sync.addGroups2;
     httpReq.mOnError =   function addGroupError(httpReq) {
       com.gContactSync.LOGGER.LOG_ERROR('Error while adding group',
@@ -1246,8 +1240,7 @@ com.gContactSync.Sync = {
     var httpReq = new com.gContactSync.GHttpRequest("update",
                                                     com.gContactSync.Sync.mCurrentAuthToken,
                                                     group.getEditURL(),
-                                                    body,
-                                                    com.gContactSync.Sync.mCurrentUsername);
+                                                    body);
     httpReq.mOnSuccess = com.gContactSync.Sync.updateGroups;
     httpReq.mOnError   = function updateGroupError(httpReq) {
       com.gContactSync.LOGGER.LOG_ERROR("Error while updating group",
