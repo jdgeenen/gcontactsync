@@ -3,7 +3,7 @@
      xmlns:em="http://www.mozilla.org/2004/em-rdf#">
     <Description about="urn:mozilla:install-manifest">
         <em:id>gContactSync@pirules.net</em:id>
-        <em:version>2.0.9</em:version>
+        <em:version>2.0.9g</em:version>
         <em:name>gContactSync</em:name>
         <em:description>Synchronizes Google Contacts with Thunderbird</em:description>
         <em:creator>Josh Geenen</em:creator>
