@@ -117,7 +117,6 @@
                   onclick="com.gContactSync.showLog();"
                   label="&initialStatus.label;"
                   image="chrome://gContactSync/skin/logo_main_16.png"
-                  class="statusbarpanel-iconic-text"
                   tooltiptext="&status.tooltip;"/>
   <menu id="gContactSyncMenu"
         label="&gContactSyncMenu.label;"

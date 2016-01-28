@@ -37,6 +37,13 @@
 <!ENTITY enableMenuLinks.accesskey        "l">
 <!ENTITY addReset.label                   "Add Replace to and Replace from Server links to the Address Book context menu">
 <!ENTITY addReset.accesskey               "A">
+<!ENTITY statusBarClass.label                   "Status bar">
+<!ENTITY statusBarClass.icon.label                   "icon">
+<!ENTITY statusBarClass.icon.accesskey                   "i">
+<!ENTITY statusBarClass.text.label                   "text">
+<!ENTITY statusBarClass.text.accesskey                   "t">
+<!ENTITY statusBarClass.both.label                   "both">
+<!ENTITY statusBarClass.both.accesskey                   "b">
 <!ENTITY abResults.label                  "Contacts List">
 <!ENTITY phoneColLabels.label             "Rename the phone column labels">
 <!ENTITY phoneColLabels.accesskey         "R">
