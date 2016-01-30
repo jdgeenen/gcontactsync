@@ -1,0 +1,21 @@
+<!ENTITY Title.label             "Options d'Importation de gContactSync">
+
+<!ENTITY ABList.label            "Carnet d'adresses :">
+<!--Nota: Change for 'C'? -->
+<!ENTITY ABList.accesskey        "A">
+
+<!ENTITY NewABButton.label       "Nouveau carnet d'adresses">
+<!ENTITY NewABButton.accesskey   "N">
+
+<!ENTITY MergeContacts.label     "Fusionner les contacts">
+<!--Nota: Change for 'F'? -->
+<!ENTITY MergeContacts.accesskey "M">
+
+<!ENTITY Warning.value           "NOTE: L'importation des contacts peut prendre longtemps. Si vous voyez un avertissement de 'Script sans réponse' cliquez 'Continuer'.">
+
+<!ENTITY Finish.label            "Terminer">
+<!--[en] ENTITY Finish.accesskey        "F"-->
+<!ENTITY Finish.accesskey        "T">
+<!ENTITY Cancel.label            "Annuler">
+<!--Nota: Change for 'A'? -->
+<!ENTITY Cancel.accesskey        "C">
