@@ -10,6 +10,7 @@ locale   gcontactsync  pt-PT        locale/pt-PT/
 locale   gcontactsync  sl-SI        locale/sl-SI/
 locale   gcontactsync  sv-SE        locale/sv-SE/
 locale   gcontactsync  zh-CN        locale/zh-CN/
+locale   gcontactsync  fr-FR        locale/fr-FR/
 
 overlay  chrome://messenger/content/addressbook/addressbook.xul       chrome://gcontactsync/content/Overlay.xul
 overlay  chrome://messenger/content/addressbook/addressbook.xul       chrome://gcontactsync/content/ABOverlay.xul
