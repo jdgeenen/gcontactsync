@@ -137,6 +137,13 @@ com.gContactSync.Preferences = {
           elem.label = pref.value;
         }
         break;
+      case "statusBarClass":
+        var elem = document.getElementById("gContactSyncStatusText");
+        if (elem) {
+	  com.gContactSync.LOGGER.LOG("Changing gContactSyncStatusText className '"+elem.className+"' -> '"+pref.value+"'");
+          elem.className = pref.value;
+        }
+        break;
       case "enableMenu":
         var elem = document.getElementById("gContactSyncMenu");
         if (elem) {
@@ -195,6 +202,7 @@ com.gContactSync.Preferences = {
     addReset:                 new com.gContactSync.Pref("addReset",                 "bool", true),
     alertSummary:             new com.gContactSync.Pref("alertSummary",             "bool", true),
     statusBarText:            new com.gContactSync.Pref("statusBarText",            "char", ""),
+    statusBarClass:           new com.gContactSync.Pref("statusBarClass",           "char", ""),
     myContactsName:           new com.gContactSync.Pref("myContactsName",           "char", "Contacts"),
     lastVersionMajor:         new com.gContactSync.Pref("lastVersionMajor",         "int",  0),
     lastVersionMinor:         new com.gContactSync.Pref("lastVersionMinor",         "int",  0),
@@ -308,9 +316,22 @@ com.gContactSync.Preferences = {
                                                    this.mTypes.CHAR));
       }
     }
+    // collapse gContactSyncMenu if !enableMenu
     if (!com.gContactSync.Preferences.mSyncPrefs.enableMenu.value &&
           document.getElementById("gContactSyncMenu")) {
       document.getElementById("gContactSyncMenu").collapsed = true;
+    }
+    // adjust statusbarpanel's class with saved preference
+    { var sbpanel = document.getElementById("gContactSyncStatusText");
+      if (sbpanel) {
+        if (com.gContactSync.Preferences.mSyncPrefs.statusBarClass.value) {
+	  com.gContactSync.LOGGER.LOG("Set gContactSyncStatusText className to '"+com.gContactSync.Preferences.mSyncPrefs.statusBarClass.value+"'");
+	  sbpanel.className = com.gContactSync.Preferences.mSyncPrefs.statusBarClass.value;
+	} else {
+	  com.gContactSync.LOGGER.LOG("Unset gContactSyncStatusText className");
+	  sbpanel.className = "";
+	}
+      }
     }
   },
   /**

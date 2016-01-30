@@ -173,6 +173,9 @@
       <preference id="addReset"
                   name="extensions.gContactSync.addReset"
                   type="bool"/>
+      <preference id="statusBarClass"
+                  name="extensions.gContactSync.statusBarClass"
+                  type="string"/>
       <preference id="phoneColLabels"
                   name="extensions.gContactSync.phoneColLabels"
                   type="bool"/>
@@ -192,6 +195,16 @@
                   id="addReset"
                   label="&addReset.label;"
                   accesskey="&addReset.accesskey;"/>
+      </groupbox>
+      <groupbox id="statusBarClass">
+         <caption label="&statusBarClass.label;"/>
+         <radiogroup preference="statusBarClass"
+                  orient="horizontal"
+                  >
+          <radio id="sb-icon-only" value="statusbarpanel-iconic" label="&statusBarClass.icon.label;" accesskey="&statusBarClass.icon.accesskey;"/>
+          <radio id="sb-text-only" selected="true" value="" label="&statusBarClass.text.label;" accesskey="&statusBarClass.text.accesskey;"/>
+          <radio id="sb-both" value="statusbarpanel-iconic-text" label="&statusBarClass.both.label;" accesskey="&statusBarClass.both.accesskey;"/>
+         </radiogroup>
       </groupbox>
       <groupbox>
         <caption label="&abResults.label;"/>
