@@ -1,0 +1,62 @@
+<!ENTITY title.label             "Comptes gContactSync">
+
+<!ENTITY accounts.tab            "Comptes">
+<!ENTITY addressBook.label       "Carnet d'adresses">
+<!ENTITY abSynced.label          "Compte Google">
+
+<!-- Global buttons -->
+<!ENTITY addAB.label             "Nouveau carnet d'adresses">
+<!ENTITY addAB.accesskey         "N">
+<!ENTITY refreshTree.label       "Rafraîchir">
+<!ENTITY refreshTree.accesskey   "R">
+
+<!-- Account labels and options -->
+
+<!-- Basic Settings -->
+<!ENTITY Username.label          "Choisir un compte">
+<!ENTITY Username.accesskey      "C">
+<!ENTITY NoUsername.label        "Aucun nom d'utilisateur trouvé">
+
+<!ENTITY Groups.label            "Groupes et contacts à synchroniser">
+<!ENTITY Groups.accesskey        "G">
+<!ENTITY AllGroups.label         "Tous les groupes et contacts">
+<!ENTITY NoGroups.label          "Seulement les contacts (aucun groupe)">
+<!ENTITY Contacts.label          "Mes Contacts">
+<!ENTITY Coworkers.label         "Collègues">
+<!ENTITY Family.label            "Famille">
+<!ENTITY Friends.label           "Amis">
+<!ENTITY GetGroups.label         "Rechercher tous les groupes">
+<!--[en] ENTITY GetGroups.accesskey     "F" -->
+<!ENTITY GetGroups.accesskey     "R">
+
+<!ENTITY Plugin.label            "Choisir le plugin à utiliser">
+<!ENTITY Google.label            "Google">
+
+<!ENTITY SyncDirection.label     "Choisir la direction de synchronisation">
+<!--[en] ENTITY SyncDirection.accesskey "P"-->
+<!ENTITY SyncDirection.accesskey "C">
+<!ENTITY DirectionHelp.label     "Qu'est-ce que c'est ?">
+<!--Nota: Complete.label - English version is 'Complete', I choose 'Lecture-Écriture' (Read-Write) that seems more clear, otherwise 'Complet' ou 'Complète' (as 'direction' is feminine) -->
+<!ENTITY Complete.label          "Lecture-Écriture (à la fois Google et votre client sont actualisés)">
+<!ENTITY ReadOnly.label          "Lecture seule (votre client reçoit les modifications de Google)">
+<!ENTITY WriteOnly.label         "Écriture seule (votre client envoie les modifications à Google)">
+
+<!ENTITY Disable.label           "Désactiver la synchronisation pour ce carnet d'adresses">
+<!ENTITY Disable.accesskey       "D">
+<!ENTITY Disable.tooltiptext     "Cocher cette case pour ignorer ce carnet d'adresses lors de la synchronisation. La décocher si vous voulez que ce carnet d'adresses soit à nouveau synchronisé.">
+
+<!ENTITY updateG.label           "Les modifications locales ont la priorité sur celles distantes">
+<!ENTITY updateG.accesskey       "L">
+<!ENTITY updateG.tooltiptext     "Quand un contact a été modifié localement et à distance après la dernière synchronisation, gContactSync doit savoir quelle modification gardée.  Cocher cette case pour que les modifications locales remplacent les modifications distantes">
+
+<!-- Account buttons -->
+<!ENTITY deleteAB.label          "Supprimer ce carnet d'adresses">
+<!ENTITY removeLogin.label       "Effacer les réglages">
+<!ENTITY saveChanges.label       "Enregistrer les changements">
+<!--Nota: I keep 'S' as access key, more usual than 'E' -->
+<!ENTITY saveChanges.accesskey   "S">
+
+<!-- Other -->
+<!ENTITY Close.label             "Fermer">
+<!--Nota: I keep 'C' as access key, more usual than 'F' -->
+<!ENTITY Close.accesskey         "C">

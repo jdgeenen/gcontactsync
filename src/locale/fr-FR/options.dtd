@@ -1,0 +1,80 @@
+<!ENTITY title.label                      "Préférences de gContactSync">
+
+<!ENTITY main.tab                         "Principal">
+<!ENTITY help.value                       "Aide">
+<!--Nota: change it ? -->
+<!ENTITY help.accesskey                   "H">
+<!ENTITY autoSync.value                   "Synchronisation automatique">
+<!ENTITY autoSync.label                   "Synchronisation automatique des contacts">
+<!ENTITY autoSync.accesskey               "S">
+<!ENTITY refreshInterval.value            "Intervale de synchronisation (minutes) [par défaut 120 (2 heures)]">
+<!ENTITY refreshInterval.accesskey        "I">
+<!ENTITY initialDelayMinutes.value        "Délai initial de synchronisation (minutes) [par défaut 5]">
+<!ENTITY initialDelayMinutes.accesskey    "d">
+<!ENTITY abName.value                     "Carnet d'adresses à synchroniser">
+<!ENTITY abName.accesskey                 "A">
+<!ENTITY syncBehavior.label               "Comportement de synchronisation">
+<!ENTITY syncAddresses.label              "Synchroniser les adresses postales">
+<!ENTITY syncAddresses.accesskey          "p">
+<!ENTITY alertSummary.label               "Montrer un résumé après chaque synchronisation manuelle">
+<!ENTITY alertSummary.accesskey           "m">
+<!ENTITY phoneTypes.label                 "Ajouter les champs de types de numéros de téléphone (ignore les noms de champ existants)">
+<!ENTITY phoneTypes.accesskey             "n">
+<!ENTITY accountDelay.value               "Délai entre les comptes (ms) [5000]">
+<!ENTITY accountDelay.accesskey           "b">
+<!ENTITY logging.label                    "Journal des messages">
+<!ENTITY enableLogging.label              "Activer le journal">
+<!--[en] ENTITY enableLogging.accesskey          "L"-->
+<!ENTITY enableLogging.accesskey          "J">
+<!ENTITY verboseLog.label                 "Activer le journal 'verbeux' (pour débuger)">
+<!ENTITY verboseLog.accesskey             "V">
+<!ENTITY showInConsole.label              "Écrire les messages d'erreur dans la console d'erreur (pour débuger)">
+<!ENTITY showInConsole.accesskey          "E">
+
+<!ENTITY interface.tab                    "Interface">
+<!ENTITY buttons.label                    "Boutons et menus">
+<!ENTITY enableMenu.label                 "Activer le menu gContactSync">
+<!ENTITY enableMenu.accesskey             "E">
+<!ENTITY enableMenuLinks.label            "Ajouter quelques entrées (Rapport d'erreur, FAQ, etc.) au menu gContactSync">
+<!ENTITY enableMenuLinks.accesskey        "l">
+<!--Nota: check the 'Replace to' and 'Replace from' translation (in which file?) -->
+<!ENTITY addReset.label                   "Ajouter les entrées 'Modifier sur' et 'Modifier depuis' le serveur dans le menu contextuel des carnets d'adresses">
+<!ENTITY addReset.accesskey               "A">
+<!ENTITY abResults.label                  "Liste de contacts">
+<!--[en] ENTITY phoneColLabels.label             "Rename the phone column labels"-->
+<!--Nota: check this translation -->
+<!ENTITY phoneColLabels.label             "Renommer les étiquettes de la colonne téléphone">
+<!ENTITY phoneColLabels.accesskey         "R">
+<!--[en] ENTITY newColLabels.label               "Add the new fields to the column labels"-->
+<!--Nota: check this translation -->
+<!ENTITY newColLabels.label               "Ajouter les nouveaux champs aux étiquettes de colonne">
+<!ENTITY newColLabels.accesskey           "n">
+
+<!ENTITY advanced.tab                     "Avancés">
+<!ENTITY warning.value                    "Attention - c'est prévu pour les utilisateurs avancés seulement">
+<!ENTITY backup.label                     "Politique de sauvegarde des carnets d'adresses">
+<!ENTITY backupInterval.value             "Intervalle de sauvegarde (jours, -1 pour désactiver) [14]">
+<!ENTITY backupInterval.accesskey         "B">
+<!ENTITY other.label                      "Autre">
+<!ENTITY chromeTime.value                 "Délai d'avertissement d'un 'Script sans réponse' (0 pour désactiver)">
+<!ENTITY chromeTime.accesskey             "U">
+<!ENTITY confirmDeleteThreshold.value     "Nombre minimum de contact à supprimer avant de demander la permission [5]">
+<!ENTITY confirmDeleteThreshold.accesskey "d">
+<!ENTITY httpRequestTimeout.value         "Temps d'expiration des requêtes HTTP (ms, 0 pour désactiver) [0]">
+<!ENTITY httpRequestTimeout.accesskey     "H">
+<!ENTITY httpRequestDelay.value           "Délai entre les requêtes HTTP (ms, 0 pour désactiver) [100]">
+<!ENTITY httpRequestDelay.accesskey       "l">
+<!ENTITY resetAll.label                   "Réinitialiser tous les carnets synchronisés">
+<!ENTITY resetAll.accesskey               "R">
+<!--[en] ENTITY cleanOldPrefs.label              "Clean Old AB Preferences"-->
+<!--Nota: (Old AB) Preferences OR Old (AB Preferences) (I choose the 2nd) -->
+<!ENTITY cleanOldPrefs.label              "Nettoyer les anciennes préférences de carnet">
+<!ENTITY cleanOldPrefs.accesskey          "C">
+<!--[en] ENTITY cleanOldPhotos.label             "Delete Old Contact Photos"-->
+<!--Nota: Idem (Old Contact) Photos OR Old (Contact Photos) (I choose the 2nd) -->
+<!ENTITY cleanOldPhotos.label             "Supprimer les ancienens photos de contact">
+<!ENTITY cleanOldPhotos.accesskey         "P">
+<!ENTITY resetAllSettings.label           "Réinitialiser tous les paramètres de gContactSync">
+<!ENTITY resetAllSettings.accesskey       "g">
+<!ENTITY throttleTest.label               "Lancer le test d'accélération">
+<!ENTITY throttleTest.accesskey           "T">
