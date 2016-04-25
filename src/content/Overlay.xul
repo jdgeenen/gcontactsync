@@ -110,11 +110,11 @@
   <toolbarbutton id="button-sync"
                  label="&sync.label;"
                  tooltiptext="&sync.tooltip;"
-                 oncommand="com.gContactSync.Sync.begin(true, null);"
+                 oncommand="gContactSync.Sync.begin(true, null);"
                  class="gContactSync-Button toolbarbutton-1 chromeclass-toolbar-additional"/>
 
   <statusbarpanel id="gContactSyncStatusText"
-                  onclick="com.gContactSync.showLog();"
+                  onclick="gContactSync.showLog();"
                   label="&initialStatus.label;"
                   tooltiptext="&status.tooltip;"/>
   <menu id="gContactSyncMenu"
@@ -125,64 +125,64 @@
                label="&syncMenuItem.label;"
                accesskey="&syncMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.Sync.begin(true, null);"/>
+               oncommand="gContactSync.Sync.begin(true, null);"/>
      <menuitem id="newAcctMenuItem"
                label="&newAcctMenuItem.label;"
                accesskey="&newAcctMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.Overlay.openAccountWizard(false);"/>
+               oncommand="gContactSync.Overlay.openAccountWizard(false);"/>
      <menuitem id="acctMenuItem"
                label="&acctMenuItem.label;"
                accesskey="&acctMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openAccounts();"/>
+               oncommand="gContactSync.openAccounts();"/>
      <menuitem id="prefMenuItem"
                label="&prefMenuItem.label;"
                accesskey="&prefMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openPreferences();"/>
+               oncommand="gContactSync.openPreferences();"/>
      <menuitem id="forumMenuItem"
                label="&forumMenuItem.label;"
                accesskey="&forumMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openURL('extensions.gContactSync.forumURL');"/>
+               oncommand="gContactSync.openURL('extensions.gContactSync.forumURL');"/>
      <menuitem id="faqMenuItem"
                label="&faqMenuItem.label;"
                accesskey="&faqMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openURL('extensions.gContactSync.faqURL');"/>
+               oncommand="gContactSync.openURL('extensions.gContactSync.faqURL');"/>
      <menuitem id="errorMenuItem"
                label="&errorMenuItem.label;"
                accesskey="&errorMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openURL('extensions.gContactSync.errorURL');"/>
+               oncommand="gContactSync.openURL('extensions.gContactSync.errorURL');"/>
      <menuitem id="logMenuItem"
                label="&logMenuItem.label;"
                accesskey="&logMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.showLog();"/>
+               oncommand="gContactSync.showLog();"/>
      <menuitem id="gcMenuItem"
                label="&gcMenuItem.label;"
                accesskey="&gcMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openURL('extensions.gContactSync.googleContactsURL');"/>
+               oncommand="gContactSync.openURL('extensions.gContactSync.googleContactsURL');"/>
        <menuseparator/>
        <menu id="gContactSyncImport"
              label="&Import.label;"
              accesskey="&Import.accesskey;">
          <menupopup>
            <menuitem label="&Facebook.label;"
-                     oncommand="com.gContactSync.Import.step1('facebook');"/>
+                     oncommand="gContactSync.Import.step1('facebook');"/>
            <!-- Not supported quite yet -->
            <!--<menuitem label="&LinkedIn.label;"
-                     oncommand="com.gContactSync.Import.step1('linkedin');"/>-->
+                     oncommand="gContactSync.Import.step1('linkedin');"/>-->
            <menuitem label="&Twitter.label;"
-                     oncommand="com.gContactSync.Import.step1('twitter');"/>
+                     oncommand="gContactSync.Import.step1('twitter');"/>
          </menupopup>
        </menu>
       <menuitem id="finishImport"
                 label="&FinishImport.label;"
-                oncommand="com.gContactSync.Import.step3();"/>
+                oncommand="gContactSync.Import.step3();"/>
    </menupopup>
   </menu>
   <menu id="gContactSyncAppMenu"
@@ -193,64 +193,64 @@
                label="&syncMenuItem.label;"
                accesskey="&syncMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.Sync.begin(true, null);"/>
+               oncommand="gContactSync.Sync.begin(true, null);"/>
      <menuitem id="newAcctMenuItem"
                label="&newAcctMenuItem.label;"
                accesskey="&newAcctMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.Overlay.openAccountWizard();"/>
+               oncommand="gContactSync.Overlay.openAccountWizard();"/>
      <menuitem id="acctMenuItem"
                label="&acctMenuItem.label;"
                accesskey="&acctMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openAccounts();"/>
+               oncommand="gContactSync.openAccounts();"/>
      <menuitem id="prefMenuItem"
                label="&prefMenuItem.label;"
                accesskey="&prefMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openPreferences();"/>
+               oncommand="gContactSync.openPreferences();"/>
      <menuitem id="forumMenuItem"
                label="&forumMenuItem.label;"
                accesskey="&forumMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openURL('extensions.gContactSync.forumURL');"/>
+               oncommand="gContactSync.openURL('extensions.gContactSync.forumURL');"/>
      <menuitem id="faqMenuItem"
                label="&faqMenuItem.label;"
                accesskey="&faqMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openURL('extensions.gContactSync.faqURL');"/>
+               oncommand="gContactSync.openURL('extensions.gContactSync.faqURL');"/>
      <menuitem id="errorMenuItem"
                label="&errorMenuItem.label;"
                accesskey="&errorMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openURL('extensions.gContactSync.errorURL');"/>
+               oncommand="gContactSync.openURL('extensions.gContactSync.errorURL');"/>
      <menuitem id="logMenuItem"
                label="&logMenuItem.label;"
                accesskey="&logMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.showLog();"/>
+               oncommand="gContactSync.showLog();"/>
      <menuitem id="gcMenuItem"
                label="&gcMenuItem.label;"
                accesskey="&gcMenuItem.accesskey;"
                class="menuitem-iconic icon-mail16 menu-iconic"
-               oncommand="com.gContactSync.openURL('extensions.gContactSync.googleContactsURL');"/>
+               oncommand="gContactSync.openURL('extensions.gContactSync.googleContactsURL');"/>
        <menuseparator/>
        <menu id="gContactSyncImport"
              label="&Import.label;"
              accesskey="&Import.accesskey;">
          <menupopup>
            <menuitem label="&Facebook.label;"
-                     oncommand="com.gContactSync.Import.step1('facebook');"/>
+                     oncommand="gContactSync.Import.step1('facebook');"/>
            <!-- Not supported quite yet -->
            <!--<menuitem label="&LinkedIn.label;"
-                     oncommand="com.gContactSync.Import.step1('linkedin');"/>-->
+                     oncommand="gContactSync.Import.step1('linkedin');"/>-->
            <menuitem label="&Twitter.label;"
-                     oncommand="com.gContactSync.Import.step1('twitter');"/>
+                     oncommand="gContactSync.Import.step1('twitter');"/>
          </menupopup>
        </menu>
       <menuitem id="finishImport"
                 label="&FinishImport.label;"
-                oncommand="com.gContactSync.Import.step3();"/>
+                oncommand="gContactSync.Import.step3();"/>
    </menupopup>
   </menu>
 </overlay>

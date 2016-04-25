@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2013
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,20 +34,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * An object that can obtain address books by the name or URI, find the synced
  * address books, and edit contacts.
- * @extends com.gContactSync.AbManager
+ * @extends gContactSync.AbManager
  * @class
  */
-com.gContactSync.GAbManager = com.gContactSync.AbManager;
+gContactSync.GAbManager = gContactSync.AbManager;
 
 /** Stores GAddressBook objects keyed by preference ID *AND* URI */
-com.gContactSync.GAbManager.mABs = {};
+gContactSync.GAbManager.mABs = {};
 
 /**
  * Resets all synchronized address books in the following ways:
@@ -61,16 +60,16 @@ com.gContactSync.GAbManager.mABs = {};
  * @param showConfirm {boolean} Show a confirmation dialog first and quit if
  * the user presses Cancel.
  */
-com.gContactSync.GAbManager.resetAllSyncedABs =
+gContactSync.GAbManager.resetAllSyncedABs =
 function GAbManager_resetSyncedABs(showConfirm) {
   if (showConfirm) {
-    if (!com.gContactSync.confirm(com.gContactSync.StringBundle.getStr("confirmReset"))) {
+    if (!gContactSync.confirm(gContactSync.StringBundle.getStr("confirmReset"))) {
       return false;
     }
   }
 
-  com.gContactSync.LOGGER.LOG("Resetting all synchronized directories.");
-  var abs = com.gContactSync.GAbManager.getSyncedAddressBooks(true),
+  gContactSync.LOGGER.LOG("Resetting all synchronized directories.");
+  var abs = gContactSync.GAbManager.getSyncedAddressBooks(true),
       i,
       needRestart = false;;
   for (i in abs) {
@@ -79,9 +78,9 @@ function GAbManager_resetSyncedABs(showConfirm) {
     }
   }
   
-  com.gContactSync.LOGGER.LOG("Finished resetting all synchronized directories.");
+  gContactSync.LOGGER.LOG("Finished resetting all synchronized directories.");
   if (needRestart) {
-    com.gContactSync.alert(com.gContactSync.StringBundle.getStr("pleaseRestart"));
+    gContactSync.alert(gContactSync.StringBundle.getStr("pleaseRestart"));
   }
   return true;
 };
@@ -96,7 +95,7 @@ function GAbManager_resetSyncedABs(showConfirm) {
  *         If !aMakeArray then the returned object is keyed by username and
  *         the value of that property is an array of GAddressBook objects.
  */
-com.gContactSync.GAbManager.getSyncedAddressBooks =
+gContactSync.GAbManager.getSyncedAddressBooks =
 function AbManager_getSyncedAddressBooks(aMakeArray) {
   this.mAddressBooks = {};
   var iter,
@@ -158,31 +157,31 @@ function AbManager_getSyncedAddressBooks(aMakeArray) {
  * @param aAb {GAddressBook} The address book to backup.
  * @returns {boolean} True if the AB was successfully backed up
  */
-com.gContactSync.GAbManager.backupAB = function GAbManager_backupAB(aAB, aPrefix, aSuffix) {
-  var destFile    = com.gContactSync.FileIO.getProfileDirectory(),
+gContactSync.GAbManager.backupAB = function GAbManager_backupAB(aAB, aPrefix, aSuffix) {
+  var destFile    = gContactSync.FileIO.getProfileDirectory(),
       uri         = aAB.mURI,
       srcFileName = uri.substr(1 + uri.lastIndexOf("/")),
-      srcFile     = com.gContactSync.FileIO.getProfileDirectory(),
+      srcFile     = gContactSync.FileIO.getProfileDirectory(),
       lines       = [];
   // the source file is profile_dir/{FileNameFromURI}
   srcFile.append(srcFileName);
   // the destination is profile_dir/gcontactsync/{aPrefix}{FileName}{aSuffix}
-  destFile.append(com.gContactSync.FileIO.fileNames.FOLDER_NAME);
-  destFile.append(com.gContactSync.FileIO.fileNames.AB_BACKUP_DIR);
+  destFile.append(gContactSync.FileIO.fileNames.FOLDER_NAME);
+  destFile.append(gContactSync.FileIO.fileNames.AB_BACKUP_DIR);
   destFile.append((aPrefix || "") + srcFileName + (aSuffix || ""));
-  com.gContactSync.LOGGER.LOG("Beginning a backup of the Address Book:\n" +
+  gContactSync.LOGGER.LOG("Beginning a backup of the Address Book:\n" +
                               srcFile.path + "\nto:\n" + destFile.path);
   // make sure the AB we are copying exists
   if (!srcFile.exists()) {
-    com.gContactSync.LOGGER.LOG_ERROR("The source file does not exist");
+    gContactSync.LOGGER.LOG_ERROR("The source file does not exist");
     return false;
   }
-  if (com.gContactSync.FileIO.copyFile(srcFile, destFile)) {
+  if (gContactSync.FileIO.copyFile(srcFile, destFile)) {
     aAB.savePref("lastBackup", (new Date()).getTime());
-    com.gContactSync.LOGGER.LOG(" - Backup finished successfully");
+    gContactSync.LOGGER.LOG(" - Backup finished successfully");
     return true;
   }
-  com.gContactSync.LOGGER.LOG(" - Unable to read the source address book");
+  gContactSync.LOGGER.LOG(" - Unable to read the source address book");
   return false;
 };
 
@@ -191,16 +190,16 @@ com.gContactSync.GAbManager.backupAB = function GAbManager_backupAB(aAB, aPrefix
  * If a GAddressBook for the URI or directory's pref branch has already been
  * returned and is still stored, it is returned and no new object is created.
  */
-com.gContactSync.GAbManager.getGAbByURI = function GAbManager_getGAbByURI(aURI) {
+gContactSync.GAbManager.getGAbByURI = function GAbManager_getGAbByURI(aURI) {
   // first check if a GAddressBook object for the URI already exists
-  var ab = com.gContactSync.GAbManager.mABs[aURI]
+  var ab = gContactSync.GAbManager.mABs[aURI]
   if (ab) {
     return ab;
   }
   // if it hasn't been obtained yet, get the nsIAbDirectory through its URI
   // then get a GAddressBook object from that and add it to
-  // com.gContactSync.GAbManager.mABs
-  return com.gContactSync.GAbManager.getGAb(com.gContactSync.GAbManager.getAbByURI(aURI));
+  // gContactSync.GAbManager.mABs
+  return gContactSync.GAbManager.getGAb(gContactSync.GAbManager.getAbByURI(aURI));
 };
 
 /**
@@ -212,7 +211,7 @@ com.gContactSync.GAbManager.getGAbByURI = function GAbManager_getGAbByURI(aURI) 
  * @returns {GAddressBook} The GAddressBook with the name given, null if not found and
  *                          aDontMakeAb is true.
  */
-com.gContactSync.GAbManager.getGAbByName = function GAbManager_getGAbByName(aDirName, aDontMakeAb) {
+gContactSync.GAbManager.getGAbByName = function GAbManager_getGAbByName(aDirName, aDontMakeAb) {
   return this.getGAb(this.getAbByName(aDirName, aDontMakeAb));
 };
 
@@ -221,21 +220,21 @@ com.gContactSync.GAbManager.getGAbByName = function GAbManager_getGAbByName(aDir
  * If a GAddressBook for the directory's URI or pref branch has already been
  * returned and is still stored, it is returned and no new object is created.
  */
-com.gContactSync.GAbManager.getGAb = function GAbManager_getGAb(aDirectory, aNoPrefs) {
+gContactSync.GAbManager.getGAb = function GAbManager_getGAb(aDirectory, aNoPrefs) {
   if (!aDirectory) {
     return aDirectory;
   }
   // first check if a GAddressBook object for the URI already exists
   // if so, return it
   var uri = aDirectory.URI || aDirectory.getDirUri();
-  if (uri && com.gContactSync.GAbManager.mABs[uri]) {
-    return com.gContactSync.GAbManager.mABs[uri];
+  if (uri && gContactSync.GAbManager.mABs[uri]) {
+    return gContactSync.GAbManager.mABs[uri];
   }
   // otherwise create a new GAddressBook object and add it to
-  // com.gContactSync.GAbManager.mABs
-  var ab  = new com.gContactSync.GAddressBook(aDirectory, aNoPrefs);
-  com.gContactSync.GAbManager.mABs[ab.mURI] = ab;
-  com.gContactSync.GAbManager.mABs[ab.getPrefId()] = ab;
+  // gContactSync.GAbManager.mABs
+  var ab  = new gContactSync.GAddressBook(aDirectory, aNoPrefs);
+  gContactSync.GAbManager.mABs[ab.mURI] = ab;
+  gContactSync.GAbManager.mABs[ab.getPrefId()] = ab;
   return ab;
 };
 
@@ -244,7 +243,7 @@ com.gContactSync.GAbManager.getGAb = function GAbManager_getGAb(aDirectory, aNoP
  * @param aDirType {int} The type of directory (2 is the usual Mork AB)
  * @returns {object} An object filled with GAddressBook objects keyed by URI.
  */
-com.gContactSync.GAbManager.getAllAddressBooks = function GAbManager_getAllAddressBooks(aDirType, aSkipPrefs) {
+gContactSync.GAbManager.getAllAddressBooks = function GAbManager_getAllAddressBooks(aDirType, aSkipPrefs) {
   var iter,
       abManager,
       dir,
@@ -297,20 +296,20 @@ com.gContactSync.GAbManager.getAllAddressBooks = function GAbManager_getAllAddre
  *                   at which the two contacts should be considered equal.
  * @returns {boolean} True if aContact0 and aContact1 share enough attributes.
  */
-com.gContactSync.GAbManager.compareContacts = function GAbManager_compareContacts(aContact0, aContact1, aAttributeList0, aAttributeList1, aThreshold) {
+gContactSync.GAbManager.compareContacts = function GAbManager_compareContacts(aContact0, aContact1, aAttributeList0, aAttributeList1, aThreshold) {
   var hitCount = 0, valCount = 0;
-  com.gContactSync.LOGGER.VERBOSE_LOG("Comparing '" + aContact0.getName() + "' and '" + aContact1.getName() + "'");
+  gContactSync.LOGGER.VERBOSE_LOG("Comparing '" + aContact0.getName() + "' and '" + aContact1.getName() + "'");
   if (aAttributeList0.length != aAttributeList1.length)
     throw "Error - attribute lists don't match in length";
 
   for (var i = 0; i < aAttributeList0.length; i++) {
     var val0 = aContact0.getValue(aAttributeList0[i]),
         val1 = aContact1.getValue(aAttributeList1[i]);
-    if (val0 && aContact0 instanceof com.gContactSync.GContact)
+    if (val0 && aContact0 instanceof gContactSync.GContact)
       val0 = val0.value;
-    if (val1 && aContact1 instanceof com.gContactSync.GContact)
+    if (val1 && aContact1 instanceof gContactSync.GContact)
       val1 = val1.value;
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * " + aAttributeList0[i] + ": '" + val0 + "'" +
+    gContactSync.LOGGER.VERBOSE_LOG(" * " + aAttributeList0[i] + ": '" + val0 + "'" +
                                         " "   + aAttributeList1[i] + ": '" + val1 + "'");
     if (val0 && val1) {
       valCount++;
@@ -318,7 +317,7 @@ com.gContactSync.GAbManager.compareContacts = function GAbManager_compareContact
     }
   }
 
-  com.gContactSync.LOGGER.VERBOSE_LOG(" * Hit count: " + hitCount +
+  gContactSync.LOGGER.VERBOSE_LOG(" * Hit count: " + hitCount +
                                       " Value count: " + valCount +
                                       " threshold (%): " + (aThreshold * 100));
 

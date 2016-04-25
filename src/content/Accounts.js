@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2009-2015
+ * Portions created by the Initial Developer are Copyright (C) 2009-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,15 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 window.addEventListener("load",
   /** Initializes the Accounts class when the window has finished loading */
   function gCS_AccountsLoadListener() {
     window.removeEventListener("load", gCS_AccountsLoadListener, false);
-    com.gContactSync.Accounts.initDialog();
+    gContactSync.Accounts.initDialog();
   },
 false);
 
@@ -51,7 +50,7 @@ false);
  * accounts allowing each synchronized address book to have its own preferences.
  * @class
  */
-com.gContactSync.Accounts = {
+gContactSync.Accounts = {
   /** Stores whether there are any unsaved changes in the Accounts dialog */
   mUnsavedChange: false,
   /** The column index of the address book name
@@ -84,13 +83,13 @@ com.gContactSync.Accounts = {
       this.selectedAbChange();
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Error in Accounts.initDialog", e);
+      gContactSync.LOGGER.LOG_WARNING("Error in Accounts.initDialog", e);
     }
   },
   /**
    * Returns the GAddressBook corresponding to the currently-selected address
    * book in the accounts tree.
-   * @returns {com.gContactSync.GAddressBook} A GAddressBook if one is selected, else false.
+   * @returns {gContactSync.GAddressBook} A GAddressBook if one is selected, else false.
    */
   getSelectedAb: function Accounts_getSelectedAb() {
     var tree = document.getElementById("loginTree");
@@ -100,7 +99,7 @@ com.gContactSync.Accounts = {
     }
     this.enablePreferences(true);
     var ab = tree.currentIndex > -1 && tree.currentIndex < this.mAbURIs.length ?
-              com.gContactSync.GAbManager.mABs[this.mAbURIs[tree.currentIndex]] :
+              gContactSync.GAbManager.mABs[this.mAbURIs[tree.currentIndex]] :
               null;
     if (!ab) {
       return false;
@@ -113,11 +112,11 @@ com.gContactSync.Accounts = {
    * @returns {nsIAbDirectory} The new address book.
    */
   newAddressBook: function Accounts_newAddressBook() {
-    var name = com.gContactSync.prompt(com.gContactSync.StringBundle.getStr("newABPrompt"), null, window);
+    var name = gContactSync.prompt(gContactSync.StringBundle.getStr("newABPrompt"), null, window);
     if (!name) {
       return false;
     }
-    var ab = com.gContactSync.AbManager.getAbByName(name);
+    var ab = gContactSync.AbManager.getAbByName(name);
     this.fillAbTree();
     return ab;
   },
@@ -168,12 +167,12 @@ com.gContactSync.Accounts = {
 
     if (needsReset) {
       ab.reset();
-      com.gContactSync.Preferences.setSyncPref("needRestart", true);
-      var restartStr = com.gContactSync.StringBundle.getStr("pleaseRestart");
-      com.gContactSync.Preferences.setSyncPref("statusBarText", restartStr);
-      com.gContactSync.alert(com.gContactSync.StringBundle.getStr("finishedAcctSave"));
+      gContactSync.Preferences.setSyncPref("needRestart", true);
+      var restartStr = gContactSync.StringBundle.getStr("pleaseRestart");
+      gContactSync.Preferences.setSyncPref("statusBarText", restartStr);
+      gContactSync.alert(gContactSync.StringBundle.getStr("finishedAcctSave"));
     } else {
-      com.gContactSync.alert(com.gContactSync.StringBundle.getStr("finishedAcctSaveNoRestart"));
+      gContactSync.alert(gContactSync.StringBundle.getStr("finishedAcctSaveNoRestart"));
     }
     return true;
   },
@@ -187,7 +186,7 @@ com.gContactSync.Accounts = {
     for (i = 0; i < this.mPrefElemIDs.length; i++) {
       elem = document.getElementById(this.mPrefElemIDs[i]);
       if (!elem) {
-        com.gContactSync.LOGGER.LOG_WARNING(this.mPrefElemIDs[i] + " not found");
+        gContactSync.LOGGER.LOG_WARNING(this.mPrefElemIDs[i] + " not found");
         continue;
       }
       elem.disabled = aEnable ? false : true;
@@ -219,18 +218,18 @@ com.gContactSync.Accounts = {
     var group = ab.mPrefs.myContacts ?
                (ab.mPrefs.myContactsName ? ab.mPrefs.myContactsName : "false") :
                (ab.mPrefs.syncGroups !== "false" ? "All" : "false");
-    com.gContactSync.selectMenuItem(groupElem, group, true);
+    gContactSync.selectMenuItem(groupElem, group, true);
     // Sync Direction
     var direction = ab.mPrefs.readOnly === "true" ? "ReadOnly" :
                       ab.mPrefs.writeOnly === "true" ? "WriteOnly" : "Complete";
-    com.gContactSync.selectMenuItem(directionElem, direction, true);
+    gContactSync.selectMenuItem(directionElem, direction, true);
     // Temporarily disable synchronization with the address book
     disableElem.checked = ab.mPrefs.Disabled === "true";
     skipCElem.checked = ab.mPrefs.skipContactsWithoutEmail === "true";
     // Overwrite remote changes with local changes in a conflict
     updateGElem.checked = ab.mPrefs.updateGoogleInConflicts === "true";
     // Select the correct plugin
-    com.gContactSync.selectMenuItem(pluginElem, ab.mPrefs.Plugin, true);
+    gContactSync.selectMenuItem(pluginElem, ab.mPrefs.Plugin, true);
     
     return true;
   },
@@ -242,7 +241,7 @@ com.gContactSync.Accounts = {
    */
   fillUsernames: function Accounts_fillUsernames(aDefault) {
     var usernameElem = document.getElementById("Username"),
-        tokens       = com.gContactSync.LoginManager.getAuthTokens(),
+        tokens       = gContactSync.LoginManager.getAuthTokens(),
         item,
         username,
         index = -1;
@@ -252,7 +251,7 @@ com.gContactSync.Accounts = {
     // Remove all existing logins from the menulist
     usernameElem.removeAllItems();
 
-    usernameElem.appendItem(com.gContactSync.StringBundle.getStr("noAccount"), "none");
+    usernameElem.appendItem(gContactSync.StringBundle.getStr("noAccount"), "none");
     // Add a menuitem for each account with an auth token
     for (username in tokens) {
       item = usernameElem.appendItem(username, username);
@@ -270,7 +269,7 @@ com.gContactSync.Accounts = {
     // This isn't retained (for now?) to prevent anyone from setting up a new
     // synchronized account with it and expecting it to work.
     else if (aDefault) {
-      com.gContactSync.selectMenuItem(usernameElem, aDefault, true);
+      gContactSync.selectMenuItem(usernameElem, aDefault, true);
     }
     // Otherwise select None
     else {
@@ -300,9 +299,9 @@ com.gContactSync.Accounts = {
     // Get all Personal/Mork DB Address Books (type == 2,
     // see mailnews/addrbook/src/nsDirPrefs.h)
     // TODO - there should be a way to change the allowed dir types...
-    abs = com.gContactSync.GAbManager.getAllAddressBooks(2);
+    abs = gContactSync.GAbManager.getAllAddressBooks(2);
     for (i in abs) {
-      if (abs[i] instanceof com.gContactSync.GAddressBook) {
+      if (abs[i] instanceof gContactSync.GAddressBook) {
         this.addToTree(newTreeChildren, abs[i]);
       }
     }
@@ -314,7 +313,7 @@ com.gContactSync.Accounts = {
    * @param aAB           {GAddressBook} The GAddressBook to add.
    */
   addToTree: function Accounts_addToTree(aTreeChildren, aAB) {
-    if (!aAB || !aAB instanceof com.gContactSync.GAddressBook) {
+    if (!aAB || !aAB instanceof gContactSync.GAddressBook) {
       throw "Error - Invalid AB passed to addToTree";
     }
     var treeitem    = document.createElement("treeitem"),
@@ -324,7 +323,7 @@ com.gContactSync.Accounts = {
 
     addressbook.setAttribute("label", aAB.getName());
     synced.setAttribute("label",      aAB.mPrefs.Username ||
-                                      com.gContactSync.StringBundle.getStr("noAccount"));
+                                      gContactSync.StringBundle.getStr("noAccount"));
 
     treerow.appendChild(addressbook);
     treerow.appendChild(synced);
@@ -340,7 +339,7 @@ com.gContactSync.Accounts = {
    * preference.
    */
   directionPopup: function Accounts_directionPopup() {
-    com.gContactSync.alert(com.gContactSync.StringBundle.getStr("directionPopup")); 
+    gContactSync.alert(gContactSync.StringBundle.getStr("directionPopup")); 
   },
   /**
    * Restores the Groups menulist to contain only the default groups.
@@ -368,9 +367,9 @@ com.gContactSync.Accounts = {
     if (!aUsername || aUsername === "none") {
       return false;
     }
-    var token = com.gContactSync.LoginManager.getAuthTokens()[aUsername];
+    var token = gContactSync.LoginManager.getAuthTokens()[aUsername];
     if (!token) {
-      com.gContactSync.LOGGER.LOG_WARNING("Unable to find the token for username " + aUsername);
+      gContactSync.LOGGER.LOG_WARNING("Unable to find the token for username " + aUsername);
       return false;
     }
     this.getAccessToken(token, aUsername);
@@ -382,16 +381,16 @@ com.gContactSync.Accounts = {
    * @param aRefreshToken {string} A refresh token.
    */
   getAccessToken: function Accounts_getAccessToken(aRefreshToken, aUsername) {
-    com.gContactSync.LOGGER.VERBOSE_LOG("Requesting access token");
+    gContactSync.LOGGER.VERBOSE_LOG("Requesting access token");
     // Fetch an access token from the refresh token
-    var request = new com.gContactSync.GHttpRequest("REFRESH_REQUEST", aRefreshToken);
+    var request = new gContactSync.GHttpRequest("REFRESH_REQUEST", aRefreshToken);
     request.mOnSuccess = function getAccessTokenSuccess(aHttpRequest) {
       var response = JSON.parse(aHttpRequest.responseText);
       var accessToken = response.token_type + " " + response.access_token;
-      com.gContactSync.Accounts.sendGetGroupsRequest(accessToken, aUsername);
+      gContactSync.Accounts.sendGetGroupsRequest(accessToken, aUsername);
     };
     request.mOnError = function getAccessTokenError(httpReq) {
-      com.gContactSync.LOGGER.LOG_WARNING(httpReq.responseText);
+      gContactSync.LOGGER.LOG_WARNING(httpReq.responseText);
     };
     request.mOnOffline = null;
     request.send();
@@ -403,17 +402,17 @@ com.gContactSync.Accounts = {
    * @param aUsername {string The username.
    */
   sendGetGroupsRequest: function Accounts_finishGetAllGroups(aAccessToken, aUsername) {
-    com.gContactSync.LOGGER.VERBOSE_LOG("Fetching groups for username: " + aUsername);
-    var httpReq = new com.gContactSync.GHttpRequest("getGroups",
+    gContactSync.LOGGER.VERBOSE_LOG("Fetching groups for username: " + aUsername);
+    var httpReq = new gContactSync.GHttpRequest("getGroups",
                                                     aAccessToken,
                                                     null,
                                                     null);
     httpReq.mOnSuccess = function getAllGroupsSuccess(httpReq) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(com.gContactSync.serializeFromText(httpReq.responseText));
-      com.gContactSync.Accounts.addGroups(httpReq.responseXML, aUsername);
+      gContactSync.LOGGER.VERBOSE_LOG(gContactSync.serializeFromText(httpReq.responseText));
+      gContactSync.Accounts.addGroups(httpReq.responseXML, aUsername);
     };
     httpReq.mOnError   = function getAllGroupsError(httpReq) {
-      com.gContactSync.LOGGER.LOG_WARNING(httpReq.responseText);
+      gContactSync.LOGGER.LOG_WARNING(httpReq.responseText);
     };
     httpReq.mOnOffline = null;
     httpReq.send();
@@ -436,16 +435,16 @@ com.gContactSync.Accounts = {
     if (usernameElem !== null && (usernameElem.value === "none" || usernameElem.value !== aUsername)) {
       return false;
     }
-    arr = aAtom.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.ATOM.url, "entry");
-    com.gContactSync.LOGGER.VERBOSE_LOG("Adding groups from username: " + aUsername);
+    arr = aAtom.getElementsByTagNameNS(gContactSync.gdata.namespaces.ATOM.url, "entry");
+    gContactSync.LOGGER.VERBOSE_LOG("Adding groups from username: " + aUsername);
     var names = [];
     for (i = 0; i < arr.length; i++) {
-      group = new com.gContactSync.Group(arr[i]);
+      group = new gContactSync.Group(arr[i]);
       title = group.getTitle();
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * " + title);
+      gContactSync.LOGGER.VERBOSE_LOG(" * " + title);
       // don't add system groups again
       if (!title || group.isSystemGroup()) {
-        com.gContactSync.LOGGER.VERBOSE_LOG("    - Skipping system group");
+        gContactSync.LOGGER.VERBOSE_LOG("    - Skipping system group");
       }
       else {
         names.push(title);
@@ -490,7 +489,7 @@ com.gContactSync.Accounts = {
   needsReset: function Accounts_needsReset(aAB, aUsername, aSyncGroups, aMyContacts, aMyContactsName, aSkipContacts) {
     // This should not be necessary, but it's better to be safe
     aAB.getPrefs();
-    com.gContactSync.LOGGER.VERBOSE_LOG
+    gContactSync.LOGGER.VERBOSE_LOG
       (
        "**Determining if the address book '" + aAB.getName() +
        "' should be reset:\n" +
@@ -511,11 +510,11 @@ com.gContactSync.Accounts = {
           aAB.mPrefs.myContactsName !== aMyContactsName ||
           aAB.mPrefs.skipContactsWithoutEmail !== aSkipContacts
          )) {
-      var reset = com.gContactSync.confirm(com.gContactSync.StringBundle.getStr("confirmABReset"));
-      com.gContactSync.LOGGER.VERBOSE_LOG("  * Confirmation result: " + reset + "\n");
+      var reset = gContactSync.confirm(gContactSync.StringBundle.getStr("confirmABReset"));
+      gContactSync.LOGGER.VERBOSE_LOG("  * Confirmation result: " + reset + "\n");
       return reset;
     }
-    com.gContactSync.LOGGER.VERBOSE_LOG("  * The AB will NOT be reset\n");
+    gContactSync.LOGGER.VERBOSE_LOG("  * The AB will NOT be reset\n");
     return false;
   },
   /**
@@ -527,7 +526,7 @@ com.gContactSync.Accounts = {
    */
   close: function Accounts_close() {
     if (this.mUnsavedChange &&
-        com.gContactSync.confirm(com.gContactSync.StringBundle.getStr("unsavedAcctChanges"))) {
+        gContactSync.confirm(gContactSync.StringBundle.getStr("unsavedAcctChanges"))) {
       this.saveSelectedAccount();
     }
     return true;

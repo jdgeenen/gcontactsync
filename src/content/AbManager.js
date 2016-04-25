@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2010
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,16 +34,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * An object that can obtain address books by the name or URI, find the synced
  * address books, and edit cards.
  * @class
  */
-com.gContactSync.AbManager = {
+gContactSync.AbManager = {
   /** The version of Thunderbird */
   mVersion:   Components.classes["@mozilla.org/abmanager;1"] ? 3 : 2,
   /** True if the changes started in Bug 413260 have been applied */
@@ -90,7 +89,7 @@ com.gContactSync.AbManager = {
     if (!card || (!(card instanceof Components.interfaces.nsIAbCard) &&
                   !(Components.interfaces.nsIAbMDBCard && card instanceof Components.interfaces.nsIAbMDBCard))) {
       throw "Invalid card: " + aCard + "passed to the '" + aMethodName +
-            "' method." + com.gContactSync.StringBundle.getStr("pleaseReport");
+            "' method." + gContactSync.StringBundle.getStr("pleaseReport");
     }
   },
   /**
@@ -109,11 +108,11 @@ com.gContactSync.AbManager = {
       var value;
       if (this.isRegularAttribute(aAttrName))
         try { return aCard.getCardValue(aAttrName); }
-        catch (e) { com.gContactSync.LOGGER.LOG_WARNING("Error in getCardValue: " + e); }
+        catch (e) { gContactSync.LOGGER.LOG_WARNING("Error in getCardValue: " + e); }
       else if (Components.interfaces.nsIAbMDBCard && aCard instanceof Components.interfaces.nsIAbMDBCard)
         return this.getMDBCardValue(aCard, aAttrName);
       else
-        com.gContactSync.LOGGER.LOG_WARNING("Couldn't get the value " + aAttrName + " of the card "
+        gContactSync.LOGGER.LOG_WARNING("Couldn't get the value " + aAttrName + " of the card "
                            + aCard);
     }
     return null;
@@ -178,7 +177,7 @@ com.gContactSync.AbManager = {
     // make sure the last modified date is in milliseconds since 1/1/1970 UTC
     // and not in microseconds
     if (aAttrName == "LastModifiedDate" && parseInt(aValue, 10) > 2147483647) {
-      com.gContactSync.LOGGER.LOG_WARNING("Had to adjust last modified date from " + aValue);
+      gContactSync.LOGGER.LOG_WARNING("Had to adjust last modified date from " + aValue);
       aValue = aValue/1000;
     }
     if (this.mBug413260) { // if the patch for Bug 413260 is applied
@@ -206,7 +205,7 @@ com.gContactSync.AbManager = {
           if (aValue == "")
             aValue = 0;
           aCard.lastModifiedDate = aValue;
-        } catch (e) { com.gContactSync.LOGGER.LOG_WARNING("Invalid lastModifiedDate"); }
+        } catch (e) { gContactSync.LOGGER.LOG_WARNING("Invalid lastModifiedDate"); }
       else if (aAttrName == "AllowRemoteContent") {
         // AllowRemoteContent may be 1/0 if the patch or true/false otherwise
         var value = aValue == "1" || (aValue != "0" && aValue);
@@ -232,11 +231,11 @@ com.gContactSync.AbManager = {
       }
       else if (this.isRegularAttribute(aAttrName))
         try { aCard.setCardValue(aAttrName, aValue); }
-        catch (e) { com.gContactSync.LOGGER.LOG_WARNING("Error in setCardValue: " + e); }
+        catch (e) { gContactSync.LOGGER.LOG_WARNING("Error in setCardValue: " + e); }
      else if (Components.interfaces.nsIAbMDBCard && aCard instanceof Components.interfaces.nsIAbMDBCard)
         this.setMDBCardValue(aCard, aAttrName, aValue);
      else
-       com.gContactSync.LOGGER.LOG_WARNING("Couldn't set the value " + aAttrName + " of the card "
+       gContactSync.LOGGER.LOG_WARNING("Couldn't set the value " + aAttrName + " of the card "
                           + aCard);
     }
   },
@@ -255,7 +254,7 @@ com.gContactSync.AbManager = {
       return true;
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Error in setMDBCardValue: " + e + "\n" + aAttrName +
+      gContactSync.LOGGER.LOG_WARNING("Error in setMDBCardValue: " + e + "\n" + aAttrName +
                          "\n" + aValue);
     }
     return false;
@@ -272,7 +271,7 @@ com.gContactSync.AbManager = {
       return aCard.getStringAttribute(aAttrName);
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Error in getMDBCardValue: " + e + "\n" + aAttrName);
+      gContactSync.LOGGER.LOG_WARNING("Error in getMDBCardValue: " + e + "\n" + aAttrName);
     }
     return null;
   },
@@ -283,8 +282,8 @@ com.gContactSync.AbManager = {
    */
   getAbByURI: function AbManager_getAbByURI(aURI) {
     if (!aURI) {
-      com.gContactSync.LOGGER.LOG_WARNING("Invalid aURI supplied to the 'getAbByURI' method" +
-                         com.gContactSync.StringBundle.getStr("pleaseReport"));
+      gContactSync.LOGGER.LOG_WARNING("Invalid aURI supplied to the 'getAbByURI' method" +
+                         gContactSync.StringBundle.getStr("pleaseReport"));
       return null;
     }
     try {
@@ -304,7 +303,7 @@ com.gContactSync.AbManager = {
         return null;
       return dir;
     }
-    catch (e) { com.gContactSync.LOGGER.LOG_ERROR("Error in getAbByURI", e); }
+    catch (e) { gContactSync.LOGGER.LOG_ERROR("Error in getAbByURI", e); }
     return null;
   },
   /**
@@ -318,7 +317,7 @@ com.gContactSync.AbManager = {
   getAbByName: function AbManager_getAbByName(aDirName, aDontMakeAb) {
     if (!aDirName || aDirName.length == 0)
       throw "Invalid aDirName passed to the 'getAbByName' method." +
-            com.gContactSync.StringBundle.getStr("pleaseReport");
+            gContactSync.StringBundle.getStr("pleaseReport");
     var iter, data;
     if (Components.classes["@mozilla.org/abmanager;1"]) { // TB 3
       var abManager = Components.classes["@mozilla.org/abmanager;1"]
@@ -364,12 +363,12 @@ com.gContactSync.AbManager = {
       iter = dir.childNodes;
     }
     else {
-      com.gContactSync.LOGGER.LOG_WARNING("Unable to determine how to create a directory");
+      gContactSync.LOGGER.LOG_WARNING("Unable to determine how to create a directory");
       alert("error");
       return null;
     }
     if (!iter) {
-      com.gContactSync.LOGGER.LOG_WARNING("iter is invalid in getAbByName");
+      gContactSync.LOGGER.LOG_WARNING("iter is invalid in getAbByName");
       return null;
     }
     while (iter.hasMoreElements()) {
@@ -389,21 +388,21 @@ com.gContactSync.AbManager = {
    */
   deleteAB: function AbManager_deleteAB(aURI) {
     if (!aURI) {
-      com.gContactSync.LOGGER.LOG_ERROR("Invalid URI passed to AbManager.deleteAB");
+      gContactSync.LOGGER.LOG_ERROR("Invalid URI passed to AbManager.deleteAB");
       return false;
     }
     if (aURI.indexOf("abook.mab") != -1 || aURI.indexOf("history.mab") != -1) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("deletePAB"));
-      com.gContactSync.LOGGER.LOG_WARNING("Attempt made to delete the PAB or CAB.  URI: " + aURI);
+      gContactSync.alertError(gContactSync.StringBundle.getStr("deletePAB"));
+      gContactSync.LOGGER.LOG_WARNING("Attempt made to delete the PAB or CAB.  URI: " + aURI);
       return false;
     }
-    com.gContactSync.LOGGER.VERBOSE_LOG("Deleting address book with the URI " + aURI);
+    gContactSync.LOGGER.VERBOSE_LOG("Deleting address book with the URI " + aURI);
     // In TB 3 just use the AbManager to delete the AB
     if (Components.classes["@mozilla.org/abmanager;1"]) {
       var abManager = Components.classes["@mozilla.org/abmanager;1"]
                                 .getService(Components.interfaces.nsIAbManager);
       if (!abManager) {
-        com.gContactSync.LOGGER.LOG_ERROR("Unable to get the AB Manager service");
+        gContactSync.LOGGER.LOG_ERROR("Unable to get the AB Manager service");
         return false;
       }
       abManager.deleteAddressBook(aURI);
@@ -414,7 +413,7 @@ com.gContactSync.AbManager = {
       var parentArray = Components.classes["@mozilla.org/supports-array;1"]
                                   .createInstance(Components.interfaces.nsISupportsArray);
       if (!parentArray) {
-        com.gContactSync.LOGGER.LOG_ERROR("Unable to get an nsISupportsArray");
+        gContactSync.LOGGER.LOG_ERROR("Unable to get an nsISupportsArray");
         return false;
       }
       var parentId  = "moz-abdirectory://";
@@ -425,13 +424,13 @@ com.gContactSync.AbManager = {
       var resourceArray = Components.classes["@mozilla.org/supports-array;1"]
                                     .createInstance(Components.interfaces.nsISupportsArray);
       if (!resourceArray) {
-        com.gContactSync.LOGGER.LOG_ERROR("Unable to get an nsISupportsArray");
+        gContactSync.LOGGER.LOG_ERROR("Unable to get an nsISupportsArray");
         return false;
       }
       var selectedABResource = GetDirectoryFromURI(aURI)
                                     .QueryInterface(Components.interfaces.nsIRDFResource);
       if (!selectedABResource) {
-        com.gContactSync.LOGGER.LOG_ERROR("Unable to get an nsISupportsArray");
+        gContactSync.LOGGER.LOG_ERROR("Unable to get an nsISupportsArray");
         return false;
       }
       resourceArray.AppendElement(selectedABResource);
@@ -439,7 +438,7 @@ com.gContactSync.AbManager = {
       // Get the directory tree
       var dirTree = GetDirTree();
       if (!dirTree) {
-        com.gContactSync.LOGGER.LOG_ERROR("Unable to get the directory tree");
+        gContactSync.LOGGER.LOG_ERROR("Unable to get the directory tree");
         return false;
       }
 

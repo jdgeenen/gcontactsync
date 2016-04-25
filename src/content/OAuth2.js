@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2014-2015
+ * Portions created by the Initial Developer are Copyright (C) 2014-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,11 +34,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
 
 /**
  * A simple class to assist with OAuth2 authentication.
@@ -46,7 +45,7 @@ if (!com.gContactSync) {com.gContactSync = {};}
  * Assumes the browser element's source is already pointed to the initial OAuth page.
  * @class
  */
-com.gContactSync.OAuth2 = {
+gContactSync.OAuth2 = {
   /**
    * Initializes this class.
    * @param aBrowserElem {browser} Browser element.
@@ -66,12 +65,12 @@ com.gContactSync.OAuth2 = {
    * @param aCode {string} The authorization code.
    */
   onCodeReceived: function OAuth2_onCodeReceived(aCode) {
-    com.gContactSync.LOGGER.LOG("Received an authorization code: " + aCode);
+    gContactSync.LOGGER.LOG("Received an authorization code: " + aCode);
     this.mBrowserElem.loadURI("");
-    var request = new com.gContactSync.GHttpRequest("TOKEN_REQUEST", aCode);
-    request.mOnSuccess = com.gContactSync.OAuth2.onTokenReceived;
+    var request = new gContactSync.GHttpRequest("TOKEN_REQUEST", aCode);
+    request.mOnSuccess = gContactSync.OAuth2.onTokenReceived;
     request.mOnError = function onTokenError(aHttpReq) {
-      com.gContactSync.alertError(aHttpReq.responseText);
+      gContactSync.alertError(aHttpReq.responseText);
     };
     request.send();
   },
@@ -81,18 +80,18 @@ com.gContactSync.OAuth2 = {
    * @param aHttpReq {XmlHttpRequest} The HTTP request.
    */
   onTokenReceived: function OAuth2_onTokenReceived(aHttpReq) {
-    com.gContactSync.LOGGER.LOG("Received an access token + " + aHttpReq.responseText);
-    com.gContactSync.OAuth2.mCallback(JSON.parse(aHttpReq.responseText));
+    gContactSync.LOGGER.LOG("Received an access token + " + aHttpReq.responseText);
+    gContactSync.OAuth2.mCallback(JSON.parse(aHttpReq.responseText));
   },
   /**
    * Checks the title of the browser for the requested title indicating a code.
    */
   checkTitle: function OAuth2_checkTitle() {
-    var title = com.gContactSync.OAuth2.mBrowserElem.contentTitle;
-    if (title && title.indexOf(com.gContactSync.OAuth2.mBrowserTitle) === 0) {
-      com.gContactSync.OAuth2.onCodeReceived(title.substring(com.gContactSync.OAuth2.mBrowserTitle.length));
+    var title = gContactSync.OAuth2.mBrowserElem.contentTitle;
+    if (title && title.indexOf(gContactSync.OAuth2.mBrowserTitle) === 0) {
+      gContactSync.OAuth2.onCodeReceived(title.substring(gContactSync.OAuth2.mBrowserTitle.length));
     } else {
-      setTimeout(com.gContactSync.OAuth2.checkTitle, 500);
+      setTimeout(gContactSync.OAuth2.checkTitle, 500);
     }
   }
 };

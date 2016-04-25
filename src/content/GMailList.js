@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * GMailList is an abstraction of a mailing list that facilitates getting the
@@ -51,13 +50,13 @@ if (!com.gContactSync) com.gContactSync = {};
  * @param aNew             {boolean}      Set as true for new mailing lists where
  *                                        no attempt should be made to fetch the
  *                                        contacts contained in the list.
- * @extends com.gContactSync.MailList
+ * @extends gContactSync.MailList
  * @constructor
  * @class
  */
-com.gContactSync.GMailList = function gCS_GMailList(aList, aParentDirectory, aNew) {
+gContactSync.GMailList = function gCS_GMailList(aList, aParentDirectory, aNew) {
   // Make a new MailList object and copy everything over
-  var list = new com.gContactSync.MailList(aList, aParentDirectory, aNew),
+  var list = new gContactSync.MailList(aList, aParentDirectory, aNew),
       i;
   for (i in list) {
     if (!this[i]) {
@@ -67,7 +66,7 @@ com.gContactSync.GMailList = function gCS_GMailList(aList, aParentDirectory, aNe
   this.mListObj = list;
 };
 
-com.gContactSync.GMailList.prototype = {
+gContactSync.GMailList.prototype = {
   /**
    * Gets and returns the ID of the group in Google with which this Mail List
    * is synchronized, if any.  If not found, returns "no id found" with a space
@@ -84,7 +83,7 @@ com.gContactSync.GMailList.prototype = {
     if (id.indexOf("www.google.com/m8/feeds/groups") === -1) {
       id = "no id found " + (new Date()).getTime();
     }
-    return com.gContactSync.fixURL(id);
+    return gContactSync.fixURL(id);
   },
   /**
    * Sets the ID of the group in Google with which this Mail List is

@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2014
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Makes a new GContact object that has functions to get and set various values
@@ -47,7 +46,7 @@ if (!com.gContactSync) com.gContactSync = {};
  * @class
  * @constructor
  */
-com.gContactSync.GContact = function gCS_GContact(aXml) {
+gContactSync.GContact = function gCS_GContact(aXml) {
   // if the contact exists, check its IM addresses
   if (aXml) {
     this.xml = aXml;
@@ -56,8 +55,8 @@ com.gContactSync.GContact = function gCS_GContact(aXml) {
   // otherwise, make a new contact
   else {
     this.mIsNew  = true;
-    var atom     = com.gContactSync.gdata.namespaces.ATOM,
-        gd       = com.gContactSync.gdata.namespaces.GD,
+    var atom     = gContactSync.gdata.namespaces.ATOM,
+        gd       = gContactSync.gdata.namespaces.GD,
         xml      = document.createElementNS(atom.url, atom.prefix + "entry"),
         category = document.createElementNS(atom.url, atom.prefix + "category");
     category.setAttribute("scheme", gd.url + "#kind");
@@ -73,14 +72,14 @@ com.gContactSync.GContact = function gCS_GContact(aXml) {
   this.mNewPhotoURI = null;
 };
 
-com.gContactSync.GContact.prototype = {
+gContactSync.GContact.prototype = {
   /**
    * Checks for an invalid IM address as explained here:
    * http://pi3141.wordpress.com/2008/07/30/update-2/
    */
   checkIMAddress: function GContact_checkIMAddress() {
     var element = {},
-        ns      = com.gContactSync.gdata.namespaces.GD.url,
+        ns      = gContactSync.gdata.namespaces.GD.url,
         arr     = this.xml.getElementsByTagNameNS(ns, "im"),
         i       = 0,
         length  = arr.length,
@@ -112,7 +111,7 @@ com.gContactSync.GContact.prototype = {
       }
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Unable to get the name or e-mail address of a contact", e);
+      gContactSync.LOGGER.LOG_WARNING("Unable to get the name or e-mail address of a contact", e);
     }
     return contactName;
   },
@@ -123,7 +122,7 @@ com.gContactSync.GContact.prototype = {
    */
   getEmailAddress: function GContact_getEmailAddress() {
     var email = "";
-    var emailElem = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url,
+    var emailElem = this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.GD.url,
                                                     "email")[0];
     if (emailElem && emailElem.getAttribute) {
       email = emailElem.getAttribute("address");
@@ -166,51 +165,51 @@ com.gContactSync.GContact.prototype = {
         // get the contact's "type" as defined in gdata and return the attribute's
         // value based on where the value is actually stored in the element
         switch (aElement.contactType) {
-        case com.gContactSync.gdata.contacts.types.TYPED_WITH_CHILD:
+        case gContactSync.gdata.contacts.types.TYPED_WITH_CHILD:
           if (arr[i].childNodes[0]) {
             type = arr[i].getAttribute("rel");
             if (!type)
               type = arr[i].getAttribute("label");
             if (type)
               type = type.substring(type.indexOf("#") + 1);
-            return new com.gContactSync.Property(arr[i].childNodes[0].nodeValue,
+            return new gContactSync.Property(arr[i].childNodes[0].nodeValue,
                                                  type);
           }
           return null;
-        case com.gContactSync.gdata.contacts.types.TYPED_WITH_ATTR:
+        case gContactSync.gdata.contacts.types.TYPED_WITH_ATTR:
           if (!aElement.attribute)
-            com.gContactSync.LOGGER.LOG_WARNING("Error - invalid element passed to the " +
+            gContactSync.LOGGER.LOG_WARNING("Error - invalid element passed to the " +
                                "getElementValue method." +
-                               com.gContactSync.StringBundle.getStr("pleaseReport"));
+                               gContactSync.StringBundle.getStr("pleaseReport"));
           else {
             if (aElement.tagName == "im") {
               type = arr[i].getAttribute("protocol") || arr[i].getAttribute("label") ||
-                     com.gContactSync.gdata.contacts.rel + "#GOOGLE_TALK"
+                     gContactSync.gdata.contacts.rel + "#GOOGLE_TALK"
             } else {
               type = arr[i].getAttribute("rel") || arr[i].getAttribute("label") ||
-                     com.gContactSync.gdata.contacts.rel + "#other";
+                     gContactSync.gdata.contacts.rel + "#other";
             }
             type = type.substring(type.indexOf("#") + 1);
-            return new com.gContactSync.Property(arr[i].getAttribute(aElement.attribute),
+            return new gContactSync.Property(arr[i].getAttribute(aElement.attribute),
                                                  type);
           }
         // fall through
-        case com.gContactSync.gdata.contacts.types.UNTYPED:
-        case com.gContactSync.gdata.contacts.types.PARENT_TYPED:
+        case gContactSync.gdata.contacts.types.UNTYPED:
+        case gContactSync.gdata.contacts.types.PARENT_TYPED:
           if (aElement.tagName === "birthday")
-            return new com.gContactSync.Property(arr[i].getAttribute("when"));
+            return new gContactSync.Property(arr[i].getAttribute("when"));
           if (arr[i].childNodes[0])
-            return new com.gContactSync.Property(arr[i].childNodes[0].nodeValue);
+            return new gContactSync.Property(arr[i].childNodes[0].nodeValue);
           return null;
-        case com.gContactSync.gdata.contacts.types.EVENT:
+        case gContactSync.gdata.contacts.types.EVENT:
           if (arr[i].childNodes[0]) {
-            return new com.gContactSync.Property(arr[i].childNodes[0].getAttribute("startTime"), arr[i].getAttribute("rel"));
+            return new gContactSync.Property(arr[i].childNodes[0].getAttribute("startTime"), arr[i].getAttribute("rel"));
           }
           return null;
         default:
-          com.gContactSync.LOGGER.LOG_WARNING("Error - invalid contact type passed to the " +
+          gContactSync.LOGGER.LOG_WARNING("Error - invalid contact type passed to the " +
                                               "getElementValue method." +
-                                              com.gContactSync.StringBundle.getStr("pleaseReport"));
+                                              gContactSync.StringBundle.getStr("pleaseReport"));
           return null;
         }
       }
@@ -228,10 +227,10 @@ com.gContactSync.GContact.prototype = {
    */
   setOrg: function GContact_setOrg(aElement, aValue) {
     var tagName      = aElement ? aElement.tagName : null,
-        organization = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url,
+        organization = this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.GD.url,
                                                        "organization")[0],
         thisElem     = this.mCurrentElement;
-    if (!tagName || !com.gContactSync.gdata.contacts.isOrgTag(tagName))
+    if (!tagName || !gContactSync.gdata.contacts.isOrgTag(tagName))
       return null;
 
     if (thisElem) {
@@ -250,9 +249,9 @@ com.gContactSync.GContact.prototype = {
     }
     // if it gets here, the node must be added, so add <organization> if necessary
     if (!organization) {
-      organization = document.createElementNS(com.gContactSync.gdata.namespaces.GD.url,
+      organization = document.createElementNS(gContactSync.gdata.namespaces.GD.url,
                                               "organization");
-      organization.setAttribute("rel", com.gContactSync.gdata.contacts.rel + "#other");
+      organization.setAttribute("rel", gContactSync.gdata.contacts.rel + "#other");
       this.xml.appendChild(organization);
     }
     var elem = document.createElementNS(aElement.namespace.url,
@@ -274,10 +273,10 @@ com.gContactSync.GContact.prototype = {
    */
   setName: function GContact_setName(aElement, aValue) {
     var tagName  = aElement ? aElement.tagName : null,
-        name     = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url,
+        name     = this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.GD.url,
                                                        "name")[0],
         thisElem = this.mCurrentElement;
-    if (!tagName || !com.gContactSync.gdata.contacts.isNameTag(tagName))
+    if (!tagName || !gContactSync.gdata.contacts.isNameTag(tagName))
       return null;
 
     if (thisElem) {
@@ -295,7 +294,7 @@ com.gContactSync.GContact.prototype = {
     }
     // if it gets here, the node must be added, so add <name> if necessary
     if (!name) {
-      name = document.createElementNS(com.gContactSync.gdata.namespaces.GD.url,
+      name = document.createElementNS(gContactSync.gdata.namespaces.GD.url,
                                       "name");
       this.xml.appendChild(name);
     }
@@ -320,12 +319,12 @@ com.gContactSync.GContact.prototype = {
    */
   setAddress: function GContact_setAddress(aElement, aValue, aType, aIndex) {
     var tagName   = aElement ? aElement.tagName : null,
-        addresses = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url,
+        addresses = this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.GD.url,
                                                     "structuredPostalAddress"),
         address   = null,
         thisElem,
         i         = 0;
-    if (!tagName || !com.gContactSync.gdata.contacts.isAddressTag(tagName))
+    if (!tagName || !gContactSync.gdata.contacts.isAddressTag(tagName))
       return null;
 
     for (; i < addresses.length; i++) {
@@ -340,7 +339,7 @@ com.gContactSync.GContact.prototype = {
     // TODO how will this work w/ multiple addresses...
     this.getElementValue(aElement, (aIndex ? aIndex : 0), aType);
     thisElem = this.mCurrentElement;
-    com.gContactSync.LOGGER.VERBOSE_LOG("  - Setting address..." + address + " " + aValue + " " + aType + " " + thisElem);
+    gContactSync.LOGGER.VERBOSE_LOG("  - Setting address..." + address + " " + aValue + " " + aType + " " + thisElem);
     if (thisElem && address) {
       // if there is an existing value that should be updated, do so
       if (aValue) {
@@ -351,7 +350,7 @@ com.gContactSync.GContact.prototype = {
         for (i = 0; i < thisElem.parentNode.childNodes.length; i++) {
           var node = thisElem.parentNode.childNodes[i];
           if (node && node.tagName === "gd:formattedAddress") {
-            com.gContactSync.LOGGER.VERBOSE_LOG("Removing formatted address: " + node.childNodes[0].nodeValue);
+            gContactSync.LOGGER.VERBOSE_LOG("Removing formatted address: " + node.childNodes[0].nodeValue);
             node.parentNode.removeChild(node);
             break;
           }
@@ -371,9 +370,9 @@ com.gContactSync.GContact.prototype = {
       return true;
     // if it gets here, the node must be added, so add <structuredPostalAddress> if necessary
     if (!address) {
-      address = document.createElementNS(com.gContactSync.gdata.namespaces.GD.url,
+      address = document.createElementNS(gContactSync.gdata.namespaces.GD.url,
                                          "structuredPostalAddress");
-      com.gContactSync.gdata.contacts.setRelOrLabel(address, aType);
+      gContactSync.gdata.contacts.setRelOrLabel(address, aType);
       this.xml.appendChild(address);
     }
     var elem = document.createElementNS(aElement.namespace.url,
@@ -395,34 +394,34 @@ com.gContactSync.GContact.prototype = {
    */
   setElementValue: function GContact_setElementValue(aElement, aIndex, aType, aValue) {
     // Postal addresses are different...
-    if (com.gContactSync.gdata.contacts.isAddressTag(aElement.tagName))
+    if (gContactSync.gdata.contacts.isAddressTag(aElement.tagName))
       return this.setAddress(aElement, aValue, aType, aIndex);
     // get the current element (as this.mCurrentElement) and it's value (returned)
     var property = this.getElementValue(aElement, aIndex, aType);
-    property = property ? property : new com.gContactSync.Property(null, null);
+    property = property ? property : new gContactSync.Property(null, null);
     var value = property.value;
     // if the current value is already good, check the type and return
     if (value == aValue) {
       if (value && property.type != aType) {
-        com.gContactSync.LOGGER.VERBOSE_LOG("Value is already good, changing type to: " + aType);
-        com.gContactSync.gdata.contacts.setRelOrLabel(this.mCurrentElement, aType);
+        gContactSync.LOGGER.VERBOSE_LOG("Value is already good, changing type to: " + aType);
+        gContactSync.gdata.contacts.setRelOrLabel(this.mCurrentElement, aType);
       }
       else if (value)
-        com.gContactSync.LOGGER.VERBOSE_LOG("   - value " + value + " and type " + property.type + " are good");
+        gContactSync.LOGGER.VERBOSE_LOG("   - value " + value + " and type " + property.type + " are good");
       return null;
     }
     // organization tags are special cases
-    if (com.gContactSync.gdata.contacts.isOrgTag(aElement.tagName))
+    if (gContactSync.gdata.contacts.isOrgTag(aElement.tagName))
       return this.setOrg(aElement, aValue);
     // name tags are as well
-    if (com.gContactSync.gdata.contacts.isNameTag(aElement.tagName))
+    if (gContactSync.gdata.contacts.isNameTag(aElement.tagName))
       return this.setName(aElement, aValue);
 
     // if the element should be removed
     if (!aValue && this.mCurrentElement) {
       try { this.mCurrentElement.parentNode.removeChild(this.mCurrentElement); }
       catch (e) {
-        com.gContactSync.LOGGER.LOG_WARNING("Error while removing element: " + e + "\n" +
+        gContactSync.LOGGER.LOG_WARNING("Error while removing element: " + e + "\n" +
                                             this.mCurrentElement);
       }
       this.mCurrentElement = null;
@@ -430,42 +429,42 @@ com.gContactSync.GContact.prototype = {
     // otherwise set the value of the element
     else {
       switch (aElement.contactType) {
-        case com.gContactSync.gdata.contacts.types.TYPED_WITH_CHILD:
+        case gContactSync.gdata.contacts.types.TYPED_WITH_CHILD:
           if (this.mCurrentElement && this.mCurrentElement.childNodes[0])
             this.mCurrentElement.childNodes[0].nodeValue = aValue;
           else {
             if (!aType) {
-              com.gContactSync.LOGGER.LOG_WARNING("Invalid aType supplied to the 'setElementValue' "
-                                 + "method." + com.gContactSync.StringBundle.getStr("pleaseReport"));
+              gContactSync.LOGGER.LOG_WARNING("Invalid aType supplied to the 'setElementValue' "
+                                 + "method." + gContactSync.StringBundle.getStr("pleaseReport"));
               return null;
             }
             var elem = this.mCurrentElement ? this.mCurrentElement :
                                               document.createElementNS
                                                        (aElement.namespace.url,
                                                         aElement.tagName);
-            com.gContactSync.gdata.contacts.setRelOrLabel(elem, aType);
+            gContactSync.gdata.contacts.setRelOrLabel(elem, aType);
             elem.appendChild(document.createTextNode(aValue));
             this.xml.appendChild(elem);
           }
           break;
-        case com.gContactSync.gdata.contacts.types.TYPED_WITH_ATTR:
+        case gContactSync.gdata.contacts.types.TYPED_WITH_ATTR:
           if (this.mCurrentElement)
             this.mCurrentElement.setAttribute(aElement.attribute, aValue);
           else {
             var elem = document.createElementNS(aElement.namespace.url,
                                                 aElement.tagName);
-            com.gContactSync.gdata.contacts.setRelOrLabel(elem, aType);
+            gContactSync.gdata.contacts.setRelOrLabel(elem, aType);
             elem.setAttribute(aElement.attribute, aValue);
             this.xml.appendChild(elem);
           }
           break;
-        case com.gContactSync.gdata.contacts.types.UNTYPED:
-        case com.gContactSync.gdata.contacts.types.PARENT_TYPED:
+        case gContactSync.gdata.contacts.types.UNTYPED:
+        case gContactSync.gdata.contacts.types.PARENT_TYPED:
           if (aElement.tagName == "birthday") {
             // make sure the value at least has two -s
             // valid formats: YYYY-M-D and --M-D
             if (aValue.split("-").length < 3) {
-              com.gContactSync.LOGGER.LOG_WARNING("Detected an invalid birthday: " + aValue);
+              gContactSync.LOGGER.LOG_WARNING("Detected an invalid birthday: " + aValue);
               return null;
             }
             var elem = this.mCurrentElement ? this.mCurrentElement:
@@ -490,12 +489,12 @@ com.gContactSync.GContact.prototype = {
             this.xml.appendChild(elem);
           }
           break;
-        case com.gContactSync.gdata.contacts.types.EVENT:
+        case gContactSync.gdata.contacts.types.EVENT:
           var eventElem = this.mCurrentElement;
           if (!eventElem) {
-            eventElem = document.createElementNS(com.gContactSync.gdata.namespaces.GCONTACT.url, "event");
+            eventElem = document.createElementNS(gContactSync.gdata.namespaces.GCONTACT.url, "event");
             eventElem.setAttribute("rel", aType);
-            eventElem.appendChild(document.createElementNS(com.gContactSync.gdata.namespaces.GD.url, "when"));
+            eventElem.appendChild(document.createElementNS(gContactSync.gdata.namespaces.GD.url, "when"));
             this.xml.appendChild(eventElem);
           }
           // TODO - support xs:dateTime
@@ -503,8 +502,8 @@ com.gContactSync.GContact.prototype = {
           eventElem.firstChild.setAttribute("startTime", aValue);
           break;
         default:
-          com.gContactSync.LOGGER.LOG_WARNING("Invalid aType parameter sent to the setElementValue"
-                             + "method" + com.gContactSync.StringBundle.getStr("pleaseReport"));
+          gContactSync.LOGGER.LOG_WARNING("Invalid aType parameter sent to the setElementValue"
+                             + "method" + gContactSync.StringBundle.getStr("pleaseReport"));
           return null;
       }
     }
@@ -520,7 +519,7 @@ com.gContactSync.GContact.prototype = {
     try {
       var elems = this.xml.getElementsByTagName('updated');
       if (elems.length === 0) return 0;  // New contact
-      if (com.gContactSync.Preferences.mSyncPrefs.writeOnly.value && !aIgnoreWriteOnly) {
+      if (gContactSync.Preferences.mSyncPrefs.writeOnly.value && !aIgnoreWriteOnly) {
         return 1;
       }
       var sModified = elems[0].childNodes[0].nodeValue,
@@ -536,7 +535,7 @@ com.gContactSync.GContact.prototype = {
       return ret;
     }
     catch(e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Unable to get last modified date from a contact:\n" + e);
+      gContactSync.LOGGER.LOG_WARNING("Unable to get last modified date from a contact:\n" + e);
     }
     return 1;
   },
@@ -544,7 +543,7 @@ com.gContactSync.GContact.prototype = {
    * Removes all extended properties from this contact.
    */
   removeExtendedProperties: function GContact_removeExtendedProperties() {
-    var arr = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url, "extendedProperty");
+    var arr = this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.GD.url, "extendedProperty");
     for (var i = arr.length - 1; i > -1 ; i--) {
       arr[i].parentNode.removeChild(arr[i]);
     }
@@ -556,10 +555,10 @@ com.gContactSync.GContact.prototype = {
    *                    property with the name attribute aName.
    */
   getExtendedProperty: function GContact_getExtendedProperty(aName) {
-    var arr = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url, "extendedProperty");
+    var arr = this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.GD.url, "extendedProperty");
     for (var i = 0, length = arr.length; i < length; i++)
       if (arr[i].getAttribute("name") == aName)
-        return new com.gContactSync.Property(arr[i].getAttribute("value"));
+        return new gContactSync.Property(arr[i].getAttribute("value"));
     return null;
   },
   /**
@@ -569,13 +568,13 @@ com.gContactSync.GContact.prototype = {
    * @param aValue {string} The value of the property.
    */
   setExtendedProperty: function GContact_setExtendedProperty(aName, aValue) {
-    if (this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.GD.url,
+    if (this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.GD.url,
         "extendedProperty").length >= 10) {
-      com.gContactSync.LOGGER.LOG_WARNING("Attempt to add too many properties aborted");
+      gContactSync.LOGGER.LOG_WARNING("Attempt to add too many properties aborted");
       return null;
     }
     if (aValue && aValue != "") {
-      var property = document.createElementNS(com.gContactSync.gdata.namespaces.GD.url,
+      var property = document.createElementNS(gContactSync.gdata.namespaces.GD.url,
                                               "extendedProperty");
       property.setAttribute("name", aName);
       property.setAttribute("value", aValue);
@@ -601,23 +600,23 @@ com.gContactSync.GContact.prototype = {
     // TODO uncomment
     //try {
       // if the value to obtain is a link, get the value for the link
-      if (com.gContactSync.gdata.contacts.links[aName]) {
-        var arr = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.ATOM.url, "link");
+      if (gContactSync.gdata.contacts.links[aName]) {
+        var arr = this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.ATOM.url, "link");
         for (var i = 0, length = arr.length; i < length; i++)
-          if (arr[i].getAttribute("rel") == com.gContactSync.gdata.contacts.links[aName])
-            return new com.gContactSync.Property(arr[i].getAttribute("href"));
+          if (arr[i].getAttribute("rel") == gContactSync.gdata.contacts.links[aName])
+            return new gContactSync.Property(arr[i].getAttribute("href"));
       }
       else if (aName == "groupMembershipInfo")
         return this.getGroups();
       // otherwise, if it is a normal attribute, get it's value
-      else if (com.gContactSync.gdata.contacts[aName])
-        return this.getElementValue(com.gContactSync.gdata.contacts[aName], aIndex, aType);
+      else if (gContactSync.gdata.contacts[aName])
+        return this.getElementValue(gContactSync.gdata.contacts[aName], aIndex, aType);
       // if the name of the value to get is something else, throw an error
       else
-        com.gContactSync.LOGGER.LOG_WARNING("Unable to getValue for " + aName);
+        gContactSync.LOGGER.LOG_WARNING("Unable to getValue for " + aName);
     //}
     //catch(e) {
-    //  com.gContactSync.LOGGER.LOG_WARNING("Error in GContact.getValue:\n" + e);
+    //  gContactSync.LOGGER.LOG_WARNING("Error in GContact.getValue:\n" + e);
     //}
     return null;
   },
@@ -635,19 +634,19 @@ com.gContactSync.GContact.prototype = {
       if (aValue == "")
         aValue = null;
       if (aType == "Home" || aType == "Work" || aType == "Other") {
-        com.gContactSync.LOGGER.LOG_WARNING("Found and fixed an invalid type: " + aType);
+        gContactSync.LOGGER.LOG_WARNING("Found and fixed an invalid type: " + aType);
         aType = aType.toLowerCase();
       }
-      com.gContactSync.LOGGER.VERBOSE_LOG("   - " + aName + " - " + aIndex + " - " + aType + " - " + aValue);
-      if (com.gContactSync.gdata.contacts[aName] && aName != "groupMembershipInfo")
-        return this.setElementValue(com.gContactSync.gdata.contacts[aName],
+      gContactSync.LOGGER.VERBOSE_LOG("   - " + aName + " - " + aIndex + " - " + aType + " - " + aValue);
+      if (gContactSync.gdata.contacts[aName] && aName != "groupMembershipInfo")
+        return this.setElementValue(gContactSync.gdata.contacts[aName],
                                     aIndex, aType, aValue);
       // if the name of the value to get is something else, throw an error
       else
-        com.gContactSync.LOGGER.LOG_WARNING("Unable to setValue for " + aName + " - " + aValue);
+        gContactSync.LOGGER.LOG_WARNING("Unable to setValue for " + aName + " - " + aValue);
     }
     catch(e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Error in GContact.setValue:\n" + e);
+      gContactSync.LOGGER.LOG_WARNING("Error in GContact.setValue:\n" + e);
     }
     return null;
   },
@@ -655,22 +654,22 @@ com.gContactSync.GContact.prototype = {
    * Returns an array of the names of the groups to which this contact belongs.
    */
   getGroups: function GContact_getGroups() {
-    var groupInfo = com.gContactSync.gdata.contacts.groupMembershipInfo;
+    var groupInfo = gContactSync.gdata.contacts.groupMembershipInfo;
     var arr = this.xml.getElementsByTagNameNS(groupInfo.namespace.url,
                                               groupInfo.tagName);
     var groups = {};
     // iterate through each group and add the group as a new property of the
     // groups object with the ID as the name of the property.
     for (var i = 0, length = arr.length; i < length; i++) {
-      var id    = com.gContactSync.fixURL(arr[i].getAttribute("href")),
-          group = com.gContactSync.Sync.mGroups[id];
+      var id    = gContactSync.fixURL(arr[i].getAttribute("href")),
+          group = gContactSync.Sync.mGroups[id];
       if (group)
         groups[id] = group;
       else {
-        if (com.gContactSync.Preferences.mSyncPrefs.myContacts.value)
+        if (gContactSync.Preferences.mSyncPrefs.myContacts.value)
           groups[id] = true;
         else
-          com.gContactSync.LOGGER.LOG_WARNING("Unable to find group: " + id);
+          gContactSync.LOGGER.LOG_WARNING("Unable to find group: " + id);
       }
     }
     // return the object with the groups this contact belongs to
@@ -680,7 +679,7 @@ com.gContactSync.GContact.prototype = {
    * Removes all groups from this contact.
    */
   clearGroups: function GContact_clearGroups() {
-    var groupInfo = com.gContactSync.gdata.contacts.groupMembershipInfo;
+    var groupInfo = gContactSync.gdata.contacts.groupMembershipInfo;
     var arr = this.xml.getElementsByTagNameNS(groupInfo.namespace.url,
                                               groupInfo.tagName);
     // iterate through every group element and remove it from the XML
@@ -691,7 +690,7 @@ com.gContactSync.GContact.prototype = {
         }
       }
       catch(e) {
-        com.gContactSync.LOGGER.LOG_WARNING("Error while trying to clear group: " + arr[i], e);
+        gContactSync.LOGGER.LOG_WARNING("Error while trying to clear group: " + arr[i], e);
       }
     }
     this.mGroups = {};
@@ -710,7 +709,7 @@ com.gContactSync.GContact.prototype = {
       var id = aGroups[i];
       // if the ID isn't valid log a warning and go to the next ID
       if (!id || !id.indexOf || id.indexOf("www.google.com/m8/feeds/groups") == -1) {
-        com.gContactSync.LOGGER.LOG_WARNING("Invalid id in aGroups: " + id);
+        gContactSync.LOGGER.LOG_WARNING("Invalid id in aGroups: " + id);
         continue;
       }
       this.addToGroup(id);
@@ -723,7 +722,7 @@ com.gContactSync.GContact.prototype = {
    */
   removeFromGroup: function GContact_removeFromGroup(aGroup) {
     if (!aGroup) {
-      com.gContactSync.LOGGER.LOG_WARNING("Attempt to remove a contact from a non-existant group");
+      gContactSync.LOGGER.LOG_WARNING("Attempt to remove a contact from a non-existant group");
       return null;
     }
     try {
@@ -731,7 +730,7 @@ com.gContactSync.GContact.prototype = {
       return true;
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Error while trying to remove a contact from a group: " + e);
+      gContactSync.LOGGER.LOG_WARNING("Error while trying to remove a contact from a group: " + e);
     }
     return null;
   },
@@ -742,11 +741,11 @@ com.gContactSync.GContact.prototype = {
    */
   addToGroup: function GContact_addToGroup(aGroupURL) {
     if (!aGroupURL) {
-      com.gContactSync.LOGGER.LOG_WARNING("Attempt to add a contact to a non-existant group");
+      gContactSync.LOGGER.LOG_WARNING("Attempt to add a contact to a non-existant group");
       return null;
     }
     try {
-      var ns = com.gContactSync.gdata.namespaces.GCONTACT;
+      var ns = gContactSync.gdata.namespaces.GCONTACT;
       var group = document.createElementNS(ns.url,
                                            ns.prefix + "groupMembershipInfo");
       group.setAttribute("deleted", false);
@@ -755,7 +754,7 @@ com.gContactSync.GContact.prototype = {
       return true;
     }
     catch(e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Error while trying to add a contact to a group: " + e);
+      gContactSync.LOGGER.LOG_WARNING("Error while trying to add a contact to a group: " + e);
     }
     return null;
   },
@@ -767,16 +766,16 @@ com.gContactSync.GContact.prototype = {
    * @param aType    {string}      The type (home, work, other, etc.)
    */
   isMatch: function GContact_isMatch(aElement, aXmlElem, aType, aDontSkip) {
-    if (aElement.contactType === com.gContactSync.gdata.contacts.types.UNTYPED)
+    if (aElement.contactType === gContactSync.gdata.contacts.types.UNTYPED)
       return true;
     // if the parent contains the type then get the XML element's parent
-    else if (aElement.contactType === com.gContactSync.gdata.contacts.types.PARENT_TYPED)
+    else if (aElement.contactType === gContactSync.gdata.contacts.types.PARENT_TYPED)
       aXmlElem = aXmlElem.parentNode;
     // If this is a phone number, check the phoneTypes pref
     // If the pref is true, then always say that this is a match
     // If the pref is false, continue with the normal type check
     if (aElement.tagName === "phoneNumber" &&
-        com.gContactSync.Preferences.mSyncPrefs.phoneTypes.value) {
+        gContactSync.Preferences.mSyncPrefs.phoneTypes.value) {
       return true;
     }
     switch (aElement.tagName) {
@@ -809,7 +808,7 @@ com.gContactSync.GContact.prototype = {
     var val = this.getValue("id").value || "";
     val = val.toLowerCase();
     if (aFull) {
-      return com.gContactSync.fixURL(val); // make sure to change http to https
+      return gContactSync.fixURL(val); // make sure to change http to https
     }
     return val.substr(val.lastIndexOf("/") + 1);
   },
@@ -821,38 +820,38 @@ com.gContactSync.GContact.prototype = {
    * @param aURI {string|nsIURI} A string with the URI of a contact photo.
    */
   setPhoto: function GContact_setPhoto(aURI) {
-    com.gContactSync.LOGGER.VERBOSE_LOG("Entering GContact.setPhoto:");
+    gContactSync.LOGGER.VERBOSE_LOG("Entering GContact.setPhoto:");
     // If the URI is empty or a chrome URL remove the photo, if present
     // TODO - this should probably just check if it is the default photo
     if (!aURI) {
       var photoInfo = this.getPhotoInfo();
       // Easy case: URI is empty and this contact doesn't have a photo
       if (!photoInfo || !(photoInfo.etag)) {
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * URI is empty, contact has no photo");
+        gContactSync.LOGGER.VERBOSE_LOG(" * URI is empty, contact has no photo");
         return;
       }
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * URI is empty, photo will be removed");
+      gContactSync.LOGGER.VERBOSE_LOG(" * URI is empty, photo will be removed");
       // TODO - this needs to be queued
       // Remove the photo
-      var httpReq = new com.gContactSync.GHttpRequest("delete",
-                                                      com.gContactSync.Sync.mCurrentAuthToken,
+      var httpReq = new gContactSync.GHttpRequest("delete",
+                                                      gContactSync.Sync.mCurrentAuthToken,
                                                       photoInfo.url,
                                                       null);
       httpReq.mOnSuccess = function setPhotoSuccess() {
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo successfully removed");
+        gContactSync.LOGGER.VERBOSE_LOG(" * Photo successfully removed");
       };
       httpReq.mOnError   = function setPhotoError(httpReq) {
-        com.gContactSync.LOGGER.LOG_ERROR('Error while removing photo',
+        gContactSync.LOGGER.LOG_ERROR('Error while removing photo',
                                           httpReq.responseText);
       };
-      httpReq.mOnOffline = com.gContactSync.Sync.mOfflineFunction;
-      httpReq.mOn503 = com.gContactSync.Sync.m503Function;
+      httpReq.mOnOffline = gContactSync.Sync.mOfflineFunction;
+      httpReq.mOn503 = gContactSync.Sync.m503Function;
       httpReq.addHeaderItem("If-Match", "*");
       httpReq.send();
     } else {
       // The URI exists, so update or add the photo
       // NOTE: A photo cannot be added until the contact has been added
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo will be uploaded");
+      gContactSync.LOGGER.VERBOSE_LOG(" * Photo will be uploaded");
       this.mNewPhotoURI = aURI;
     }
   },
@@ -881,22 +880,22 @@ com.gContactSync.GContact.prototype = {
       outChannel.setUploadStream(inChannel.open(), photoInfo.type, -1);
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("The photo at '" + aURI + "' doesn't exist", e);
+      gContactSync.LOGGER.LOG_WARNING("The photo at '" + aURI + "' doesn't exist", e);
       return;
     }
     // set the request type to PUT (this has to be after setting the upload data)
     outChannel = outChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
     outChannel.requestMethod = "PUT";
     // Setup the header: Authorization and Content-Type: image/*
-    outChannel.setRequestHeader("Authorization", com.gContactSync.Sync.mCurrentAuthToken, false);
+    outChannel.setRequestHeader("Authorization", gContactSync.Sync.mCurrentAuthToken, false);
     outChannel.setRequestHeader("Content-Type",  photoInfo.type, false);
     outChannel.setRequestHeader("If-Match",      "*", false);
     outChannel.open();
     try {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Update status: " + outChannel.responseStatus);
+      gContactSync.LOGGER.VERBOSE_LOG(" * Update status: " + outChannel.responseStatus);
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING(" * outChannel.responseStatus failed", e);
+      gContactSync.LOGGER.LOG_WARNING(" * outChannel.responseStatus failed", e);
     }
   },
   /**
@@ -913,15 +912,15 @@ com.gContactSync.GContact.prototype = {
     // <link rel='http://schemas.google.com/contacts/2008/rel#photo' type='image/*'
     //  href='http://google.com/m8/feeds/photos/media/liz%40gmail.com/c9012de'
     // gd:etag='"KTlcZWs1bCp7ImBBPV43VUV4LXEZCXERZAc."'/>
-    var arr = this.xml.getElementsByTagNameNS(com.gContactSync.gdata.namespaces.ATOM.url, "link");
+    var arr = this.xml.getElementsByTagNameNS(gContactSync.gdata.namespaces.ATOM.url, "link");
     var elem, etag;
     for (var i = 0, length = arr.length; i < length; i++) {
       elem = arr[i];
-      if (elem.getAttribute("rel") == com.gContactSync.gdata.contacts.links["PhotoURL"]) {
+      if (elem.getAttribute("rel") == gContactSync.gdata.contacts.links["PhotoURL"]) {
         return {
           url:  elem.getAttribute("href"),
           type: elem.getAttribute("type"),
-          etag: elem.getAttributeNS(com.gContactSync.gdata.namespaces.GD.url, "etag")
+          etag: elem.getAttributeNS(gContactSync.gdata.namespaces.GD.url, "etag")
         }
       }
     }
@@ -932,19 +931,19 @@ com.gContactSync.GContact.prototype = {
    * NOTE: Portions of this code are from Thunderbird written by me (Josh Geenen)
    * See https://bugzilla.mozilla.org/show_bug.cgi?id=119459
    *
-   * TODO - merge w/ com.gContactSync.writePhoto
+   * TODO - merge w/ gContactSync.writePhoto
    * @param aAuthToken {string} The authentication token for the account to
    *                            which this contact belongs.
    */
   writePhoto: function GContact_writePhoto(aAuthToken) {
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Checking for a contact photo");
+    gContactSync.LOGGER.VERBOSE_LOG(" * Checking for a contact photo");
     if (!aAuthToken) {
-      com.gContactSync.LOGGER.LOG_WARNING("No auth token passed to GContact.writePhoto");
+      gContactSync.LOGGER.LOG_WARNING("No auth token passed to GContact.writePhoto");
       return null;
     }
     var info = this.getPhotoInfo();
     if (!info) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * This contact does not have a photo");
+      gContactSync.LOGGER.VERBOSE_LOG(" * This contact does not have a photo");
       return null;
     }
     // Get the profile directory
@@ -964,7 +963,7 @@ com.gContactSync.GContact.prototype = {
     var istream = ch.open();
     // quit if the request failed
     if ((ch instanceof Components.interfaces.nsIHttpChannel) && !ch.requestSucceeded) {
-      com.gContactSync.LOGGER.LOG_WARNING("The request to retrive the photo returned with a status ",
+      gContactSync.LOGGER.LOG_WARNING("The request to retrive the photo returned with a status ",
                          ch.responseStatus);
       return null;
     }
@@ -972,14 +971,14 @@ com.gContactSync.GContact.prototype = {
     // Create a name for the photo with the contact's ID and the photo extension
     var filename = this.getID(false) + "_" + (new Date()).getTime();
     try {
-      var ext = com.gContactSync.findPhotoExt(ch);
+      var ext = gContactSync.findPhotoExt(ch);
       filename = filename + (ext ? "." + ext : "");
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Couldn't find an extension for the photo");
+      gContactSync.LOGGER.LOG_WARNING("Couldn't find an extension for the photo");
     }
     file.append(filename);
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Writing the photo to " + file.path);
+    gContactSync.LOGGER.VERBOSE_LOG(" * Writing the photo to " + file.path);
 
     var output = Components.classes["@mozilla.org/network/file-output-stream;1"]
                            .createInstance(Components.interfaces.nsIFileOutputStream);

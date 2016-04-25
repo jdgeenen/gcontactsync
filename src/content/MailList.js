@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009, 2011
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * MailList is an abstraction of a mailing list that facilitates getting the
@@ -54,10 +53,10 @@ if (!com.gContactSync) com.gContactSync = {};
  * @constructor
  * @class
  */
-com.gContactSync.MailList = function gCS_MailList(aList, aParentDirectory, aNew) {
+gContactSync.MailList = function gCS_MailList(aList, aParentDirectory, aNew) {
   if (!aParentDirectory ||
-    !(aParentDirectory instanceof com.gContactSync.AddressBook ||
-        aParentDirectory instanceof com.gContactSync.GAddressBook))
+    !(aParentDirectory instanceof gContactSync.AddressBook ||
+        aParentDirectory instanceof gContactSync.GAddressBook))
     throw "Error - invalid address book supplied to the MailList Constructor";
   this.mParent = aParentDirectory;
   this.mParent.checkList(aList, "MailList constructor");
@@ -69,7 +68,7 @@ com.gContactSync.MailList = function gCS_MailList(aList, aParentDirectory, aNew)
     this.getAllContacts();
 };
 
-com.gContactSync.MailList.prototype = {
+gContactSync.MailList.prototype = {
   /** The contacts in this mailing list (cached) */
   mContacts:       [],
   /** This is true whenever the contacts have to be fetched again */
@@ -102,7 +101,7 @@ com.gContactSync.MailList.prototype = {
    * @returns {boolean} Whether the given contact is in this list.
    */
   hasContact: function MailList_hasContact(aContact, aAttrs) {
-    if (!(aContact instanceof com.gContactSync.TBContact)) {
+    if (!(aContact instanceof gContactSync.TBContact)) {
       throw "Invalid aContact sent to MailList.hasContact";
     }
     // get all of the cards in this list again, if necessary
@@ -173,23 +172,23 @@ com.gContactSync.MailList.prototype = {
    * @returns {TBContact}  The contact.
    */
   addContact: function MailList_addContact(aContact) {
-    if (!(aContact instanceof com.gContactSync.TBContact)) {
+    if (!(aContact instanceof gContactSync.TBContact)) {
       throw "Invalid aContact sent to AddressBook.addContact";
     }
     // Add a dummy e-mail address if necessary and ignore the preference
     // If this was not done then the mailing list would break.
     if (!(aContact.getValue("PrimaryEmail"))) {
-      aContact.setValue("PrimaryEmail", com.gContactSync.makeDummyEmail(aContact, true));
+      aContact.setValue("PrimaryEmail", gContactSync.makeDummyEmail(aContact, true));
       aContact.update(); // TODO is this necessary
     }
     try {
-      var realContact = new com.gContactSync.TBContact(this.mList.addCard(aContact.mContact),
+      var realContact = new gContactSync.TBContact(this.mList.addCard(aContact.mContact),
                                                        this);
       this.mContacts.push(realContact);
       return realContact;
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_ERROR("Unable to add card to the mail list with URI: " +
+      gContactSync.LOGGER.LOG_ERROR("Unable to add card to the mail list with URI: " +
                        this.getURI(), e);
     }
     return null;
@@ -217,7 +216,7 @@ com.gContactSync.MailList.prototype = {
         while (iter.hasMoreElements()) {
           data = iter.getNext();
           if (data instanceof Components.interfaces.nsIAbCard)
-            this.mContacts.push(new com.gContactSync.TBContact(data, this));
+            this.mContacts.push(new gContactSync.TBContact(data, this));
         }
       }
       catch (e) {
@@ -225,21 +224,21 @@ com.gContactSync.MailList.prototype = {
         // If enumeration fails and the error shouldn't be ignored then offer
         // to reset this AB for the user.
         if (!this.mIgnoreIfBroken) {
-          com.gContactSync.LOGGER.LOG_ERROR("A mailing list is not working:", e);
-          if (com.gContactSync.confirm(com.gContactSync.StringBundle.getStr("resetConfirm"))) {
+          gContactSync.LOGGER.LOG_ERROR("A mailing list is not working:", e);
+          if (gContactSync.confirm(gContactSync.StringBundle.getStr("resetConfirm"))) {
             if (this.mParent.reset()) {
-              com.gContactSync.alert(com.gContactSync.StringBundle.getStr("pleaseRestart"));
+              gContactSync.alert(gContactSync.StringBundle.getStr("pleaseRestart"));
             }
           }
           // Throw an error to stop the sync
-          throw com.gContactSync.StringBundle.getStr("mailListBroken");
+          throw gContactSync.StringBundle.getStr("mailListBroken");
           
         // If ignoring this broken mailing list (such as when enumerating
         // through a list immediately after adding a contact to it) then quit.
         // This is a VERBOSE_LOG instead of LOG_WARNING or ERROR to avoid
         // unnecessary e-mail/forum posts.
         } else {
-          com.gContactSync.LOGGER.VERBOSE_LOG("A mailing list is not working:", e);
+          gContactSync.LOGGER.VERBOSE_LOG("A mailing list is not working:", e);
           return this.mContacts;
         }
       }
@@ -251,7 +250,7 @@ com.gContactSync.MailList.prototype = {
         do {
           data = iter.currentItem();
           if (data instanceof Components.interfaces.nsIAbCard)
-            this.mContacts.push(new com.gContactSync.TBContact(data, this));
+            this.mContacts.push(new gContactSync.TBContact(data, this));
           iter.next();
         } while (Components.lastResult === 0);
       }
@@ -259,12 +258,12 @@ com.gContactSync.MailList.prototype = {
         // TODO find a way to distinguish between the usual errors and the
         // broken list errors
         // error is expected when finished
-        com.gContactSync.LOGGER.VERBOSE_LOG("This error is (sometimes) expected:\n" + ex);
+        gContactSync.LOGGER.VERBOSE_LOG("This error is (sometimes) expected:\n" + ex);
       }
     }
     else {
-      com.gContactSync.LOGGER.LOG_ERROR("Could not iterate through an address book's contacts");
-      throw com.gContactSync.StringBundle.getStr("mailListBroken");
+      gContactSync.LOGGER.LOG_ERROR("Could not iterate through an address book's contacts");
+      throw gContactSync.StringBundle.getStr("mailListBroken");
     }
     return this.mContacts;
   },
@@ -277,15 +276,15 @@ com.gContactSync.MailList.prototype = {
       return;
     var arr,
         i = 0;
-    if (com.gContactSync.AbManager.mVersion === 3) { // TB 3
+    if (gContactSync.AbManager.mVersion === 3) { // TB 3
       arr = Components.classes["@mozilla.org/array;1"]
                       .createInstance(Components.interfaces.nsIMutableArray);
       for (; i < aContacts.length; i++) {
-        if (aContacts[i] instanceof com.gContactSync.TBContact) {
+        if (aContacts[i] instanceof gContactSync.TBContact) {
           arr.appendElement(aContacts[i].mContact, false);
         }
         else {
-          com.gContactSync.LOGGER.LOG_WARNING("Found an invalid contact sent " +
+          gContactSync.LOGGER.LOG_WARNING("Found an invalid contact sent " +
                                               "MailList.deleteContacts");
         }
       }
@@ -294,11 +293,11 @@ com.gContactSync.MailList.prototype = {
       arr =  Components.classes["@mozilla.org/supports-array;1"]
                        .createInstance(Components.interfaces.nsISupportsArray);
       for (; i < aContacts.length; i++) {
-        if (aContacts[i] instanceof com.gContactSync.TBContact) {
+        if (aContacts[i] instanceof gContactSync.TBContact) {
           arr.AppendElement(aContacts[i].mContact, false);
         }
         else {
-          com.gContactSync.LOGGER.LOG_WARNING("Found an invalid contact sent " +
+          gContactSync.LOGGER.LOG_WARNING("Found an invalid contact sent " +
                                               "MailList.deleteContacts");
         }
       }
@@ -310,7 +309,7 @@ com.gContactSync.MailList.prototype = {
       }
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Error while deleting cards from a mailing list", e);
+      gContactSync.LOGGER.LOG_WARNING("Error while deleting cards from a mailing list", e);
     }
     this.mContacts = this.getAllContacts();
   },
@@ -332,13 +331,13 @@ com.gContactSync.MailList.prototype = {
    */
   update: function MailList_update() {
     try {
-      if (com.gContactSync.AbManager.mVersion === 3)
+      if (gContactSync.AbManager.mVersion === 3)
         this.mList.editMailListToDatabase(null);
       else
         this.mList.editMailListToDatabase(this.getURI(), null);
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Unable to update mail list", e);
+      gContactSync.LOGGER.LOG_WARNING("Unable to update mail list", e);
     }
   },
   /**

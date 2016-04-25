@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2015
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,26 +34,19 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {
-  /** A generic wrapper variable */
-  var com = {};
-}
-
-if (!com.gContactSync) {
-  /** A wrapper for all GCS functions and variables */
-  com.gContactSync = {};
-}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /** The major version of gContactSync (ie 0 in 0.2.18) */
-com.gContactSync.versionMajor   = "3";
+gContactSync.versionMajor   = "3";
 /** The minor version of gContactSync (ie 3 in 0.3.0b1) */
-com.gContactSync.versionMinor   = "0";
+gContactSync.versionMinor   = "0";
 /** The release for the current version of gContactSync (ie 1 in 0.3.1a7) */
-com.gContactSync.versionRelease = "0";
+gContactSync.versionRelease = "0";
 /** The suffix for the current version of gContactSync (ie a7 for Alpha 7) */
-com.gContactSync.versionSuffix  = "a3pre";
+gContactSync.versionSuffix  = "a3pre";
 /** The attribute where the dummy e-mail address is stored */
-com.gContactSync.dummyEmailName = "PrimaryEmail";
+gContactSync.dummyEmailName = "PrimaryEmail";
 
 /**
  * Returns a string of the current version for logging.  This can print either
@@ -68,20 +61,20 @@ com.gContactSync.dummyEmailName = "PrimaryEmail";
  *                   gContactSync in the following form:
  *                   <major>.<minor>.<release><suffix>
  */
-com.gContactSync.getVersionString = function gCS_getVersionString(aGetLast) {
+gContactSync.getVersionString = function gCS_getVersionString(aGetLast) {
   var major, minor, release, suffix;
   if (aGetLast) {
-    var prefs = com.gContactSync.Preferences;
+    var prefs = gContactSync.Preferences;
     major   = prefs.mSyncPrefs.lastVersionMajor.value;
     minor   = prefs.mSyncPrefs.lastVersionMinor.value;
     release = prefs.mSyncPrefs.lastVersionRelease.value;
     suffix  = prefs.mSyncPrefs.lastVersionSuffix.value;
   }
   else {
-    major   = com.gContactSync.versionMajor;
-    minor   = com.gContactSync.versionMinor;
-    release = com.gContactSync.versionRelease;
-    suffix  = com.gContactSync.versionSuffix;
+    major   = gContactSync.versionMajor;
+    minor   = gContactSync.versionMinor;
+    release = gContactSync.versionRelease;
+    suffix  = gContactSync.versionSuffix;
   }
   return major +
          "." + minor +
@@ -98,7 +91,7 @@ com.gContactSync.getVersionString = function gCS_getVersionString(aGetLast) {
  * @param aXML {XML} The XML to serialize into a human-friendly string.
  * @returns {string} A formatted string of the given XML.
  */
-com.gContactSync.serialize = function gCS_serialize(aXML) {
+gContactSync.serialize = function gCS_serialize(aXML) {
   if (!aXML)
     return "";
   try {
@@ -107,7 +100,7 @@ com.gContactSync.serialize = function gCS_serialize(aXML) {
                      .serializeToString(aXML);
   }
   catch (e) {
-    com.gContactSync.LOGGER.LOG_WARNING("Error while serializing the following XML: " +
+    gContactSync.LOGGER.LOG_WARNING("Error while serializing the following XML: " +
                                         aXML, e);
   }
   return "";
@@ -124,10 +117,10 @@ com.gContactSync.serialize = function gCS_serialize(aXML) {
  * @returns {string} The serialized text if verboseLog is true; else the original
  *                  text.
  */
-com.gContactSync.serializeFromText = function gCS_serializeFromText(aString, aForce) {
+gContactSync.serializeFromText = function gCS_serializeFromText(aString, aForce) {
   // if verbose logging is disabled, don't replace >< with >\n< because it only
   // wastes time
-  if (aForce || com.gContactSync.Preferences.mSyncPrefs.verboseLog.value) {
+  if (aForce || gContactSync.Preferences.mSyncPrefs.verboseLog.value) {
     var arr = aString.split("><");
     aString = arr.join(">\n<");
   }
@@ -157,26 +150,26 @@ com.gContactSync.serializeFromText = function gCS_serializeFromText(aString, aFo
  *                             definitely cause problems.
  * @returns {string} A dummy e-mail address.
  */
-com.gContactSync.makeDummyEmail = function gCS_makeDummyEmail(aContact, ignorePref) {
+gContactSync.makeDummyEmail = function gCS_makeDummyEmail(aContact, ignorePref) {
   if (!aContact) throw "Invalid contact sent to makeDummyEmail";
-  if (!ignorePref && !com.gContactSync.Preferences.mSyncPrefs.dummyEmail.value) {
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Not setting dummy e-mail");
+  if (!ignorePref && !gContactSync.Preferences.mSyncPrefs.dummyEmail.value) {
+    gContactSync.LOGGER.VERBOSE_LOG(" * Not setting dummy e-mail");
     return "";
   }
-  var prefix = com.gContactSync.StringBundle.getStr("dummy1"),
+  var prefix = gContactSync.StringBundle.getStr("dummy1"),
       suffix = "@nowhere.invalid", // Note - this is hard-coded so locales can
                                    // be switched without gContactSync failing
                                    // to recognize a dummy e-mail address
       id     = null;
   // GContact and TBContact may not be defined
   try {
-    if (aContact instanceof com.gContactSync.GContact)
+    if (aContact instanceof gContactSync.GContact)
       id = aContact.getID(true);
     // otherwise it is from Thunderbird, so try to get the Google ID, if any
-    else if (aContact instanceof com.gContactSync.TBContact)
+    else if (aContact instanceof gContactSync.TBContact)
       id = aContact.getID();
     else
-      id = com.gContactSync.GAbManager.getCardValue(aContact, "GoogleID");
+      id = gContactSync.GAbManager.getCardValue(aContact, "GoogleID");
   } catch (e) {
     try {
       // try getting the card's value
@@ -204,7 +197,7 @@ com.gContactSync.makeDummyEmail = function gCS_makeDummyEmail(aContact, ignorePr
  * @returns {boolean} true  if aEmail is a dummy e-mail address
  *                  false otherwise
  */
-com.gContactSync.isDummyEmail = function gCS_isDummyEmail(aEmail) {
+gContactSync.isDummyEmail = function gCS_isDummyEmail(aEmail) {
   return aEmail && aEmail.indexOf &&
          (aEmail.indexOf("@nowhere.invalid") !== -1 ||
           // This is here for when the sv-SE locale had a translated string
@@ -225,7 +218,7 @@ com.gContactSync.isDummyEmail = function gCS_isDummyEmail(aEmail) {
  * @param aCreate   {boolean}  Set as true to create and select a new menuitem
  *                             if a match cannot be found.
  */
-com.gContactSync.selectMenuItem = function gCS_selectMenuItem(aMenuList, aValue, aCreate) {
+gContactSync.selectMenuItem = function gCS_selectMenuItem(aMenuList, aValue, aCreate) {
   if (!aMenuList || !aMenuList.menupopup || !aValue)
     throw "Invalid parameter sent to selectMenuItem";
 
@@ -261,7 +254,7 @@ com.gContactSync.selectMenuItem = function gCS_selectMenuItem(aMenuList, aValue,
  *
  * @returns {string} A username with a domain and no spaces.
  */
-com.gContactSync.fixUsername = function gCS_fixUsername(aUsername) {
+gContactSync.fixUsername = function gCS_fixUsername(aUsername) {
   if (!aUsername)
     return null;
   // Add @gmail.com if necessary
@@ -280,9 +273,9 @@ com.gContactSync.fixUsername = function gCS_fixUsername(aUsername) {
  *                        "gContactSync Notification").
  * @param aParent {nsIDOMWindow} The parent window (also optional).
  */
-com.gContactSync.alert = function gCS_alert(aText, aTitle, aParent) {
+gContactSync.alert = function gCS_alert(aText, aTitle, aParent) {
   if (!aTitle) {
-    aTitle = com.gContactSync.StringBundle.getStr("alertTitle");
+    aTitle = gContactSync.StringBundle.getStr("alertTitle");
   }
   var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                                 .getService(Components.interfaces.nsIPromptService);
@@ -294,9 +287,9 @@ com.gContactSync.alert = function gCS_alert(aText, aTitle, aParent) {
  *
  * @param aText {string} The message to display.
  */
-com.gContactSync.alertError = function gCS_alertError(aText) {
-  var title = com.gContactSync.StringBundle.getStr("alertError");
-  com.gContactSync.alert(aText, title, window);
+gContactSync.alertError = function gCS_alertError(aText) {
+  var title = gContactSync.StringBundle.getStr("alertError");
+  gContactSync.alert(aText, title, window);
 };
 
 /**
@@ -304,9 +297,9 @@ com.gContactSync.alertError = function gCS_alertError(aText) {
  *
  * @param aText {string} The message to display.
  */
-com.gContactSync.alertWarning = function gCS_alertWarning(aText) {
-  var title = com.gContactSync.StringBundle.getStr("alertWarning");
-  com.gContactSync.alert(aText, title, window);
+gContactSync.alertWarning = function gCS_alertWarning(aText) {
+  var title = gContactSync.StringBundle.getStr("alertWarning");
+  gContactSync.alert(aText, title, window);
 };
 
 /**
@@ -317,9 +310,9 @@ com.gContactSync.alertWarning = function gCS_alertWarning(aText) {
  *                        "gContactSync Confirmation").
  * @param aParent {nsIDOMWindow} The parent window (also optional).
  */
-com.gContactSync.confirm = function gCS_confirm(aText, aTitle, aParent) {
+gContactSync.confirm = function gCS_confirm(aText, aTitle, aParent) {
   if (!aTitle) {
-    aTitle = com.gContactSync.StringBundle.getStr("confirmTitle");
+    aTitle = gContactSync.StringBundle.getStr("confirmTitle");
   }
   var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                                 .getService(Components.interfaces.nsIPromptService);
@@ -335,9 +328,9 @@ com.gContactSync.confirm = function gCS_confirm(aText, aTitle, aParent) {
  * @param aParent {nsIDOMWindow} The parent window (also optional).
  * @param aDefault {string} The default value for the textbox.
  */
-com.gContactSync.prompt = function gCS_prompt(aText, aTitle, aParent, aDefault) {
+gContactSync.prompt = function gCS_prompt(aText, aTitle, aParent, aDefault) {
   if (!aTitle) {
-    aTitle = com.gContactSync.StringBundle.getStr("promptTitle");
+    aTitle = gContactSync.StringBundle.getStr("promptTitle");
   }
   var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
                                 .getService(Components.interfaces.nsIPromptService),
@@ -349,7 +342,7 @@ com.gContactSync.prompt = function gCS_prompt(aText, aTitle, aParent, aDefault) 
 /**
  * Opens the Accounts dialog for gContactSync
  */
-com.gContactSync.openAccounts = function gCS_openAccounts() {
+gContactSync.openAccounts = function gCS_openAccounts() {
     window.open("chrome://gcontactsync/content/Accounts.xul",
                 "gContactSync_Accts",
                 "chrome=yes,resizable=yes,toolbar=yes,centerscreen=yes");
@@ -358,7 +351,7 @@ com.gContactSync.openAccounts = function gCS_openAccounts() {
 /**
  * Opens the Preferences dialog for gContactSync
  */
-com.gContactSync.openPreferences = function gCS_openPreferences() {
+gContactSync.openPreferences = function gCS_openPreferences() {
   window.open("chrome://gcontactsync/content/options.xul",
               "gContactSync_Prefs",
               "chrome=yes,resizable=yes,toolbar=yes,centerscreen=yes");
@@ -370,10 +363,10 @@ com.gContactSync.openPreferences = function gCS_openPreferences() {
  *
  * @param aURL {string} THe URL to open.
  */
-com.gContactSync.openURL = function gCS_openURL(aURL) {
-  com.gContactSync.LOGGER.VERBOSE_LOG("Opening the following URL: " + aURL);
+gContactSync.openURL = function gCS_openURL(aURL) {
+  gContactSync.LOGGER.VERBOSE_LOG("Opening the following URL: " + aURL);
   if (!aURL) {
-    com.gContactSync.LOGGER.LOG_WARNING("Caught an attempt to load a blank URL");
+    gContactSync.LOGGER.LOG_WARNING("Caught an attempt to load a blank URL");
     return;
   }
   try {
@@ -383,7 +376,7 @@ com.gContactSync.openURL = function gCS_openURL(aURL) {
     }
   }
   catch (e) {
-    com.gContactSync.LOGGER.LOG_WARNING(" - Error in openFormattedURL", e);
+    gContactSync.LOGGER.LOG_WARNING(" - Error in openFormattedURL", e);
   }
   try {
     if (openFormattedRegionURL) {
@@ -392,7 +385,7 @@ com.gContactSync.openURL = function gCS_openURL(aURL) {
     }
   }
   catch (e) {
-    com.gContactSync.LOGGER.LOG_WARNING(" - Error in openFormattedRegionURL", e);
+    gContactSync.LOGGER.LOG_WARNING(" - Error in openFormattedRegionURL", e);
   }
   try {
     if (openTopWin) {
@@ -404,7 +397,7 @@ com.gContactSync.openURL = function gCS_openURL(aURL) {
     }
   }
   catch (e) {
-    com.gContactSync.LOGGER.LOG_WARNING(" - Error in openTopWin", e);
+    gContactSync.LOGGER.LOG_WARNING(" - Error in openTopWin", e);
   }
   // If all else fails try doing it manually
   try {
@@ -421,26 +414,26 @@ com.gContactSync.openURL = function gCS_openURL(aURL) {
     return;
   }
   catch (e) {
-    com.gContactSync.LOGGER.LOG_WARNING(" - Error opening the URL", e);
+    gContactSync.LOGGER.LOG_WARNING(" - Error opening the URL", e);
   }
-  com.gContactSync.LOGGER.LOG_WARNING("Could not open the URL: " + aURL);
+  gContactSync.LOGGER.LOG_WARNING("Could not open the URL: " + aURL);
   return;
 };
 
 /**
  * Opens the "view source" window with the log file if logging is enabled.
  */
-com.gContactSync.showLog = function gCS_showLog() {
+gContactSync.showLog = function gCS_showLog() {
   try {
-    if (!com.gContactSync.Preferences.mSyncPrefs.enableLogging.value)
-      com.gContactSync.alertWarning(com.gContactSync.StringBundle.getStr("loggingDisabled"));
+    if (!gContactSync.Preferences.mSyncPrefs.enableLogging.value)
+      gContactSync.alertWarning(gContactSync.StringBundle.getStr("loggingDisabled"));
     else
-      window.open("view-source:file://" + com.gContactSync.FileIO.mLogFile.path,
+      window.open("view-source:file://" + gContactSync.FileIO.mLogFile.path,
                   "gContactSyncLog",
                   "chrome=yes,resizable=yes,height=480,width=600");
   }
   catch(e) {
-    com.gContactSync.LOGGER.LOG_WARNING("Unable to open the log", e);
+    gContactSync.LOGGER.LOG_WARNING("Unable to open the log", e);
   }
 };
 
@@ -452,7 +445,7 @@ com.gContactSync.showLog = function gCS_showLog() {
  * @param aURL {string} The URL to fix.
  * @return {string} The URL using https instead of http
  */
-com.gContactSync.fixURL = function gCS_fixURL(aURL) {
+gContactSync.fixURL = function gCS_fixURL(aURL) {
   if (!aURL) {
     return aURL;
   }
@@ -471,13 +464,13 @@ com.gContactSync.fixURL = function gCS_fixURL(aURL) {
  * @param aRedirect {string} The number of times the request was redirected.
  *                           If > 5 then the download attempt will be aborted.
  */
-com.gContactSync.writePhoto = function gCS_writePhoto(aURL, aFilename, aRedirect) {
+gContactSync.writePhoto = function gCS_writePhoto(aURL, aFilename, aRedirect) {
   if (!aURL) {
-    com.gContactSync.LOGGER.LOG_WARNING("No aURL passed to writePhoto");
+    gContactSync.LOGGER.LOG_WARNING("No aURL passed to writePhoto");
     return null;
   }
   if (aRedirect > 5) {
-    com.gContactSync.LOGGER.LOG_WARNING("Caught > 5 redirection attempts, aborting photo download");
+    gContactSync.LOGGER.LOG_WARNING("Caught > 5 redirection attempts, aborting photo download");
     return null;
   }
 
@@ -501,24 +494,24 @@ com.gContactSync.writePhoto = function gCS_writePhoto(aURL, aFilename, aRedirect
     // At least Facebook returns a 302 with a new Location for the photo.
     if (ch.responseStatus == 302) {
       var newURL = ch.getResponseHeader("Location");
-      com.gContactSync.LOGGER.VERBOSE_LOG("Received a 302, Location: " + newURL);
-      return com.gContactSync.writePhoto(newURL, aFilename, aRedirect + 1);
+      gContactSync.LOGGER.VERBOSE_LOG("Received a 302, Location: " + newURL);
+      return gContactSync.writePhoto(newURL, aFilename, aRedirect + 1);
     }
-    com.gContactSync.LOGGER.LOG_WARNING("The request to retrive the photo returned with a status ",
+    gContactSync.LOGGER.LOG_WARNING("The request to retrive the photo returned with a status ",
                                         ch.responseStatus);
     return null;
   }
 
   // Create a name for the photo with the contact's ID and the photo extension
   try {
-    var ext = com.gContactSync.findPhotoExt(ch);
+    var ext = gContactSync.findPhotoExt(ch);
     aFilename += (ext ? "." + ext : "");
   }
   catch (e) {
-    com.gContactSync.LOGGER.LOG_WARNING("Couldn't find an extension for the photo");
+    gContactSync.LOGGER.LOG_WARNING("Couldn't find an extension for the photo");
   }
   file.append(aFilename);
-  com.gContactSync.LOGGER.VERBOSE_LOG(" * Writing the photo to " + file.path);
+  gContactSync.LOGGER.VERBOSE_LOG(" * Writing the photo to " + file.path);
 
   var output = Components.classes["@mozilla.org/network/file-output-stream;1"]
                          .createInstance(Components.interfaces.nsIFileOutputStream);
@@ -559,7 +552,7 @@ com.gContactSync.writePhoto = function gCS_writePhoto(aURL, aFilename, aRedirect
  *                             Photos folder in the profile directory.
  * @returns {nsIFile} The new copy of the photo.
  */
-com.gContactSync.copyPhotoToPhotosDir = function gCS_copyPhotoToPhotosDir(aPhotoFile) {
+gContactSync.copyPhotoToPhotosDir = function gCS_copyPhotoToPhotosDir(aPhotoFile) {
 
   // Get the profile directory
   var file = Components.classes["@mozilla.org/file/directory_service;1"]
@@ -569,7 +562,7 @@ com.gContactSync.copyPhotoToPhotosDir = function gCS_copyPhotoToPhotosDir(aPhoto
   file.append("Photos");
   if (!file.exists() || !file.isDirectory())
     file.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0777);
-  com.gContactSync.LOGGER.VERBOSE_LOG("Copying photo from '" + aPhotoFile.path +
+  gContactSync.LOGGER.VERBOSE_LOG("Copying photo from '" + aPhotoFile.path +
                                       "' to '" + file.path + "'");
   aPhotoFile.copyToFollowingLinks(file, aPhotoFile.leafName);
   file.append(aPhotoFile.leafName);
@@ -588,7 +581,7 @@ com.gContactSync.copyPhotoToPhotosDir = function gCS_copyPhotoToPhotosDir(aPhoto
  *
  * @return The extension of the file, if any, excluding the period.
  */
-com.gContactSync.findPhotoExt = function gCS_findPhotoExt(aChannel) {
+gContactSync.findPhotoExt = function gCS_findPhotoExt(aChannel) {
   var mimeSvc = Components.classes["@mozilla.org/mime;1"]
                           .getService(Components.interfaces.nsIMIMEService),
       ext = "",
@@ -601,29 +594,29 @@ com.gContactSync.findPhotoExt = function gCS_findPhotoExt(aChannel) {
   return ext === "jpe" ? "jpeg" : ext;
 };
 
-com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
-  com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("version04UpgradeStatus"));
-  com.gContactSync.alert(com.gContactSync.StringBundle.getStr("version04UpgradeMessage"));
-  com.gContactSync.LOGGER.LOG("***Upgrading Contacts***");
+gContactSync.version04Upgrade = function gCS_version04Upgrade() {
+  gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr("version04UpgradeStatus"));
+  gContactSync.alert(gContactSync.StringBundle.getStr("version04UpgradeMessage"));
+  gContactSync.LOGGER.LOG("***Upgrading Contacts***");
   var propertiesToReplace = ["_AimScreenName", "TalkScreenName", "ICQScreenName", "YahooScreenName", "MSNScreenName", "JabberScreenName"];
   // Properties that should not have types, but were given types to contacts without an e-mail address.
   var untypedProperties  = ["_GoogleTalk", "_ICQ", "_Yahoo", "_MSN", "_JabberId", "_Skype", "JobTitle", "Company", "Department",
                             "JobDescription", "CompanySymbol", "HomeAddress", "HomeCity", "HomeState", "HomeZipCode", "HomeCountry",
                             "WorkAddress", "WorkCity", "WorkState", "WorkZipCode", "WorkCountry"];
-  var abs = com.gContactSync.GAbManager.getAllAddressBooks(2, true);
-  var updateScreenNames = com.gContactSync.Preferences.mSyncPrefs.v04UpgradeNeeded.value;
+  var abs = gContactSync.GAbManager.getAllAddressBooks(2, true);
+  var updateScreenNames = gContactSync.Preferences.mSyncPrefs.v04UpgradeNeeded.value;
   // For each AB:
   //  Get all contacts
   //   Get all old screennames and move them to the new fields in TB
   //   Remove types for untyped properties
   for (var i in abs) {
-    if (abs[i] instanceof com.gContactSync.GAddressBook) {
+    if (abs[i] instanceof gContactSync.GAddressBook) {
       var contacts = abs[i].getAllContacts();
-      com.gContactSync.LOGGER.LOG(abs[i].getName() + ": " + contacts.length);
+      gContactSync.LOGGER.LOG(abs[i].getName() + ": " + contacts.length);
       for (var j = 0, length = contacts.length; j < length; j++) {
         var contact = contacts[j];
         var needsUpdate = false;
-        com.gContactSync.LOGGER.VERBOSE_LOG("-" + contact.getName());
+        gContactSync.LOGGER.VERBOSE_LOG("-" + contact.getName());
 
         if (updateScreenNames) {
           var typeToName = {
@@ -643,7 +636,7 @@ com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
             var type = contact.getValue(propertiesToReplace[k] + "Type");
             if (type && typeToName[type] && typeToName[type][1] == "") {
               typeToName[type][1] = contact.getValue(propertiesToReplace[k]);
-              com.gContactSync.LOGGER.VERBOSE_LOG(" * " + type + ": " + typeToName[type][1]);
+              gContactSync.LOGGER.VERBOSE_LOG(" * " + type + ": " + typeToName[type][1]);
             }
           }
 
@@ -658,7 +651,7 @@ com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
             if (typeToName[prop][1]) {
               needsUpdate = true;
               contact.setValue(typeToName[prop][0], typeToName[prop][1]);
-              com.gContactSync.LOGGER.VERBOSE_LOG(" * " + typeToName[prop][0] + ": " + typeToName[prop][1]);
+              gContactSync.LOGGER.VERBOSE_LOG(" * " + typeToName[prop][0] + ": " + typeToName[prop][1]);
             }
           }
         }
@@ -673,8 +666,8 @@ com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
       }
     }
   }
-  com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", false);
-  com.gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", false);
+  gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", false);
+  gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", false);
 };
 
 /**
@@ -682,7 +675,7 @@ com.gContactSync.version04Upgrade = function gCS_version04Upgrade() {
  *
  * @param aURL {string} The URL to parse.
  */
-com.gContactSync.parseURLParameters = function gCS_parseURLParameters(aURL) {
+gContactSync.parseURLParameters = function gCS_parseURLParameters(aURL) {
   var ret = {};
   var params = aURL.split("?")[1].split("&");
   for (var i in params) {

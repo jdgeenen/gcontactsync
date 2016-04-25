@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * AbListener is a listener for the Address Book that is currently only used to
@@ -44,7 +43,7 @@ if (!com.gContactSync) com.gContactSync = {};
  * them.
  * @class
  */
-com.gContactSync.AbListener = {
+gContactSync.AbListener = {
   /**
    * Unused.
    * @param aParentDir The parent directory to which an item was added.
@@ -76,7 +75,7 @@ com.gContactSync.AbListener = {
 
     // if a contact was removed and there is not an ongoing synchronization
     if (aItem instanceof Components.interfaces.nsIAbCard &&
-        !com.gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
+        !gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
       // if a contact was removed from just a mailing list, update the contact's
       // last modified date in the parent address book
       if (aParentDir.isMailList) {
@@ -88,14 +87,14 @@ com.gContactSync.AbListener = {
           uri = uri.substring(0, uri.lastIndexOf("/"));
           // the parent of aParentDir (aParentDir is a mailing list, dir is the
           // directory in which aParentDir is stored)
-          var dir = new com.gContactSync.GAddressBook(com.gContactSync.AbManager.getAbByURI(uri));
-          var contact = new com.gContactSync.TBContact(aItem, dir);
+          var dir = new gContactSync.GAddressBook(gContactSync.AbManager.getAbByURI(uri));
+          var contact = new gContactSync.TBContact(aItem, dir);
           // set the last modified date and update the card
           contact.setValue("LastModifiedDate", now);
           contact.update();
         }
         catch (e) {
-          com.gContactSync.LOGGER.LOG_WARNING("Error updating card after being removed: " + 
+          gContactSync.LOGGER.LOG_WARNING("Error updating card after being removed: " + 
                              aItem + " " + uri + " " + now, e);
         }
       }
@@ -117,7 +116,7 @@ com.gContactSync.AbListener = {
           return aDirectory.getDirUri();
      } 
     } catch (e) { error = e; }
-    com.gContactSync.LOGGER.LOG_WARNING("AbListener could not get a URI for: " + aDirectory,
+    gContactSync.LOGGER.LOG_WARNING("AbListener could not get a URI for: " + aDirectory,
                        error);
     return "";
   },
@@ -132,13 +131,13 @@ com.gContactSync.AbListener = {
       flags = Components.interfaces.nsIAbListener.directoryItemRemoved;
       Components.classes["@mozilla.org/abmanager;1"]
                 .getService(Components.interfaces.nsIAbManager)
-                .addAddressBookListener(com.gContactSync.AbListener, flags);
+                .addAddressBookListener(gContactSync.AbListener, flags);
     }
     else { // Thunderbird 2
       flags = Components.interfaces.nsIAddrBookSession.directoryItemRemoved;
       Components.classes["@mozilla.org/addressbook/services/session;1"]
                 .getService(Components.interfaces.nsIAddrBookSession)
-                .addAddressBookListener(com.gContactSync.AbListener, flags);
+                .addAddressBookListener(gContactSync.AbListener, flags);
     }
   },
   /**
@@ -148,10 +147,10 @@ com.gContactSync.AbListener = {
     if (Components.classes["@mozilla.org/abmanager;1"]) // Thunderbird 3
       Components.classes["@mozilla.org/abmanager;1"]
                 .getService(Components.interfaces.nsIAbManager)
-                .removeAddressBookListener(com.gContactSync.AbListener);
+                .removeAddressBookListener(gContactSync.AbListener);
     else // Thunderbird 2
       Components.classes["@mozilla.org/addressbook/services/session;1"]
                 .getService(Components.interfaces.nsIAddrBookSession)
-                .removeAddressBookListener(com.gContactSync.AbListener);
+                .removeAddressBookListener(gContactSync.AbListener);
   }
 };

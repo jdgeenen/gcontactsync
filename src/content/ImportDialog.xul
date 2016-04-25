@@ -53,7 +53,7 @@
         <menupopup id="ABListPopup" class="addrbooksPopup" writable="true"
                    supportsmaillists="true"/>
       </menulist>
-      <button id="NewABButton" label="&NewABButton.label;" accesskey="&NewABButton.accesskey;" oncommand="com.gContactSync.ImportDialog.newAddressBook();"/>
+      <button id="NewABButton" label="&NewABButton.label;" accesskey="&NewABButton.accesskey;" oncommand="gContactSync.ImportDialog.newAddressBook();"/>
     </hbox>
     <checkbox id="MergeCheckbox" label="&MergeContacts.label;" accesskey="&MergeContacts.accesskey;" checked="true"/>
     <spacer />

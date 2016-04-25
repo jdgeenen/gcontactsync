@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * A simple class for storing information about how Google represents a contact
@@ -54,15 +53,15 @@ if (!com.gContactSync) com.gContactSync = {};
  * @constructor
  * @class
  */
-com.gContactSync.GElement = function gCS_GElement(aType, aTagName, aNamespace, aValidTypes, aAttribute) {
+gContactSync.GElement = function gCS_GElement(aType, aTagName, aNamespace, aValidTypes, aAttribute) {
   this.contactType = aType;
   this.tagName     = aTagName;
   this.namespace = aNamespace;
   switch (aType) {
-  case com.gContactSync.gdata.contacts.types.TYPED_WITH_ATTR:
+  case gContactSync.gdata.contacts.types.TYPED_WITH_ATTR:
     this.attribute = aAttribute;
   // fall through
-  case com.gContactSync.gdata.contacts.types.TYPED_WITH_CHILD:
+  case gContactSync.gdata.contacts.types.TYPED_WITH_CHILD:
     this.types = aValidTypes;
     break;
   }  
