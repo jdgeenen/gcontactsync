@@ -46,7 +46,9 @@ var gContactSync = gContactSync || {};
  * <li>0 (offline): use <b>mOnError</b></li>
  * <li>200 (OK): use <b>mOnSuccess</b></li>
  * <li>201 (CREATED): use <b>mOnCreated</b></li>
+ * <li>400 (BAD REQUEST): use <b>mOn401</b></li>
  * <li>401 (UNAUTHORIZED): use <b>mOn401</b></li>
+ * <li>403 (FORBIDDEN): use <b>mOn401</b></li>
  * <li>503 (SERVICE_UNAVAILABLE): use <b>mOn503</b></li>
  * <li>&lt;anything else&gt;: use <b>mOnError</b></li>
  * </ul>
@@ -216,7 +218,9 @@ gContactSync.HttpRequest.prototype = {
         case 200: // 200 OK
           callback = onSuccess;
           break;
+        case 400: // 400 Bad Request (typically invalid_grant)
         case 401: // 401 Unauthorized (Token Expired in Gmail)
+        case 403: // 403 Forbidden (typically invalid_grant caused by username/token mismatch)
           callback = on401 || onFail;
           break;
         case 503: // 503 Service unavailble (Server is busy, user exceeded quota, etc.)
