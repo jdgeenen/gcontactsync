@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2012
+ * Portions created by the Initial Developer are Copyright (C) 2012-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 // Note load/unload listeners are in Import.js so it knows when this dialog is
 // closed and so this dialog has to include as few scripts as possible.
@@ -45,16 +44,16 @@ if (!com.gContactSync) com.gContactSync = {};
  * The JavaScript variables and functions required for the Import dialog.
  * @class
  */
-com.gContactSync.ImportDialog = {
+gContactSync.ImportDialog = {
   /**
    * Creates and returns a new address book after requesting a name for it.
    * If an AB of any type already exists this function will do nothing.
    */
   newAddressBook: function ImportDialog_newAddressBook() {
-    var name = com.gContactSync.prompt(com.gContactSync.StringBundle.getStr("newABPrompt"), null, window);
+    var name = gContactSync.prompt(gContactSync.StringBundle.getStr("newABPrompt"), null, window);
     if (!name)
       return false;
-    var ab = new com.gContactSync.AddressBook(com.gContactSync.AbManager.getAbByName(name));
+    var ab = new gContactSync.AddressBook(gContactSync.AbManager.getAbByName(name));
     var menu = document.getElementById("ABList");
     menu.appendItem(ab.getName(), ab.mURI);
     menu.value = ab.mURI;

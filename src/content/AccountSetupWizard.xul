@@ -49,7 +49,7 @@
 
 <wizard id="newAccountWizard" title="&title.label;"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        onwizardfinish="com.gContactSync.AccountSetupWizard.finish();"
+        onwizardfinish="gContactSync.AccountSetupWizard.finish();"
         height="740px"
         width="700px">
   <script type="application/x-javascript"
@@ -97,7 +97,7 @@
                   src="chrome://gContactSync/locale/gcontactsync.properties"/>
   </stringbundleset>
 
-  <wizardpage onpageadvanced="return com.gContactSync.AccountSetupWizard.advanceAccountPage();"
+  <wizardpage onpageadvanced="return gContactSync.AccountSetupWizard.advanceAccountPage();"
               pageid="accountPage"
               id="accountPage"
               next="oauthPage">
@@ -106,7 +106,7 @@
     </description>
 
     <radiogroup id="accountOption"
-                onselect="com.gContactSync.AccountSetupWizard.updateAccountIDs();">
+                onselect="gContactSync.AccountSetupWizard.updateAccountIDs();">
       <radio id="existingAccount"
              label="&existingAccount.label;"
              accesskey="&existingAccount.accesskey;"
@@ -125,7 +125,7 @@
   </wizardpage>
   <wizardpage description="&accountSettings.description;"
               onpagerewound="document.getElementById('newAccountWizard').canAdvance = true;"
-              onpageshow="com.gContactSync.AccountSetupWizard.loadOAuthPage();"
+              onpageshow="gContactSync.AccountSetupWizard.loadOAuthPage();"
               pageid="oauthPage"
               id="oauthPage"
               next="settingsPage">
@@ -134,8 +134,8 @@
     </hbox>
   </wizardpage>
   <wizardpage description="&accountSettings.description;"
-              onpagerewound="com.gContactSync.AccountSetupWizard.mAuthToken='';"
-              onpageshow="com.gContactSync.AccountSetupWizard.setupAccountSettings();"
+              onpagerewound="gContactSync.AccountSetupWizard.mAuthToken='';"
+              onpageshow="gContactSync.AccountSetupWizard.setupAccountSettings();"
               id="settingsPage"
               pageid="settingsPage">
     <label control="abName" value="&abName.value;" accesskey="&abName.accesskey;"/>
@@ -146,7 +146,7 @@
       <button id="newABButton"
               label="&newABButton.label;"
               accesskey="&newABButton.accesskey;"
-              oncommand="com.gContactSync.AccountSetupWizard.newAddressBook();"/>
+              oncommand="gContactSync.AccountSetupWizard.newAddressBook();"/>
     </hbox>
     <spacer height="5px"/>
     <label control="Groups" value="&Groups.label;" accesskey="&Groups.accesskey;"/>
@@ -162,7 +162,7 @@
         </menupopup>
       </menulist>
       <button id="GetGroups"
-              oncommand="com.gContactSync.Accounts.getAllGroups(com.gContactSync.AccountSetupWizard.mEmailAddress);"
+              oncommand="gContactSync.Accounts.getAllGroups(gContactSync.AccountSetupWizard.mEmailAddress);"
               label="&GetGroups.label;"
               accesskey="&GetGroups.accesskey;"/>
     </hbox>
@@ -170,7 +170,7 @@
     <hbox>
       <label control="SyncDirection"  value="&SyncDirection.label;" accesskey="&SyncDirection.accesskey;"/>
       <label id="link-label"    value="&DirectionHelp.label;"
-             onclick="com.gContactSync.Accounts.directionPopup();"/>
+             onclick="gContactSync.Accounts.directionPopup();"/>
     </hbox>
     <menulist id="SyncDirection">
       <menupopup id="SyncDirectionPopup">

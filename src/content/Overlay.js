@@ -11,11 +11,11 @@
  * for the specific language governing rights and limitations under the
  * License.
  *
- * The Original Code is gContactSync.
+ * The Original Code is gContactSync6
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2015
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,15 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 window.addEventListener("load",
   /** Initializes the FileIO class when the window has finished loading */
   function gCS_overlayLoadListener() {
     window.removeEventListener("load", gCS_overlayLoadListener, false);
-    com.gContactSync.Overlay.initialize();
+    gContactSync.Overlay.initialize();
   },
 false);
 
@@ -52,7 +51,7 @@ false);
  * login window.
  * @class
  */
-com.gContactSync.Overlay = {
+gContactSync.Overlay = {
   /** The last version of gContactSync */
   mLastVersionMajor:   0,
   mLastVersionMinor:   0,
@@ -64,37 +63,37 @@ com.gContactSync.Overlay = {
    */
   initialize: function Overlay_initialize() {
     // Find the last version of gContactSync and set the pref to the current
-    this.mLastVersionMajor   = com.gContactSync.Preferences.mSyncPrefs.lastVersionMajor.value;
-    this.mLastVersionMinor   = com.gContactSync.Preferences.mSyncPrefs.lastVersionMinor.value;
-    this.mLastVersionRelease = com.gContactSync.Preferences.mSyncPrefs.lastVersionRelease.value;
-    this.mLastVersionSuffix  = com.gContactSync.Preferences.mSyncPrefs.lastVersionSuffix.value;
-    com.gContactSync.AbListener.add(); // add the address book listener
+    this.mLastVersionMajor   = gContactSync.Preferences.mSyncPrefs.lastVersionMajor.value;
+    this.mLastVersionMinor   = gContactSync.Preferences.mSyncPrefs.lastVersionMinor.value;
+    this.mLastVersionRelease = gContactSync.Preferences.mSyncPrefs.lastVersionRelease.value;
+    this.mLastVersionSuffix  = gContactSync.Preferences.mSyncPrefs.lastVersionSuffix.value;
+    gContactSync.AbListener.add(); // add the address book listener
 
     // call the unload function when the address book window is shut
     window.addEventListener("unload", function unloadListener(e) {
       window.removeEventListener("unload", unloadListener, false);
-      com.gContactSync.Overlay.unload();
+      gContactSync.Overlay.unload();
     }, false);
   },
   /**
    * Called when the overlay is unloaded and removes the address book listener.
    */
   unload: function Overlay_unload() {
-    com.gContactSync.AbListener.remove();
+    gContactSync.AbListener.remove();
   },
   /**
    * Sets the text of the status bar to the given value.
    * @param aText {string} The text to put on the status bar.
    */
   setStatusBarText: function Overlay_setStatusBarText(aText) {
-    com.gContactSync.Preferences.setSyncPref("statusBarText", aText);
+    gContactSync.Preferences.setSyncPref("statusBarText", aText);
   },
   /**
    * Gets the text of the status bar.
    * @returns {string} The text of the status bar
    */
   getStatusBarText: function Overlay_getStatusBarText() {
-    return com.gContactSync.Preferences.mSyncPrefs.statusBarText.value;
+    return gContactSync.Preferences.mSyncPrefs.statusBarText.value;
   },
   /**
    * Writes the current time to the status bar along with the sync finished
@@ -105,7 +104,7 @@ com.gContactSync.Overlay = {
     var hours   = String(new Date().getHours()),
         minutes = String(new Date().getMinutes()),
         seconds = String(new Date().getSeconds()),
-        text    = com.gContactSync.StringBundle.getStr("syncFinishedString");
+        text    = gContactSync.StringBundle.getStr("syncFinishedString");
     // Add any missing 0's to the times
     hours       = hours.length   === 0 ? "00" + hours   : hours;
     hours       = hours.length   === 1 ?  "0" + hours   : hours;
@@ -126,8 +125,8 @@ com.gContactSync.Overlay = {
       // when the setup window loads, set its onunload property to begin a sync
       wizard.onload = function onloadListener() {
         wizard.onunload = function onunloadListener() {
-          if (com.gContactSync.gdata.isAuthValid()) {
-            com.gContactSync.Sync.begin(true, null);
+          if (gContactSync.gdata.isAuthValid()) {
+            gContactSync.Sync.begin(true, null);
           }
         };
       };
@@ -137,13 +136,13 @@ com.gContactSync.Overlay = {
    * Updates the current version in the gContactSync preferences.
    */
   updateVersion: function MessengerOverlay_updateVersion() {
-    com.gContactSync.Preferences.setSyncPref("lastVersionMajor",
-                                             com.gContactSync.versionMajor);
-    com.gContactSync.Preferences.setSyncPref("lastVersionMinor",
-                                             com.gContactSync.versionMinor);
-    com.gContactSync.Preferences.setSyncPref("lastVersionRelease",
-                                             com.gContactSync.versionRelease);
-    com.gContactSync.Preferences.setSyncPref("lastVersionSuffix",
-                                             com.gContactSync.versionSuffix);
+    gContactSync.Preferences.setSyncPref("lastVersionMajor",
+                                             gContactSync.versionMajor);
+    gContactSync.Preferences.setSyncPref("lastVersionMinor",
+                                             gContactSync.versionMinor);
+    gContactSync.Preferences.setSyncPref("lastVersionRelease",
+                                             gContactSync.versionRelease);
+    gContactSync.Preferences.setSyncPref("lastVersionSuffix",
+                                             gContactSync.versionSuffix);
   }
 };

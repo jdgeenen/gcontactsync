@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2010-2015
+ * Portions created by the Initial Developer are Copyright (C) 2010-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,16 +34,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 window.addEventListener("load",
   /** Initializes the MessengerOverlay class when the window has finished loading */
   function gCS_mainOverlayLoadListener() {
     window.removeEventListener("load", gCS_mainOverlayLoadListener, false);
     // introduce a slight delay before initializing to let FileIO load in TB 2
-    setTimeout(com.gContactSync.MessengerOverlay.initialize, 100);
+    setTimeout(gContactSync.MessengerOverlay.initialize, 100);
   },
 false);
 
@@ -53,7 +52,7 @@ false);
  * Also resets the needRestart pref to false.
  * @class
  */
-com.gContactSync.MessengerOverlay = {
+gContactSync.MessengerOverlay = {
   /**
    * The original SetBusyCursor function that throws exceptions after
    * gContactSync synchronizes from messenger.xul.
@@ -66,37 +65,37 @@ com.gContactSync.MessengerOverlay = {
    */
   initialize: function MessengerOverlay_initialize() {
     // reset the needRestart pref
-    com.gContactSync.Preferences.setSyncPref("needRestart", false);
+    gContactSync.Preferences.setSyncPref("needRestart", false);
 
     // Perform log rotation
-    com.gContactSync.MessengerOverlay.rotateLog(Math.max(1, com.gContactSync.Preferences.mSyncPrefs.numLogsInRotation.value));
+    gContactSync.MessengerOverlay.rotateLog(Math.max(1, gContactSync.Preferences.mSyncPrefs.numLogsInRotation.value));
 
     // override SetBusyCursor to wrap it in a try/catch block as it and
     // this add-on do not get along...
-    com.gContactSync.MessengerOverlay.mOriginalSetBusyCursor = SetBusyCursor;
-    SetBusyCursor = com.gContactSync.MessengerOverlay.SetBusyCursor;
+    gContactSync.MessengerOverlay.mOriginalSetBusyCursor = SetBusyCursor;
+    SetBusyCursor = gContactSync.MessengerOverlay.SetBusyCursor;
 
     // log some basic system and application info
-    com.gContactSync.LOGGER.LOG(
+    gContactSync.LOGGER.LOG(
         "Loading gContactSync at " + new Date() +
-        "\n * Version is:       " + com.gContactSync.getVersionString() +
-        "\n * Last version was: " + com.gContactSync.getVersionString(true) +
+        "\n * Version is:       " + gContactSync.getVersionString() +
+        "\n * Last version was: " + gContactSync.getVersionString(true) +
         "\n * User Agent:       " + navigator.userAgent +
-        "\n * Log location:     " + com.gContactSync.FileIO.mLogFile.path +
+        "\n * Log location:     " + gContactSync.FileIO.mLogFile.path +
         "\n");
 
     // Preferences.js is loaded before MessengerOverlay so the preferences are logged to the previous log file
     // in the rotation (if any).  If verbose logging is enabled get the prefs again to log them.
-    if (com.gContactSync.Preferences.mSyncPrefs.verboseLog.value) {
-      com.gContactSync.Preferences.getSyncPrefs();
+    if (gContactSync.Preferences.mSyncPrefs.verboseLog.value) {
+      gContactSync.Preferences.getSyncPrefs();
     }
 
-    var lastVersionMajor   = com.gContactSync.Preferences.mSyncPrefs.lastVersionMajor.value;
-    var lastVersionMinor   = com.gContactSync.Preferences.mSyncPrefs.lastVersionMinor.value;
-    var lastVersionRelease = com.gContactSync.Preferences.mSyncPrefs.lastVersionRelease.value;
-    var lastVersionSuffix  = com.gContactSync.Preferences.mSyncPrefs.lastVersionSuffix.value;
+    var lastVersionMajor   = gContactSync.Preferences.mSyncPrefs.lastVersionMajor.value;
+    var lastVersionMinor   = gContactSync.Preferences.mSyncPrefs.lastVersionMinor.value;
+    var lastVersionRelease = gContactSync.Preferences.mSyncPrefs.lastVersionRelease.value;
+    var lastVersionSuffix  = gContactSync.Preferences.mSyncPrefs.lastVersionSuffix.value;
 
-    com.gContactSync.Preferences.setSyncPref("synchronizing", false);
+    gContactSync.Preferences.setSyncPref("synchronizing", false);
 
     // If this is the first time gContactSync is running (or the user never setup an account)
     // run the setup wizard.
@@ -108,22 +107,22 @@ com.gContactSync.MessengerOverlay = {
       runSetupWizard = true;
     } else if (((lastVersionMajor === 0) && (lastVersionMinor < 4)) ||
         ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && (lastVersionSuffix.charAt(0) === "a"))) {
-      com.gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", true);
+      gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", true);
     } else if ((lastVersionMajor === 0) && (lastVersionMinor === 4) && (lastVersionRelease === 0) && (lastVersionSuffix.length > 0) && ((lastVersionSuffix.charAt(0) === "a") || (lastVersionSuffix.charAt(0) === "b"))) {
-      com.gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", true);
+      gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", true);
     }
-    if (com.gContactSync.Preferences.mSyncPrefs.overrideGetCardForEmail.value) {
+    if (gContactSync.Preferences.mSyncPrefs.overrideGetCardForEmail.value) {
       try {
-        com.gContactSync.MessengerOverlay.originalGetCardForEmail = getCardForEmail;
-        getCardForEmail = com.gContactSync.MessengerOverlay.getCardForEmail;
+        gContactSync.MessengerOverlay.originalGetCardForEmail = getCardForEmail;
+        getCardForEmail = gContactSync.MessengerOverlay.getCardForEmail;
       } catch (e) {}
     }
     // Check for an auth token and either schedule a sync if at least one exists or show the new account wizard otherwise.
     if (runSetupWizard) {
-      com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr("notAuth"));
-      com.gContactSync.Overlay.openAccountWizard(true);
+      gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr("notAuth"));
+      gContactSync.Overlay.openAccountWizard(true);
     } else {
-      com.gContactSync.Sync.schedule(com.gContactSync.Preferences.mSyncPrefs.initialDelayMinutes.value * 60000);
+      gContactSync.Sync.schedule(gContactSync.Preferences.mSyncPrefs.initialDelayMinutes.value * 60000);
     }
   },
   /**
@@ -131,8 +130,8 @@ com.gContactSync.MessengerOverlay = {
    * @param numLogsInRotation The total number of logs in the rotation.  Must be at least 1.
    */
   rotateLog: function MessengerOverlay_rotateLog(numLogsInRotation) {
-    var file = com.gContactSync.FileIO.getProfileDirectory();
-    file.append(com.gContactSync.FileIO.fileNames.FOLDER_NAME);
+    var file = gContactSync.FileIO.getProfileDirectory();
+    file.append(gContactSync.FileIO.fileNames.FOLDER_NAME);
 
     // Remove the last file in the rotation
     var lastName = this.getLogFileNameFromNumber(numLogsInRotation - 1);
@@ -156,7 +155,7 @@ com.gContactSync.MessengerOverlay = {
    * @return {string} The name of the log file at the given index.
    */
   getLogFileNameFromNumber: function MessengerOverlay_getLogFileNameFromNumber(i) {
-    var fileName = com.gContactSync.FileIO.fileNames.LOG_FILE;
+    var fileName = gContactSync.FileIO.fileNames.LOG_FILE;
     if (i) {fileName = fileName.replace(/log/, "log" + i);}
     return fileName;
   },
@@ -169,10 +168,10 @@ com.gContactSync.MessengerOverlay = {
    */
   SetBusyCursor: function MessengerOverlay_SetBusyCursor() {
     try {
-      com.gContactSync.MessengerOverlay.mOriginalSetBusyCursor.apply(this, arguments);
+      gContactSync.MessengerOverlay.mOriginalSetBusyCursor.apply(this, arguments);
     }
     catch (e) {
-      com.gContactSync.LOGGER.VERBOSE_LOG("SetBusyCursor threw an exception.");
+      gContactSync.LOGGER.VERBOSE_LOG("SetBusyCursor threw an exception.");
     }
   },
  /**
@@ -222,8 +221,8 @@ com.gContactSync.MessengerOverlay = {
           result.card = card;
           // used in case ContactPhotos is installed
           try {
-            com.ContactPhotos.mCurrentAb      = ab;
-            com.ContactPhotos.mCurrentContact = card;
+            ContactPhotos.mCurrentAb      = ab;
+            ContactPhotos.mCurrentContact = card;
           } catch (e) {}
           return result;
         }

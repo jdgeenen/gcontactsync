@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2010
+ * Portions created by the Initial Developer are Copyright (C) 2010-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,16 +34,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Stores synchronization summary data.
  * 
  * @class
  */
-com.gContactSync.SyncSummaryData = function gCS_SyncSummaryData() {
+gContactSync.SyncSummaryData = function gCS_SyncSummaryData() {
   
   this.mLocal = {
     mAdded:      0,
@@ -67,7 +66,7 @@ com.gContactSync.SyncSummaryData = function gCS_SyncSummaryData() {
  *
  * @param aSummaryData {SyncSummaryData} The SyncSummaryData to add.
  */
-com.gContactSync.SyncSummaryData.prototype.addSummary = function SyncSummaryData_addSummary(aSummaryData) {
+gContactSync.SyncSummaryData.prototype.addSummary = function SyncSummaryData_addSummary(aSummaryData) {
 
   // Local data
   this.mLocal.mAdded       += aSummaryData.mLocal.mAdded;
@@ -96,17 +95,17 @@ com.gContactSync.SyncSummaryData.prototype.addSummary = function SyncSummaryData
  * @param aOverall {boolean} Set this to true to show the overall summary
  *                           instead of a summary for the current AB.
  */
-com.gContactSync.SyncSummaryData.prototype.print = function SyncSummaryData_print(aAlert, aOverall) {
+gContactSync.SyncSummaryData.prototype.print = function SyncSummaryData_print(aAlert, aOverall) {
   var getStr = function specialGetStr(aName) {
-    return com.gContactSync.StringBundle.getStr(aName).replace(/%/g, " ");
+    return gContactSync.StringBundle.getStr(aName).replace(/%/g, " ");
   }
   var msg = "*****";
-  if (aOverall || !com.gContactSync.Sync.mCurrentAb) {
+  if (aOverall || !gContactSync.Sync.mCurrentAb) {
     msg += getStr('countOverallSummary');
   } else {
     msg +=
       getStr('countSummaryFor') + " '" +
-        com.gContactSync.Sync.mCurrentAb.getName() +
+        gContactSync.Sync.mCurrentAb.getName() +
         "'";
   }
   msg +=  "*****" +
@@ -138,10 +137,10 @@ com.gContactSync.SyncSummaryData.prototype.print = function SyncSummaryData_prin
       this.mRemote.mIgnored +
       "\t" + getStr('countWriteOnlyMode') +
     "\n*****" + getStr('countEndSummary') + "*****";
-  com.gContactSync.LOGGER.LOG("\n" + msg + "\n");
+  gContactSync.LOGGER.LOG("\n" + msg + "\n");
   if (aAlert) {
     // Alert dialogs aren't monospaced so replace all whitespace with a single
     // space
-    com.gContactSync.alert(msg.replace(/[ ]{2,}/g, " "));
+    gContactSync.alert(msg.replace(/[ ]{2,}/g, " "));
   }
 }

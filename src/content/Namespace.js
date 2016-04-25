@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Stores the prefix and URL for a namespace.
@@ -45,7 +44,7 @@ if (!com.gContactSync) com.gContactSync = {};
  * @constructor
  * @class
  */
-com.gContactSync.Namespace = function gCS_Namespace(aUrl, aPrefix) {
+gContactSync.Namespace = function gCS_Namespace(aUrl, aPrefix) {
   this.url    = aUrl;
   this.prefix = aPrefix;
 }

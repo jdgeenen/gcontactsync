@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * A class for a Thunderbird Address Book with methods to add, modify, obtain, 
@@ -45,13 +44,13 @@ if (!com.gContactSync) com.gContactSync = {};
  * @constructor
  * @class
  */
-com.gContactSync.AddressBook = function gCS_AddressBook(aDirectory) {
+gContactSync.AddressBook = function gCS_AddressBook(aDirectory) {
   this.mDirectory = aDirectory;
   // make sure the directory is valid
   if (!this.isDirectoryValid(this.mDirectory))
     throw "Invalid directory supplied to the AddressBook constructor" +
           "\nCalled by: " + this.caller +
-          com.gContactSync.StringBundle.getStr("pleaseReport");
+          gContactSync.StringBundle.getStr("pleaseReport");
   // get the directory's URI
   if (this.mDirectory.URI)
     this.mURI = this.mDirectory.URI;
@@ -61,7 +60,7 @@ com.gContactSync.AddressBook = function gCS_AddressBook(aDirectory) {
   }
 };
 
-com.gContactSync.AddressBook.prototype = {
+gContactSync.AddressBook.prototype = {
   /** The Uniform Resource Identifier (URI) of the directory */
   mURI:         {},
   /** The cards within this address book */
@@ -74,17 +73,17 @@ com.gContactSync.AddressBook.prototype = {
    * @returns {TBContact} The newly-added contact.
    */
   addContact: function AddressBook_addContact(aContact) {
-    if (!(aContact instanceof com.gContactSync.TBContact)) {
+    if (!(aContact instanceof gContactSync.TBContact)) {
       throw "Invalid aContact sent to AddressBook.addContact";
     }
     try {
-      var newContact = new com.gContactSync.TBContact(this.mDirectory.addCard(aContact.mContact),
+      var newContact = new gContactSync.TBContact(this.mDirectory.addCard(aContact.mContact),
                                                       this);
       this.mContacts.push(newContact);
       return newContact;
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_ERROR("Unable to add card to the directory with URI: " +
+      gContactSync.LOGGER.LOG_ERROR("Unable to add card to the directory with URI: " +
                        this.mURI, e);
     }
     return null;
@@ -101,7 +100,7 @@ com.gContactSync.AddressBook.prototype = {
       while (iter.hasMoreElements()) {
         data = iter.getNext();
         if (data instanceof Components.interfaces.nsIAbCard && !data.isMailList)
-          this.mContacts.push(new com.gContactSync.TBContact(data, this));
+          this.mContacts.push(new gContactSync.TBContact(data, this));
       }
     }
     else if (iter instanceof Components.interfaces.nsIEnumerator) { // TB 2
@@ -112,17 +111,17 @@ com.gContactSync.AddressBook.prototype = {
           data = iter.currentItem();
           if (data instanceof Components.interfaces.nsIAbCard &&
               !data.isMailList)
-            this.mContacts.push(new com.gContactSync.TBContact(data, this));
+            this.mContacts.push(new gContactSync.TBContact(data, this));
           iter.next();
         } while (Components.lastResult === 0);
       // An error is expected when finished
       }
       catch (e) {
-        com.gContactSync.LOGGER.VERBOSE_LOG("(This error is expected): " + e);
+        gContactSync.LOGGER.VERBOSE_LOG("(This error is expected): " + e);
       }
     }
     else {
-      com.gContactSync.LOGGER.LOG_ERROR("Could not iterate through an address book's contacts");
+      gContactSync.LOGGER.LOG_ERROR("Could not iterate through an address book's contacts");
       throw "Couldn't find an address book's contacts";
     }
     return this.mContacts;
@@ -135,7 +134,7 @@ com.gContactSync.AddressBook.prototype = {
    */
   getAllLists: function AddressBook_getAllLists(skipGetCards) {
     // same in Thunderbird 2 and 3
-    com.gContactSync.LOGGER.VERBOSE_LOG("Searching for mailing lists:");
+    gContactSync.LOGGER.VERBOSE_LOG("Searching for mailing lists:");
     var iter = this.mDirectory.childNodes,
         obj = {},
         list,
@@ -146,7 +145,7 @@ com.gContactSync.AddressBook.prototype = {
       if (data instanceof Components.interfaces.nsIAbDirectory && data.isMailList) {
         list    = this.newListObj(data, this, skipGetCards);
         obj.push(list);
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * " + list.getName() + " - " + id);
+        gContactSync.LOGGER.VERBOSE_LOG(" * " + list.getName() + " - " + id);
       }
     }
     return obj;
@@ -208,15 +207,15 @@ com.gContactSync.AddressBook.prototype = {
       return;
     var arr,
         i = 0;
-    if (com.gContactSync.AbManager.mVersion === 3) { // TB 3
+    if (gContactSync.AbManager.mVersion === 3) { // TB 3
       arr = Components.classes["@mozilla.org/array;1"]
                       .createInstance(Components.interfaces.nsIMutableArray);
       for (; i < aContacts.length; i++) {
-        if (aContacts[i] instanceof com.gContactSync.TBContact) {
+        if (aContacts[i] instanceof gContactSync.TBContact) {
           arr.appendElement(aContacts[i].mContact, false);
         }
         else {
-          com.gContactSync.LOGGER.LOG_WARNING("Found an invalid contact sent " +
+          gContactSync.LOGGER.LOG_WARNING("Found an invalid contact sent " +
                                               "AddressBook.deleteContacts");
         }
       }
@@ -225,11 +224,11 @@ com.gContactSync.AddressBook.prototype = {
       arr =  Components.classes["@mozilla.org/supports-array;1"]
                        .createInstance(Components.interfaces.nsISupportsArray);
       for (; i < aContacts.length; i++) {
-        if (aContacts[i] instanceof com.gContactSync.TBContact) {
+        if (aContacts[i] instanceof gContactSync.TBContact) {
           arr.AppendElement(aContacts[i].mContact, false);
         }
         else {
-          com.gContactSync.LOGGER.LOG_WARNING("Found an invalid contact sent " +
+          gContactSync.LOGGER.LOG_WARNING("Found an invalid contact sent " +
                                               "AddressBook.deleteContacts");
         }
       }
@@ -241,7 +240,7 @@ com.gContactSync.AddressBook.prototype = {
       }
     }
     catch (e) {
-      com.gContactSync.LOGGER.LOG_WARNING("Error while deleting cards from an AB", e);
+      gContactSync.LOGGER.LOG_WARNING("Error while deleting cards from an AB", e);
     }
   },
   /**
@@ -249,7 +248,7 @@ com.gContactSync.AddressBook.prototype = {
    * @param aContact {TBContact} The card to update.
    */
   updateContact: function AddressBook_updateContact(aContact) {
-    if (!(aContact instanceof com.gContactSync.TBContact)) {
+    if (!(aContact instanceof gContactSync.TBContact)) {
       throw "Invalid aContact sent to AddressBook.updateContact";
     }
     this.mContactsUpdate = true;
@@ -269,7 +268,7 @@ com.gContactSync.AddressBook.prototype = {
     var list = aList && aList.mList ? aList.mList : aList;
     if (!list || !(list instanceof Components.interfaces.nsIAbDirectory) || !list.isMailList) {
       throw "Invalid list: " + aList + " sent to the '" + aMethodName +
-            "' method" +  com.gContactSync.StringBundle.getStr("pleaseReport");
+            "' method" +  gContactSync.StringBundle.getStr("pleaseReport");
     }
   },
   /**
@@ -282,7 +281,7 @@ com.gContactSync.AddressBook.prototype = {
     if (!this.isDirectoryValid(aDirectory))
       throw "Invalid Directory: " + aDirectory + " sent to the '" +
             aMethodName + "' method" +
-            com.gContactSync.StringBundle.getStr("pleaseReport");
+            gContactSync.StringBundle.getStr("pleaseReport");
   },
   /**
    * Checks the validity of a directory and returns false if it is invalid.
@@ -291,7 +290,7 @@ com.gContactSync.AddressBook.prototype = {
   isDirectoryValid: function AddressBook_isDirectoryValid(aDirectory) {
     return aDirectory && aDirectory instanceof Components.interfaces.nsIAbDirectory &&
            aDirectory.dirName !== "" &&
-          (com.gContactSync.AbManager.mVersion === 3 || 
+          (gContactSync.AbManager.mVersion === 3 || 
            aDirectory instanceof Components.interfaces.nsIAbMDBDirectory);
   },
   /**
@@ -300,7 +299,7 @@ com.gContactSync.AddressBook.prototype = {
    * @returns {TBContact} A new TBContact in this address book.
    */
   newContact: function AddressBook_newContact() {
-    return this.addContact(new com.gContactSync
+    return this.addContact(new gContactSync
                                   .TBContact(Components.classes["@mozilla.org/addressbook/cardproperty;1"]
                                                        .createInstance(Components.interfaces.nsIAbCard),
                                              this));
@@ -333,7 +332,7 @@ com.gContactSync.AddressBook.prototype = {
    *                     second emails are the same.
    */
   hasContact: function AddressBook_hasContact(aContact) {
-    if (!(aContact instanceof com.gContactSync.TBContact)) {
+    if (!(aContact instanceof gContactSync.TBContact)) {
       throw "Invalid aContact sent to AddressBook.hasContact";
     }
     // get all of the cards in this list again, if necessary
@@ -395,7 +394,7 @@ com.gContactSync.AddressBook.prototype = {
                              .getBranch(id)
                              .QueryInterface(Components.interfaces.nsIPrefBranch2);
       var value = branch.getCharPref(aName);
-      //com.gContactSync.LOGGER.VERBOSE_LOG("-Found the value: " + value);
+      //gContactSync.LOGGER.VERBOSE_LOG("-Found the value: " + value);
       return value;
     }
     // keep going if the preference doesn't exist for backward-compatibility
@@ -414,7 +413,7 @@ com.gContactSync.AddressBook.prototype = {
       //  2) Delete the old pref
       this.setStringPref(aName, value);
       branch.clearUserPref(aName);
-      com.gContactSync.LOGGER.VERBOSE_LOG("Found and removed an obsolete pref: " +
+      gContactSync.LOGGER.VERBOSE_LOG("Found and removed an obsolete pref: " +
                                           aName + " - " + value);
       return value;
     }
@@ -431,14 +430,14 @@ com.gContactSync.AddressBook.prototype = {
    */
   setStringPref: function AddressBook_setStringPref(aName, aValue) {
     var id = this.getPrefId();
-    com.gContactSync.LOGGER.VERBOSE_LOG("Setting pref named: " + aName + " to value: " + aValue +
+    gContactSync.LOGGER.VERBOSE_LOG("Setting pref named: " + aName + " to value: " + aValue +
                        " to the branch: " + id);
     if (!id) {
-      com.gContactSync.LOGGER.VERBOSE_LOG("Invalid ID");
+      gContactSync.LOGGER.VERBOSE_LOG("Invalid ID");
       return;
     }
     if (!aName) {
-      com.gContactSync.LOGGER.VERBOSE_LOG("Invalid name");
+      gContactSync.LOGGER.VERBOSE_LOG("Invalid name");
       return;
     }
     try {
@@ -447,7 +446,7 @@ com.gContactSync.AddressBook.prototype = {
                              .getBranch(id)
                              .QueryInterface(Components.interfaces.nsIPrefBranch2);
       branch.setCharPref(aName, aValue);
-    } catch (e) { com.gContactSync.LOGGER.LOG_WARNING("Error while setting directory pref", e); }
+    } catch (e) { gContactSync.LOGGER.LOG_WARNING("Error while setting directory pref", e); }
   },
 
   /**
@@ -465,14 +464,14 @@ com.gContactSync.AddressBook.prototype = {
   setName: function AddressBook_setName(aName) {
     // make sure it isn't being set to the PAB or CAB name and make sure that
     // this isn't the PAB or CAB
-    var pab = com.gContactSync.AbManager.getAbByURI("moz-abmdbdirectory://abook.mab");
-    var cab = com.gContactSync.AbManager.getAbByURI("moz-abmdbdirectory://history.mab");
+    var pab = gContactSync.AbManager.getAbByURI("moz-abmdbdirectory://abook.mab");
+    var cab = gContactSync.AbManager.getAbByURI("moz-abmdbdirectory://history.mab");
     if (aName === pab.dirName || aName === cab.dirName)
       throw "Error - cannot rename a directory to the PAB or CAB's name";
     if (this.getName() === pab.dirName || this.getName() === cab.dirName)
       throw "Error - cannot rename the PAB or CAB";
     // in TB 3, it is as simple as changing a property of the directory
-    if (com.gContactSync.AbManager.mVersion === 3)
+    if (gContactSync.AbManager.mVersion === 3)
       this.mDirectory.dirName = aName;
     // in TB 2 a few extra steps are necessary...
     else {
@@ -522,7 +521,7 @@ com.gContactSync.AddressBook.prototype = {
    * @returns {MailList} A new MailList object.
    */
   newListObj: function AddressBook_newListObj(aList, aParentDirectory, aNew) {
-    return new com.gContactSync.MailList(aList, aParentDirectory, aNew);
+    return new gContactSync.MailList(aList, aParentDirectory, aNew);
   },
   /**
    * Permanently deletes this address book without a confirmation dialog.
@@ -531,6 +530,6 @@ com.gContactSync.AddressBook.prototype = {
    * @returns {boolean} True if the AB was deleted.
    */
   deleteAB: function AddressBook_delete() {
-    return com.gContactSync.AbManager.deleteAB(this.mURI);
+    return gContactSync.AbManager.deleteAB(this.mURI);
   }
 };

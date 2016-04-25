@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2013
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,16 +34,15 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Stores and retrieves the authentication token from the login manager.
  * Does NOT store the password and username.
  * @class
  */
-com.gContactSync.LoginManager = {
+gContactSync.LoginManager = {
   /** The hostname used in the login manager */
   mHostname:      "chrome://gContactSync/oauth",
   /** The URL in the login manager */
@@ -152,7 +151,7 @@ com.gContactSync.LoginManager = {
         this.mNumAuthTokens--;
       }
       catch (e) {
-        com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("removeLoginFailure") + "\n\n" + e);
+        gContactSync.alertError(gContactSync.StringBundle.getStr("removeLoginFailure") + "\n\n" + e);
       }
     }
     // Thunderbird 3, Seamonkey 2
@@ -167,19 +166,19 @@ com.gContactSync.LoginManager = {
       for (var i = 0; i < logins.length; i++) {
         if (logins[i].username.toLowerCase() === aUsername) {
           try {
-            com.gContactSync.LOGGER.VERBOSE_LOG("Found the login to remove");
+            gContactSync.LOGGER.VERBOSE_LOG("Found the login to remove");
             loginManager.removeLogin(logins[i]);
             this.mAuthTokens[aUsername] = null;
             this.mNumAuthTokens--;
             return;
           }
           catch (ex) {
-            com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("removeLoginFailure") + "\n\n" + ex);
+            gContactSync.alertError(gContactSync.StringBundle.getStr("removeLoginFailure") + "\n\n" + ex);
           }
         }
       }
       // Could not find the login...
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("removeLoginFailure"));
+      gContactSync.alertError(gContactSync.StringBundle.getStr("removeLoginFailure"));
     }
   },
   /**

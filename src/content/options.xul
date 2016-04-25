@@ -304,7 +304,7 @@
                 <button id="throttleTest"
                         label="&throttleTest.label;"
                         accesskey="&throttleTest.accesskey;"
-                        oncommand="com.gContactSync.ThrottleTest.start(0);"/>
+                        oncommand="gContactSync.ThrottleTest.start(0);"/>
               </hbox>
             </row>
           </rows>
@@ -315,21 +315,21 @@
         <button id="resetAll"
                 label="&resetAll.label;"
                 accesskey="&resetAll.accesskey;"
-                oncommand="com.gContactSync.GAbManager.resetAllSyncedABs(true);"/>
+                oncommand="gContactSync.GAbManager.resetAllSyncedABs(true);"/>
         <button id="resetAllSettings"
                 label="&resetAllSettings.label;"
                 accesskey="&resetAllSettings.accesskey;"
-                oncommand="com.gContactSync.Options.resetAllSettings();"/>
+                oncommand="gContactSync.Options.resetAllSettings();"/>
       </hbox>
       <hbox>
         <button id="cleanOldPhotos"
                 label="&cleanOldPhotos.label;"
                 accesskey="&cleanOldPhotos.accesskey;"
-                oncommand="com.gContactSync.Options.deleteOldPhotos(true);"/>
+                oncommand="gContactSync.Options.deleteOldPhotos(true);"/>
         <button id="cleanOldPrefs"
                 label="&cleanOldPrefs.label;"
                 accesskey="&cleanOldPrefs.accesskey;"
-                oncommand="com.gContactSync.Options.removeABPrefs(true, true);"/>
+                oncommand="gContactSync.Options.removeABPrefs(true, true);"/>
       </hbox>
     </vbox>
   </prefpane>

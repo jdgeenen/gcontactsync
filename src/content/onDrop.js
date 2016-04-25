@@ -37,9 +37,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Meant to override the code in the onDrop method of abDirTreeObserver (an
@@ -52,12 +51,12 @@ if (!com.gContactSync) com.gContactSync = {};
  * @param row          The row
  * @param orientation  {int} An integer specifying on/after/before the given row
  */
-com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
+gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
   var dragSession = dragService.getCurrentSession();
   if (!dragSession)
     return;
   // get the attributes added by this extension
-  var attributes    = com.gContactSync.ContactConverter.getExtraSyncAttributes(false),
+  var attributes    = gContactSync.ContactConverter.getExtraSyncAttributes(false),
       attributesLen = attributes.length,
       trans         = Components.classes["@mozilla.org/widget/transferable;1"]
                                 .createInstance(Components.interfaces.nsITransferable);
@@ -167,18 +166,18 @@ com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
         catch (e) {
           // ignore the error if the card wasn't an MDB card, otherwise log it
           if (isMDBCard)
-            com.gContactSync.LOGGER.LOG_WARNING("Error while getting extra card attributes.", e);
+            gContactSync.LOGGER.LOG_WARNING("Error while getting extra card attributes.", e);
         }
         // delete the card if the user chose to move it (rather than copy it)
         if (actionIsMoving)
-          com.gContactSync.deleteCard(srcDirectory, card);
+          gContactSync.deleteCard(srcDirectory, card);
         if (toDirectory.isMailList) {
           needToRefresh = true;
-          var contact   = new com.gContactSync.TBContact(card);
+          var contact   = new gContactSync.TBContact(card);
           if (!contact.getValue("PrimaryEmail")) {
-            com.gContactSync.LOGGER.VERBOSE_LOG("Forcing dummy email");
+            gContactSync.LOGGER.VERBOSE_LOG("Forcing dummy email");
             // force a dummy e-mail address
-            var dummyEmail = com.gContactSync.makeDummyEmail(contact, true);
+            var dummyEmail = gContactSync.makeDummyEmail(contact, true);
             contact.setValue("PrimaryEmail", dummyEmail, false);
           }
         }
@@ -192,17 +191,17 @@ com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
                 newCard.setStringAttribute(attributes[k], value);
               }
             }
-          } catch (e) { com.gContactSync.LOGGER.LOG_WARNING("Error while copying card", e); }
+          } catch (e) { gContactSync.LOGGER.LOG_WARNING("Error while copying card", e); }
         }
         try {
-          var ab = new com.gContactSync.GAddressBook(toDirectory);
+          var ab = new gContactSync.GAddressBook(toDirectory);
           var now = (new Date()).getTime() / 1000,
-              newContact = new com.gContactSync.TBContact(newCard, ab);
+              newContact = new gContactSync.TBContact(newCard, ab);
           // now set the new card's last modified date, clear the Google ID (if card was copied), and update it
           newContact.setValue("LastModifiedDate", now);
           if (needToCopyCard) { newContact.setValue("GoogleID", null); }
           newContact.update();
-        } catch (e) { com.gContactSync.LOGGER.LOG_WARNING('copy card error: ' + e); }
+        } catch (e) { gContactSync.LOGGER.LOG_WARNING('copy card error: ' + e); }
       }
     }
     var cardsTransferredText;
@@ -231,7 +230,7 @@ com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
       }
     }
 
-    if (com.gContactSync.Preferences.mSyncPrefs.selectFirstCardAfterDrop.value) {
+    if (gContactSync.Preferences.mSyncPrefs.selectFirstCardAfterDrop.value) {
       // update the address book view so it doesn't show the card twice
       SetAbView(GetSelectedDirectory(), false);
       // select the first card, if any
@@ -252,7 +251,7 @@ com.gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
  * @param aCard      {nsIAbCard}      The card that is deleted from the
  *                                    directory.
  */
-com.gContactSync.deleteCard = function gCS_deleteCard(aDirectory, aCard) {
+gContactSync.deleteCard = function gCS_deleteCard(aDirectory, aCard) {
   if (!aCard || !aDirectory)
     return;
   var arr;

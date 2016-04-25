@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2009
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,15 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * A simple class that logs messages.
  * @class
  */
-com.gContactSync.LOGGER = {
+gContactSync.LOGGER = {
   /** The number of errors logged */
   mErrorCount:   0,
   /** The number of warnings logged */
@@ -60,8 +59,8 @@ com.gContactSync.LOGGER = {
       return;
     // this can fail if called before FileIO is initialized
     try {
-      if (com.gContactSync.Preferences.mSyncPrefs.enableLogging.value)
-        com.gContactSync.FileIO.appendToFile(com.gContactSync.FileIO.mLogFile,
+      if (gContactSync.Preferences.mSyncPrefs.enableLogging.value)
+        gContactSync.FileIO.appendToFile(gContactSync.FileIO.mLogFile,
                                              aMessage + "\n");
     } catch (e) {}
   },
@@ -70,7 +69,7 @@ com.gContactSync.LOGGER = {
    * @param aMessage {string} The message to log.
    */
   VERBOSE_LOG: function LOGGER_VERBOSE_LOG(aMessage) {
-    if (com.gContactSync.Preferences.mSyncPrefs.verboseLog.value)
+    if (gContactSync.Preferences.mSyncPrefs.verboseLog.value)
       this.LOG(aMessage);
   },
   /**
@@ -82,7 +81,7 @@ com.gContactSync.LOGGER = {
     var str = "***ERROR: " + aMessage;
     if (aError)
       str += "\nError Message:\n" + aError;
-    str += com.gContactSync.StringBundle.getStr("pleaseReport");
+    str += gContactSync.StringBundle.getStr("pleaseReport");
     this.LOG(str);
     this.mErrorCount++;
     this.mConsoleService.logStringMessage("gContactSync: " + str);
@@ -97,7 +96,7 @@ com.gContactSync.LOGGER = {
     var str = "***WARNING: " + aWarningMessage;
     if (aError)
       str += "\nError Message:\n" + aError;
-    //str += "\n" + com.gContactSync.StringBundle.getStr("pleaseReport");
+    //str += "\n" + gContactSync.StringBundle.getStr("pleaseReport");
     this.LOG(str);
     this.mWarningCount++;
   }

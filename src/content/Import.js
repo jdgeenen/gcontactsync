@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2010-2014
+ * Portions created by the Initial Developer are Copyright (C) 2010-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * This class is used to import contacts using OAuth.
@@ -54,7 +53,7 @@ if (!com.gContactSync) {com.gContactSync = {};}
  * 
  * @class
  */
-com.gContactSync.Import = {
+gContactSync.Import = {
   /** The 'source' from which contacts are imported (Facebook, Twitter, etc.) */
   mSource: "",
   /** This is used internally to track whether an import is in progress */
@@ -222,8 +221,8 @@ com.gContactSync.Import = {
   },
   /** Commands to execute when offline during an HTTP Request */
   mOfflineFunction: function Import_offlineFunc(httpReq) {
-    com.gContactSync.alertError(com.gContactSync.StringBundle.getStr('importOffline'));
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('offlineImportStatusText'));
+    gContactSync.alertError(gContactSync.StringBundle.getStr('importOffline'));
+    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('offlineImportStatusText'));
   },
   /**
    * Stores <em>encoded</em> OAuth variables, such as the oauth_token,
@@ -252,7 +251,7 @@ com.gContactSync.Import = {
    *                         in lowercase, as supported by pirules.org.
    */
   step1: function Import_step1(aSource) {
-    var imp      = com.gContactSync.Import,
+    var imp      = gContactSync.Import,
         callback = aSource === "facebook" ? imp.step2b : imp.step2a;
     //if (imp.mStarted) {
       // TODO warn the user and allow him or her to cancel
@@ -265,7 +264,7 @@ com.gContactSync.Import = {
     imp.mOAuth.access_token       = "";
     imp.mOAuth.expires            = "";
     
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('startingImport'));
+    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('startingImport'));
     imp.mStarted = true;
     imp.mSource  = aSource;
     // get an oauth_token and oauth_token_secret and give pirules.org some
@@ -273,13 +272,13 @@ com.gContactSync.Import = {
     imp.httpReqWrapper("http://www.pirules.org/oauth/index2.php?quiet&silent&step=1&source=" +
                        imp.mSource +
                        "&title=" +
-                       encodeURIComponent(com.gContactSync.StringBundle.getStr('importTitle')) +
+                       encodeURIComponent(gContactSync.StringBundle.getStr('importTitle')) +
                        "&instructions_title=" +
-                       encodeURIComponent(com.gContactSync.StringBundle.getStr('importInstructionsTitle')) +
+                       encodeURIComponent(gContactSync.StringBundle.getStr('importInstructionsTitle')) +
                        "&instructions_0=" +
-                       encodeURIComponent(com.gContactSync.StringBundle.getStr('importInstructions0')) +
+                       encodeURIComponent(gContactSync.StringBundle.getStr('importInstructions0')) +
                        "&instructions_1=" +
-                       encodeURIComponent(com.gContactSync.StringBundle.getStr('importInstructions1')),
+                       encodeURIComponent(gContactSync.StringBundle.getStr('importInstructions1')),
                        callback);
   },
   /**
@@ -290,14 +289,14 @@ com.gContactSync.Import = {
    * This is done in step 1 for OAuth 2.0 (Facebook only at the moment).
    */
   step2a: function Import_step2a(httpReq) {
-    var imp = com.gContactSync.Import,
+    var imp = gContactSync.Import,
         response = httpReq.responseText;
     if (!response) {
-      com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFailed'));
-      com.gContactSync.LOGGER.LOG_ERROR("***Import failed to get the auth tokens");
+      gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importFailed'));
+      gContactSync.LOGGER.LOG_ERROR("***Import failed to get the auth tokens");
       return;
     }
-    com.gContactSync.LOGGER.LOG("***IMPORT: Step 1 finished:\nContents:\n" +
+    gContactSync.LOGGER.LOG("***IMPORT: Step 1 finished:\nContents:\n" +
                                 response);
     // parse and store the parameters from step 1 (oauth_token &
     // oauth_token_secret)
@@ -315,16 +314,16 @@ com.gContactSync.Import = {
    * particular source.
    */
   step2b: function Import_step2b(httpReq) {
-    var imp = com.gContactSync.Import,
+    var imp = gContactSync.Import,
         response = httpReq.responseText;
     if (!response) {
-      com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFailed'));
-      com.gContactSync.LOGGER.LOG_ERROR("***Import failed to get the login URL");
+      gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importFailed'));
+      gContactSync.LOGGER.LOG_ERROR("***Import failed to get the login URL");
       return;
     }
     response = String(response).replace(/\&amp\;/g, "&");
-    com.gContactSync.LOGGER.LOG("***IMPORT: Step 2a finished:\nContents:\n" + response);
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importRequestingCredentials'));
+    gContactSync.LOGGER.LOG("***IMPORT: Step 2a finished:\nContents:\n" + response);
+    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importRequestingCredentials'));
     imp.openBrowserWindow(response, imp.logStep2b);
   },
   /**
@@ -333,8 +332,8 @@ com.gContactSync.Import = {
    * This just logs that step 2b has finished (the login page was opened)
    */
   logStep2b: function Import_logStep2b() {
-    var win = com.gContactSync.Import.mWindow;
-    com.gContactSync.LOGGER.LOG("***IMPORT: Step 2b finished: " + win.location +
+    var win = gContactSync.Import.mWindow;
+    gContactSync.LOGGER.LOG("***IMPORT: Step 2b finished: " + win.location +
                                 "Please click Finish Import to continue");
   },
   /**
@@ -343,9 +342,9 @@ com.gContactSync.Import = {
    * TODO - find a way to automatically start step3 when possible.
    */
   step3: function Import_step3() {
-    var imp = com.gContactSync.Import;
+    var imp = gContactSync.Import;
     if (!imp.mStarted) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("importNotStarted"));
+      gContactSync.alertError(gContactSync.StringBundle.getStr("importNotStarted"));
       return;
     }
     // Get the new oauth_token from the window.
@@ -356,13 +355,13 @@ com.gContactSync.Import = {
     }
     imp.mWindow.close();
     if (!imp.mOAuth.oauth_token) {
-      com.gContactSync.alert(com.gContactSync.StringBundle.getStr('importCanceled'),
-                             com.gContactSync.StringBundle.getStr('importCanceledTitle'),
+      gContactSync.alert(gContactSync.StringBundle.getStr('importCanceled'),
+                             gContactSync.StringBundle.getStr('importCanceledTitle'),
                              window);
       imp.mStarted = false;
       return;
     }
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importActivatingToken'));
+    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importActivatingToken'));
     // activate the token
     imp.httpReqWrapper("http://www.pirules.org/oauth/index2.php?quiet&silent&step=3&source=" +
                          imp.mSource +
@@ -377,15 +376,15 @@ com.gContactSync.Import = {
    * signs and sends the request to the source's @me/@friend URL.
    */
   step4: function Import_step4(httpReq) {
-    var imp = com.gContactSync.Import,
+    var imp = gContactSync.Import,
         response = httpReq.responseText;
     if (!response) {
-      com.gContactSync.LOGGER.LOG("***Import failed on step 3");
+      gContactSync.LOGGER.LOG("***Import failed on step 3");
       return;
     }
-    com.gContactSync.LOGGER.LOG("***IMPORT: Step 3 finished:\nContents:\n" + response);
+    gContactSync.LOGGER.LOG("***IMPORT: Step 3 finished:\nContents:\n" + response);
     imp.storeResponse(response.replace("&", "&amp;"));
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importRetrievingContacts'));
+    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importRetrievingContacts'));
     // Use the token to fetch the user's contacts
     // access_token is used instead of the oauth_token in OAuth 2.0
     if (imp.mOAuth.access_token) {
@@ -408,15 +407,15 @@ com.gContactSync.Import = {
    */
   // Get the contact feed and import it into an AB
   finish: function Import_finish(httpReq) {
-    var imp = com.gContactSync.Import,
+    var imp = gContactSync.Import,
         response = httpReq.responseText;
     if (!response) {
-      com.gContactSync.LOGGER.LOG("***Import failed on step 4");
+      gContactSync.LOGGER.LOG("***Import failed on step 4");
       return;
     }
-    com.gContactSync.LOGGER.LOG("Final response:\n" + response);
+    gContactSync.LOGGER.LOG("Final response:\n" + response);
     imp.mStarted = false;
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importParsingContacts'));
+    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importParsingContacts'));
     // start the import
     imp.showImportDialog(response);
   },
@@ -424,19 +423,19 @@ com.gContactSync.Import = {
    * Parses and stores a URL-encoded response in the following format:
    * param1=value1&amp;param2=value2&amp;param3=value3...
    * The parsed parameters and values are stored (still encoded) in
-   * com.gContactSync.Import.mOAuth[param] = value;
+   * gContactSync.Import.mOAuth[param] = value;
    *
    * @param aResponse {string} The encoded response to parse.
    */
   storeResponse: function Import_storeResponse(aResponse) {
-    var imp    = com.gContactSync.Import,
+    var imp    = gContactSync.Import,
         params = (aResponse).split("&amp;");
     for (var i = 0; i < params.length; i++) {
       var index = params[i].indexOf("=");
       if (index > 0) {
         var param = params[i].substr(0, index),
             value = params[i].substr(index + 1);
-        com.gContactSync.LOGGER.VERBOSE_LOG("***" + param + "=>" + value);
+        gContactSync.LOGGER.VERBOSE_LOG("***" + param + "=>" + value);
         imp.mOAuth[param] = value;
       }
     }
@@ -450,8 +449,8 @@ com.gContactSync.Import = {
    *                                 unloaded.
    */
   openBrowserWindow: function Import_openBrowserWindow(aUrl, aBeforeUnload) {
-    var imp = com.gContactSync.Import;
-    com.gContactSync.LOGGER.LOG("***IMPORT: opening '" + aUrl + "'");
+    var imp = gContactSync.Import;
+    gContactSync.LOGGER.LOG("***IMPORT: opening '" + aUrl + "'");
     // TODO - find a way to show a location bar, allow context menus, etc.
     imp.mWindow = window.open(aUrl,
                               "gContactSyncImport" + aUrl,
@@ -476,24 +475,24 @@ com.gContactSync.Import = {
       var menu = dialog.document.getElementById("ABList");
       // Get all Personal/Mork DB Address Books (type == 2,
       // see mailnews/addrbook/src/nsDirPrefs.h)
-      var abs = com.gContactSync.GAbManager.getAllAddressBooks(2, true);
+      var abs = gContactSync.GAbManager.getAllAddressBooks(2, true);
       for (let uri in abs) {
-        if (abs[uri] instanceof com.gContactSync.GAddressBook) {
+        if (abs[uri] instanceof gContactSync.GAddressBook) {
           menu.appendItem(abs[uri].getName(), uri);
         }
       }
       menu.selectedIndex = 0;
       dialog.onunload = function onunloadListener() {
         if (menu.selectedIndex === -1) {
-          com.gContactSync.LOGGER.LOG("***Import Canceled***");
-          com.gContactSync.alert(com.gContactSync.StringBundle.getStr("importCanceled"),
-                                 com.gContactSync.StringBundle.getStr("importCanceledTitle"),
+          gContactSync.LOGGER.LOG("***Import Canceled***");
+          gContactSync.alert(gContactSync.StringBundle.getStr("importCanceled"),
+                                 gContactSync.StringBundle.getStr("importCanceledTitle"),
                                  window);
         } else {
           // New ABs can be added from the dialog, so refresh the list
-          var abs = com.gContactSync.GAbManager.getAllAddressBooks(2, true);
+          var abs = gContactSync.GAbManager.getAllAddressBooks(2, true);
           var checkbox = dialog.document.getElementById("MergeCheckbox");
-          com.gContactSync.Import.beginImport(aFeed, abs[menu.value], checkbox.checked);
+          gContactSync.Import.beginImport(aFeed, abs[menu.value], checkbox.checked);
         }
       };
     };
@@ -512,16 +511,16 @@ com.gContactSync.Import = {
     }
     this.mNewContacts = this.mMergedContacts = 0;
     try {
-      com.gContactSync.LOGGER.VERBOSE_LOG(aFeed);
+      gContactSync.LOGGER.VERBOSE_LOG(aFeed);
       var obj = aFeed;
       // decode the JSON and get the array of cards
       try {
         obj = JSON.parse(aFeed);
       }
       catch (e) {
-        com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("importFailedMsg"));
-        com.gContactSync.LOGGER.LOG_ERROR("Import failed: ", aFeed);
-        com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFailed'));
+        gContactSync.alertError(gContactSync.StringBundle.getStr("importFailedMsg"));
+        gContactSync.LOGGER.LOG_ERROR("Import failed: ", aFeed);
+        gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importFailed'));
         return;
       }
       var arr = obj.entry || obj.data || obj.users || obj,
@@ -544,18 +543,18 @@ com.gContactSync.Import = {
           var newCard = aMerge ? this.searchForContact(contact, aAB, abContacts) : aAB.newContact(),
               attr    = "",
               srcId   = this.mSource + "_" + id;
-          if (!aMerge) {++com.gContactSync.Import.mNewContacts;}
+          if (!aMerge) {++gContactSync.Import.mNewContacts;}
           // Download FB photos
           if (this.mSource === "facebook" && id) {
-            let file = com.gContactSync.writePhoto("https://graph.facebook.com/" + id + "/picture?type=large",
+            let file = gContactSync.writePhoto("https://graph.facebook.com/" + id + "/picture?type=large",
                                                    srcId + "_" + (new Date()).getTime());
             if (file) {
               // Thunderbird requires two copies of each photo.  A permanent copy must
               // be kept outside of the Photos directory.  Each time a contact is edited
               // Thunderbird will re-copy the original photo to the Photos directory and
               // delete the old copy.
-              com.gContactSync.LOGGER.VERBOSE_LOG("Wrote photo...name: " + file.leafName);
-              com.gContactSync.copyPhotoToPhotosDir(file);
+              gContactSync.LOGGER.VERBOSE_LOG("Wrote photo...name: " + file.leafName);
+              gContactSync.copyPhotoToPhotosDir(file);
               newCard.setValue("PhotoName", file.leafName);
               newCard.setValue("PhotoType", "file");
               newCard.setValue("PhotoURI",
@@ -578,7 +577,7 @@ com.gContactSync.Import = {
               // Download a photo of the user, if available.
               if (j === "picture" || j === "thumbnailUrl" || j === "photos" ||
                   j === "profile_image_url") {
-                let file = com.gContactSync.writePhoto((j === "photos" ? contact[j][0].value : contact[j]),
+                let file = gContactSync.writePhoto((j === "photos" ? contact[j][0].value : contact[j]),
                                                        srcId + "_" + (new Date()).getTime(),
                                                        0);
                 if (file) {
@@ -586,8 +585,8 @@ com.gContactSync.Import = {
                   // be kept outside of the Photos directory.  Each time a contact is edited
                   // Thunderbird will re-copy the original photo to the Photos directory and
                   // delete the old copy.
-                  com.gContactSync.LOGGER.VERBOSE_LOG("Wrote photo...name: " + file.leafName);
-                  com.gContactSync.copyPhotoToPhotosDir(file);
+                  gContactSync.LOGGER.VERBOSE_LOG("Wrote photo...name: " + file.leafName);
+                  gContactSync.copyPhotoToPhotosDir(file);
                   newCard.setValue("PhotoName", file.leafName);
                   newCard.setValue("PhotoType", "file");
                   newCard.setValue("PhotoURI",
@@ -625,7 +624,7 @@ com.gContactSync.Import = {
                       }
                       // mMap[j][[k] is the prefix (Primary, Second, etc.)
                       // mMap[j][l] is the suffix (Email)
-                      com.gContactSync.LOGGER.VERBOSE_LOG(" - (Array): " + tbAttribute + "=" + contact[j][k][l]);
+                      gContactSync.LOGGER.VERBOSE_LOG(" - (Array): " + tbAttribute + "=" + contact[j][k][l]);
                       newCard.setValue(tbAttribute, this.decode(contact[j][k][l]));
                     }
                   }
@@ -639,14 +638,14 @@ com.gContactSync.Import = {
               // if it is just a normal property (has a length property =>
               // string) check the map
               else if (attr.length) {
-                com.gContactSync.LOGGER.VERBOSE_LOG(" - (String): " + attr + "=" + contact[j]);
+                gContactSync.LOGGER.VERBOSE_LOG(" - (String): " + attr + "=" + contact[j]);
                 newCard.setValue(attr, this.decode(contact[j]));
               }
               // else it is an object with subproperties
               else {
                 for (let k in contact[j]) {
                   if (k in attr) {
-                    com.gContactSync.LOGGER.VERBOSE_LOG(" - (Object): " + attr[k] + "/" + j + "=" + contact[j][k]);
+                    gContactSync.LOGGER.VERBOSE_LOG(" - (Object): " + attr[k] + "/" + j + "=" + contact[j][k]);
                     newCard.setValue(attr[k], this.decode(contact[j][k]));
                   }
                 }
@@ -658,7 +657,7 @@ com.gContactSync.Import = {
       }
     }
     catch (e) {
-      com.gContactSync.alertError(e);
+      gContactSync.alertError(e);
       return;
     }
     // refresh the AB results pane
@@ -672,14 +671,14 @@ com.gContactSync.Import = {
         SelectFirstCard();
     }
     catch (e) {}
-    com.gContactSync.LOGGER.LOG("***Imported Complete, Added: " +
+    gContactSync.LOGGER.LOG("***Imported Complete, Added: " +
                                 this.mNewContacts + ", Merged: " +
                                 this.mMergedContacts + "***");
-    com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFinished'));
-    com.gContactSync.alert(com.gContactSync.StringBundle.getStr("importComplete") + "\n" +
-                           com.gContactSync.StringBundle.getStr("importCompleteAdded")  + " " + this.mNewContacts    + "\n" +
-                           com.gContactSync.StringBundle.getStr("importCompleteMerged") + " " + this.mMergedContacts + "\n",
-                           com.gContactSync.StringBundle.getStr("importCompleteTitle"),
+    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importFinished'));
+    gContactSync.alert(gContactSync.StringBundle.getStr("importComplete") + "\n" +
+                           gContactSync.StringBundle.getStr("importCompleteAdded")  + " " + this.mNewContacts    + "\n" +
+                           gContactSync.StringBundle.getStr("importCompleteMerged") + " " + this.mMergedContacts + "\n",
+                           gContactSync.StringBundle.getStr("importCompleteTitle"),
                            window);
   },
   /**
@@ -701,15 +700,15 @@ com.gContactSync.Import = {
    * @param aCallback {function} The callback function if the request succeeds.
    */
   httpReqWrapper: function Import_httpReqWrapper(aURL, aCallback) {
-    var httpReq   = new com.gContactSync.HttpRequest();
+    var httpReq   = new gContactSync.HttpRequest();
     httpReq.mUrl  = aURL;
     httpReq.mType = "GET";
     httpReq.mOnSuccess = aCallback;
     httpReq.mOnOffline = this.mOfflineFunction;
     httpReq.mOnError = function import_onError(httpReq) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("importFailedMsg"));
-      com.gContactSync.LOGGER.LOG_ERROR("Import failed: ", httpReq.responseText);
-      com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFailed'));
+      gContactSync.alertError(gContactSync.StringBundle.getStr("importFailedMsg"));
+      gContactSync.LOGGER.LOG_ERROR("Import failed: ", httpReq.responseText);
+      gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importFailed'));
     };
     httpReq.send();
   },
@@ -718,11 +717,11 @@ com.gContactSync.Import = {
    * https://wiki.mozilla.org/Labs/Contacts/ContentAPI
    */
   mozillaLabsContactsImporter: function Import_mozLabsImporter() {
-    //if (com.gContactSync.Import.mStarted) {
+    //if (gContactSync.Import.mStarted) {
       // TODO warn the user and allow him or her to cancel
     //}
     
-    com.gContactSync.Import.mSource = "mozLabsContacts";
+    gContactSync.Import.mSource = "mozLabsContacts";
     try {
     
       // Import the Mozilla Labs Contacts module that loads the contacts DB
@@ -737,9 +736,9 @@ com.gContactSync.Import = {
         people = JSON.parse(json);
       }
       catch (e) {
-        com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("importFailedMsg"));
-        com.gContactSync.LOGGER.LOG_ERROR("Import failed: ", json);
-        com.gContactSync.Overlay.setStatusBarText(com.gContactSync.StringBundle.getStr('importFailed'));
+        gContactSync.alertError(gContactSync.StringBundle.getStr("importFailedMsg"));
+        gContactSync.LOGGER.LOG_ERROR("Import failed: ", json);
+        gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importFailed'));
         return;
       }
       
@@ -757,16 +756,16 @@ com.gContactSync.Import = {
             for (let k in person.documents[j]) {
               for (let l in person.documents[j][k])
               personInfo[l] = person.documents[j][k][l];
-              com.gContactSync.LOGGER.VERBOSE_LOG(j + "." + k + "." + l + " - " + person.documents[j][k][l])
+              gContactSync.LOGGER.VERBOSE_LOG(j + "." + k + "." + l + " - " + person.documents[j][k][l])
             }
           }
           toEncode.data.push(personInfo);
         }
       }
-      com.gContactSync.Import.showImportDialog(JSON.stringify(toEncode));
+      gContactSync.Import.showImportDialog(JSON.stringify(toEncode));
     } catch (e) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("mozLabsContactsImportFailed"));
-      com.gContactSync.LOGGER.LOG_ERROR("Mozilla Labs Contacts Import Failed", e);
+      gContactSync.alertError(gContactSync.StringBundle.getStr("mozLabsContactsImportFailed"));
+      gContactSync.LOGGER.LOG_ERROR("Mozilla Labs Contacts Import Failed", e);
     }
   },
   searchForContact: function Import_searchForContact(aData, aAB, aABContacts) {
@@ -780,9 +779,9 @@ com.gContactSync.Import = {
     if (primaryEmail && (primaryEmail instanceof Array)) {primaryEmail = primaryEmail[0];}
     if (displayName) {contact = aABContacts[displayName.toLowerCase()];}
     if (!contact && primaryEmail) {contact = aABContacts[primaryEmail.toLowerCase()];}
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Display Name: " + displayName + ", Email: " + primaryEmail + " - AB Contact: " + (contact ? contact.getName() : "No match found"));
-    if (contact) {++com.gContactSync.Import.mMergedContacts;}
-    else         {++com.gContactSync.Import.mNewContacts;}
+    gContactSync.LOGGER.VERBOSE_LOG(" * Display Name: " + displayName + ", Email: " + primaryEmail + " - AB Contact: " + (contact ? contact.getName() : "No match found"));
+    if (contact) {++gContactSync.Import.mMergedContacts;}
+    else         {++gContactSync.Import.mNewContacts;}
     return contact || aAB.newContact(); 
   }
 };

@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2010
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
 * An extension of AddressBook that adds functionality specific to gContactSync.
@@ -45,11 +44,11 @@ if (!com.gContactSync) com.gContactSync = {};
 *                                    preferences.
 * @constructor
 * @class
-* @extends com.gContactSync.AddressBook
+* @extends gContactSync.AddressBook
 */
-com.gContactSync.GAddressBook = function gCS_GAddressBook(aDirectory, aNoPrefs) {
+gContactSync.GAddressBook = function gCS_GAddressBook(aDirectory, aNoPrefs) {
   // call the AddressBook constructor using this object
-  com.gContactSync.AddressBook.call(this, aDirectory);
+  gContactSync.AddressBook.call(this, aDirectory);
 
   // Preferences for this address book
   // If these aren't set the global preference with the same name, if any, is used
@@ -78,18 +77,18 @@ com.gContactSync.GAddressBook = function gCS_GAddressBook(aDirectory, aNoPrefs) 
 };
 
 // Copy the AB prototype (methods and member variables)
-com.gContactSync.GAddressBook.prototype = com.gContactSync.AddressBook.prototype;
+gContactSync.GAddressBook.prototype = gContactSync.AddressBook.prototype;
 
 // A prefix for all preferences used to prevent conflicts with other extensions
-com.gContactSync.GAddressBook.prototype.prefPrefix = "gContactSync";
+gContactSync.GAddressBook.prototype.prefPrefix = "gContactSync";
 
 /**
  * Fetches all of this directory's preferences.  If the directory does not have
  * any given preferences this function will use the global preference's value,
  * if any.
  */
-com.gContactSync.GAddressBook.prototype.getPrefs = function GAddressBook_getPrefs() {
-  com.gContactSync.LOGGER.LOG("\nGetting Prefs for AB '" + this.getName() + "':");
+gContactSync.GAddressBook.prototype.getPrefs = function GAddressBook_getPrefs() {
+  gContactSync.LOGGER.LOG("\nGetting Prefs for AB '" + this.getName() + "':");
   for (var i in this.mPrefs) {
     var isLastSync = (i === "lastSync");
     // all prefs except lastSync have the prefPrefix in from of them
@@ -99,8 +98,8 @@ com.gContactSync.GAddressBook.prototype.getPrefs = function GAddressBook_getPref
     // AND set this AB's pref so this doesn't fall through next time
     // this behavior is mostly for backwards compatibility
     if (val === 0) {
-      com.gContactSync.LOGGER.VERBOSE_LOG("getPrefs fell through on " + i);
-      var pref = com.gContactSync.Preferences.mSyncPrefs[i];
+      gContactSync.LOGGER.VERBOSE_LOG("getPrefs fell through on " + i);
+      var pref = gContactSync.Preferences.mSyncPrefs[i];
       val  = pref ? String(pref.value) : "";
       this.savePref(i, val);
     }
@@ -109,7 +108,7 @@ com.gContactSync.GAddressBook.prototype.getPrefs = function GAddressBook_getPref
     else if (isLastSync && isNaN(val)) {
       val = 0;
     }
-    com.gContactSync.LOGGER.LOG(" * " + i + " = " + val);
+    gContactSync.LOGGER.LOG(" * " + i + " = " + val);
     this.mPrefs[i] = val;
   }
 };
@@ -120,8 +119,8 @@ com.gContactSync.GAddressBook.prototype.getPrefs = function GAddressBook_getPref
  * @param aName  {string} The name of the preference to set.
  * @param aValue {string} The value to set the preference to.
  */
-com.gContactSync.GAddressBook.prototype.savePref = function GAddressBook_savePref(aName, aValue) {
-  com.gContactSync.LOGGER.VERBOSE_LOG(" * Setting pref '" + aName + "' to value '" + aValue + "'");
+gContactSync.GAddressBook.prototype.savePref = function GAddressBook_savePref(aName, aValue) {
+  gContactSync.LOGGER.VERBOSE_LOG(" * Setting pref '" + aName + "' to value '" + aValue + "'");
   // all prefs except lastSync have the prefPrefix in from of them
   this.setStringPref((aName === "lastSync" ? aName : this.prefPrefix + aName), aValue);
   // in theory (and in testing) the preferences listener should already take
@@ -134,7 +133,7 @@ com.gContactSync.GAddressBook.prototype.savePref = function GAddressBook_savePre
  * since the epoch.
  * @param aLastSync {integer} The last sync time.
  */
-com.gContactSync.GAddressBook.prototype.setLastSyncDate = function GAddressBook_setLastSyncDate(aLastSync) {
+gContactSync.GAddressBook.prototype.setLastSyncDate = function GAddressBook_setLastSyncDate(aLastSync) {
   this.setStringPref("lastSync", aLastSync);
   // in theory (and in testing) the preferences listener should already take
   // care of setting the preference in this.mPrefs...
@@ -154,35 +153,35 @@ com.gContactSync.GAddressBook.prototype.setLastSyncDate = function GAddressBook_
  *   - Setting the last sync date to 0
  * @returns {boolean} True if the AB was reset, false otherwise.
  */
-com.gContactSync.GAddressBook.prototype.reset = function GAddressBook_reset() {
-  com.gContactSync.LOGGER.LOG("Resetting the " + this.getName() + " directory.");
+gContactSync.GAddressBook.prototype.reset = function GAddressBook_reset() {
+  gContactSync.LOGGER.LOG("Resetting the " + this.getName() + " directory.");
   var lists, i, dt;
   if (this.mPrefs.reset === "true") {
-    com.gContactSync.LOGGER.LOG_WARNING("An attempt was made to reset an AB which was already reset.  Ignoring request.");
+    gContactSync.LOGGER.LOG_WARNING("An attempt was made to reset an AB which was already reset.  Ignoring request.");
     return false;
   }
   dt = new Date().toLocaleFormat("%Y_%m_%d_");
-  com.gContactSync.GAbManager.backupAB(this, "reset_" + dt, ".bak");
+  gContactSync.GAbManager.backupAB(this, "reset_" + dt, ".bak");
   try {
     lists = this.getAllLists(true);
   }
   catch (e) {
-    com.gContactSync.LOGGER.LOG_ERROR("Unable to get all lists", e);
+    gContactSync.LOGGER.LOG_ERROR("Unable to get all lists", e);
     lists = {};
   }
-  com.gContactSync.LOGGER.VERBOSE_LOG(" * Deleting all lists");
+  gContactSync.LOGGER.VERBOSE_LOG(" * Deleting all lists");
   for (i in lists) {
-    if (lists[i] instanceof com.gContactSync.GMailList) {
-      com.gContactSync.LOGGER.VERBOSE_LOG("  - Deleting list " + lists[i].getName());
+    if (lists[i] instanceof gContactSync.GMailList) {
+      gContactSync.LOGGER.VERBOSE_LOG("  - Deleting list " + lists[i].getName());
       lists[i].remove();
     }
   }
-  com.gContactSync.LOGGER.VERBOSE_LOG(" * Finished deleting lists");
-  com.gContactSync.LOGGER.VERBOSE_LOG(" * Deleting all contacts");
+  gContactSync.LOGGER.VERBOSE_LOG(" * Finished deleting lists");
+  gContactSync.LOGGER.VERBOSE_LOG(" * Deleting all contacts");
   this.deleteContacts(this.getAllContacts());
-  com.gContactSync.LOGGER.VERBOSE_LOG(" * Setting Last Sync Date to 0");
+  gContactSync.LOGGER.VERBOSE_LOG(" * Setting Last Sync Date to 0");
   this.setLastSyncDate(0);
-  com.gContactSync.LOGGER.LOG("Finished resetting the directory.");
+  gContactSync.LOGGER.LOG("Finished resetting the directory.");
   // mark the AB as having been reset
   this.savePref("reset", true);
   return true;
@@ -192,7 +191,7 @@ com.gContactSync.GAddressBook.prototype.reset = function GAddressBook_reset() {
  * Updates the LastModifiedDate of every contact in this address book so
  * it gets updated during the next sync.
  */
-com.gContactSync.GAddressBook.prototype.replaceToServer = function GAddressBook_replaceToServer() {
+gContactSync.GAddressBook.prototype.replaceToServer = function GAddressBook_replaceToServer() {
   var contacts = this.getAllContacts(),
       time     = (new Date()).getTime();
   
@@ -219,8 +218,8 @@ com.gContactSync.GAddressBook.prototype.replaceToServer = function GAddressBook_
  *                                        contacts contained in the list.
  * @returns {GMailList} A new GMailList.
  */
-com.gContactSync.GAddressBook.prototype.newListObj = function GAddressBook_newListObj(aList, aParentDirectory, aNew) {
-  return new com.gContactSync.GMailList(aList, aParentDirectory, aNew);
+gContactSync.GAddressBook.prototype.newListObj = function GAddressBook_newListObj(aList, aParentDirectory, aNew) {
+  return new gContactSync.GMailList(aList, aParentDirectory, aNew);
 };
 
 /**
@@ -229,9 +228,9 @@ com.gContactSync.GAddressBook.prototype.newListObj = function GAddressBook_newLi
  * @param skipGetCards {boolean} True to skip getting the cards of each list.
  * @returns {object} An object containing GMailList objects.
  */
-com.gContactSync.GAddressBook.prototype.getAllLists = function GAddressBook_getAllLists(skipGetCards) {
+gContactSync.GAddressBook.prototype.getAllLists = function GAddressBook_getAllLists(skipGetCards) {
   // same in Thunderbird 2 and 3
-  com.gContactSync.LOGGER.VERBOSE_LOG("Searching for mailing lists:");
+  gContactSync.LOGGER.VERBOSE_LOG("Searching for mailing lists:");
   var iter = this.mDirectory.childNodes,
       obj  = {},
       list,
@@ -243,7 +242,7 @@ com.gContactSync.GAddressBook.prototype.getAllLists = function GAddressBook_getA
       list    = this.newListObj(data, this, skipGetCards);
       id      = list.getGroupID();
       obj[id] = list;
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * " + list.getName() + " - " + id);
+      gContactSync.LOGGER.VERBOSE_LOG(" * " + list.getName() + " - " + id);
     }
   }
   return obj;

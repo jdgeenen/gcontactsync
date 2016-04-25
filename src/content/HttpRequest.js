@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2014
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Sets up an HTTP request.<br>
@@ -54,19 +53,19 @@ if (!com.gContactSync) {com.gContactSync = {};}
  * <br>Sample usage:
  * <pre>
  * // Create and setup a new HttpRequest
- * var myHttpRequest   = new com.gContactSync.HttpRequest();
+ * var myHttpRequest   = new gContactSync.HttpRequest();
  * myHttpRequest.mUrl  = "http://www.pirules.org";
  * myHttpRequest.mType = "GET";
  * myHttpRequest.addHeaderItem("Content-length", 0);
  * // setup the callbacks
  * myHttpRequest.mOnSuccess = function myRequestSuccess(aHttpReq) {
- *   com.gContactSync.alert("Request succeeded.  Content:\n\n" + aHttpReq.statusText);
+ *   gContactSync.alert("Request succeeded.  Content:\n\n" + aHttpReq.statusText);
  * };
  * myHttpRequest.mOnOffline = function myRequestOffline(aHttpReq) {
- *   com.gContactSync.alert("You are offline");
+ *   gContactSync.alert("You are offline");
  * };
  * myHttpRequest.mOnError   = function myRequestError(aHttpReq) {
- *   com.gContactSync.alert("Request failed...Status: " + aHttpReq.status); 
+ *   gContactSync.alert("Request failed...Status: " + aHttpReq.status); 
  * };
  * // send the request
  * myHttpRequest.send();
@@ -74,20 +73,20 @@ if (!com.gContactSync) {com.gContactSync = {};}
  * @constructor
  * @class
  */
-com.gContactSync.HttpRequest = function gCS_HttpRequest() {
+gContactSync.HttpRequest = function gCS_HttpRequest() {
   if (window.XMLHttpRequest) {
     this.mHttpRequest = new XMLHttpRequest();
   }
 
   if (!this.mHttpRequest) {
     throw "Error - could not create an XMLHttpRequest" +
-          com.gContactSync.StringBundle.getStr("pleaseReport");
+          gContactSync.StringBundle.getStr("pleaseReport");
   }
 
   this.mParameters = [];
 };
 
-com.gContactSync.HttpRequest.prototype = {
+gContactSync.HttpRequest.prototype = {
   /** Content types */
   CONTENT_TYPES: {
     /** URL encoded */
@@ -152,14 +151,14 @@ com.gContactSync.HttpRequest.prototype = {
     var params = this.mParameters.join("&");
 
     // log the basic info for debugging purposes
-    com.gContactSync.LOGGER.VERBOSE_LOG("HTTP Request being formed");
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Caller is: " + this.send.caller.name);
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * URL: " + this.mUrl);
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Type: " + this.mType);
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Content-Type: " + this.mContentType);
+    gContactSync.LOGGER.VERBOSE_LOG("HTTP Request being formed");
+    gContactSync.LOGGER.VERBOSE_LOG(" * Caller is: " + this.send.caller.name);
+    gContactSync.LOGGER.VERBOSE_LOG(" * URL: " + this.mUrl);
+    gContactSync.LOGGER.VERBOSE_LOG(" * Type: " + this.mType);
+    gContactSync.LOGGER.VERBOSE_LOG(" * Content-Type: " + this.mContentType);
 
     if (params.length) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Parameters: " + params);
+      gContactSync.LOGGER.VERBOSE_LOG(" * Parameters: " + params);
       if (this.mType === "POST") {
         this.mBody = this.mBody ? params + this.mBody : params;
       } else {
@@ -171,10 +170,10 @@ com.gContactSync.HttpRequest.prototype = {
 
     // set the header
     this.addHeaderItem("Content-Type", this.mContentType);
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Setting up the header: ");
+    gContactSync.LOGGER.VERBOSE_LOG(" * Setting up the header: ");
 
     for (var i = 0; i < this.mHeaderLabels.length; i++) {
-      com.gContactSync.LOGGER.VERBOSE_LOG("   o " + this.mHeaderLabels[i] +
+      gContactSync.LOGGER.VERBOSE_LOG("   o " + this.mHeaderLabels[i] +
                                           ": " + this.mHeaderValues[i]);
       this.mHttpRequest.setRequestHeader(this.mHeaderLabels[i],
                                          this.mHeaderValues[i]);
@@ -190,7 +189,7 @@ com.gContactSync.HttpRequest.prototype = {
 
     // Use the requested timeout value.  Timeouts result in readyState = 4, status = 0 and
     // are handled by the offline callback.
-    httpReq.timeout = com.gContactSync.Preferences.mSyncPrefs.httpRequestTimeout.value;
+    httpReq.timeout = gContactSync.Preferences.mSyncPrefs.httpRequestTimeout.value;
 
     httpReq.onreadystatechange = function httpReq_readyState() {
       var callback = [];
@@ -199,11 +198,11 @@ com.gContactSync.HttpRequest.prototype = {
         // this may be called after the address book window is closed
         // if the window is closed there will be an exception thrown as
         // explained here - https://www.mozdev.org/bugs/show_bug.cgi?id=20527
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * The request has finished with status: " +
+        gContactSync.LOGGER.VERBOSE_LOG(" * The request has finished with status: " +
                                             httpReq.status + "/" +
                                             (httpReq.status ? httpReq.statusText : "offline"));
         if (httpReq.status) {
-          com.gContactSync.LOGGER.VERBOSE_LOG(" * Headers:\n" +
+          gContactSync.LOGGER.VERBOSE_LOG(" * Headers:\n" +
                                               httpReq.getAllResponseHeaders() + "\n");
         }
           
@@ -227,7 +226,7 @@ com.gContactSync.HttpRequest.prototype = {
           callback = onFail;
         }
         if (callback) {
-          com.gContactSync.LOGGER.VERBOSE_LOG(" * Running the function callback");
+          gContactSync.LOGGER.VERBOSE_LOG(" * Running the function callback");
           callback.call(this, httpReq);
         }
       } // end of readyState
@@ -235,9 +234,9 @@ com.gContactSync.HttpRequest.prototype = {
     try {
       this.mHttpRequest.send(this.mBody); // send the request
     } catch (e) {
-      com.gContactSync.LOGGER.LOG_ERROR(" * Error sending request", e);
+      gContactSync.LOGGER.LOG_ERROR(" * Error sending request", e);
       this.mOnError(this.mHttpRequest);
     }
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Request Sent");
+    gContactSync.LOGGER.VERBOSE_LOG(" * Request Sent");
   }
 };

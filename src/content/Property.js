@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * A simple object for storing the value and type of a property.
@@ -44,7 +43,7 @@ if (!com.gContactSync) com.gContactSync = {};
  * @param aType  {string} The 'type' of the property (Home, Work, Other, etc.)
  * @class
  */
-com.gContactSync.Property = function gCS_Property(aValue, aType) {
+gContactSync.Property = function gCS_Property(aValue, aType) {
   this.value = aValue;
   this.type = aType;
 }

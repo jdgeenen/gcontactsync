@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2014
+ * Portions created by the Initial Developer are Copyright (C) 2014-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,21 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {
-  /** A generic wrapper variable */
-  var com = {};
-}
-
-if (!com.gContactSync) {
-  /** A wrapper for all GCS functions and variables */
-  com.gContactSync = {};
-}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Runs a test to find the lowest necessary delay between requests to avoid 503 errors.
  * @class
  */
-com.gContactSync.ThrottleTest = {
+gContactSync.ThrottleTest = {
 
   /** Stores whether a test is in progress. */
   mTestInProgress: false,
@@ -62,17 +55,17 @@ com.gContactSync.ThrottleTest = {
    */
   start: function ThrottleTest_start(aDelay) {
     if (this.mTestInProgress) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("throttleTestAlreadyRunning"));
+      gContactSync.alertError(gContactSync.StringBundle.getStr("throttleTestAlreadyRunning"));
       return;
     }
-    var abs = com.gContactSync.GAbManager.getSyncedAddressBooks(true);
+    var abs = gContactSync.GAbManager.getSyncedAddressBooks(true);
     if (!abs.length) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("throttleTestNoABFound"));
+      gContactSync.alertError(gContactSync.StringBundle.getStr("throttleTestNoABFound"));
       return;
     }
     this.mAB = abs[0].ab;
     this.mUsername = abs[0].username;
-    this.mToken = com.gContactSync.LoginManager.getAuthToken(this.mUsername);
+    this.mToken = gContactSync.LoginManager.getAuthToken(this.mUsername);
     var abCard = this.mAB.getAllContacts()[0];
     this.mURL = abCard.getValue("SelfURL");
     this.mNumReceived = 0;
@@ -81,11 +74,11 @@ com.gContactSync.ThrottleTest = {
     this.mDelay = aDelay;
     this.mNumSent = 0;
     this.mTestInProgress = true;
-    com.gContactSync.Preferences.setSyncPref("statusBarText",
-                                             com.gContactSync.StringBundle.getStr("throttleTestTryingDelay") + " " +
-                                             com.gContactSync.ThrottleTest.mDelay + " ms.");
+    gContactSync.Preferences.setSyncPref("statusBarText",
+                                             gContactSync.StringBundle.getStr("throttleTestTryingDelay") + " " +
+                                             gContactSync.ThrottleTest.mDelay + " ms.");
     if (aDelay > 0) {
-      setTimeout(com.gContactSync.ThrottleTest.next, Math.max(10000, com.gContactSync.ThrottleTest.mDelay));
+      setTimeout(gContactSync.ThrottleTest.next, Math.max(10000, gContactSync.ThrottleTest.mDelay));
     } else {
       this.next();
     }
@@ -96,19 +89,19 @@ com.gContactSync.ThrottleTest = {
    */
   next: function ThrottleTest_next() {
 
-    var httpReq = new com.gContactSync.GHttpRequest("get",
-                                                    com.gContactSync.ThrottleTest.mToken,
-                                                    com.gContactSync.ThrottleTest.mURL,
+    var httpReq = new gContactSync.GHttpRequest("get",
+                                                    gContactSync.ThrottleTest.mToken,
+                                                    gContactSync.ThrottleTest.mURL,
                                                     null);
     httpReq.addHeaderItem("If-Match", "*");
-    httpReq.mOnSuccess = com.gContactSync.ThrottleTest.onSuccess;
-    httpReq.mOnError   = com.gContactSync.ThrottleTest.onError;
-    httpReq.mOnOffline = com.gContactSync.ThrottleTest.onOffline;
-    httpReq.mOn503     = com.gContactSync.ThrottleTest.on503;
+    httpReq.mOnSuccess = gContactSync.ThrottleTest.onSuccess;
+    httpReq.mOnError   = gContactSync.ThrottleTest.onError;
+    httpReq.mOnOffline = gContactSync.ThrottleTest.onOffline;
+    httpReq.mOn503     = gContactSync.ThrottleTest.on503;
     httpReq.send();
-    ++com.gContactSync.ThrottleTest.mNumSent;
-    if (com.gContactSync.ThrottleTest.mNumSent < com.gContactSync.ThrottleTest.mIters) {
-      setTimeout(com.gContactSync.ThrottleTest.next, com.gContactSync.ThrottleTest.mDelay);
+    ++gContactSync.ThrottleTest.mNumSent;
+    if (gContactSync.ThrottleTest.mNumSent < gContactSync.ThrottleTest.mIters) {
+      setTimeout(gContactSync.ThrottleTest.next, gContactSync.ThrottleTest.mDelay);
     }
   },
 
@@ -117,7 +110,7 @@ com.gContactSync.ThrottleTest = {
    * @param {GHttpRequest} The HTTP request.
    */
   onSuccess: function ThrottleTest_onSuccess(httpReq) {
-    com.gContactSync.ThrottleTest.onReceive();
+    gContactSync.ThrottleTest.onReceive();
   },
 
   /**
@@ -125,8 +118,8 @@ com.gContactSync.ThrottleTest = {
    * @param {GHttpRequest} The HTTP request.
    */
   onOffline: function ThrottleTest_onOffline(httpReq) {
-    com.gContactSync.Preferences.setSyncPref("statusBarText",
-                                             com.gContactSync.StringBundle.getStr("offlineStatusText")); 
+    gContactSync.Preferences.setSyncPref("statusBarText",
+                                             gContactSync.StringBundle.getStr("offlineStatusText")); 
   },
 
   /**
@@ -134,10 +127,10 @@ com.gContactSync.ThrottleTest = {
    * @param {GHttpRequest} The HTTP request.
    */
   onError: function ThrottleTest_onError(httpReq) {
-    ++com.gContactSync.ThrottleTest.mNumErrors;
-    com.gContactSync.LOGGER.LOG_ERROR("Error while updating contact",
+    ++gContactSync.ThrottleTest.mNumErrors;
+    gContactSync.LOGGER.LOG_ERROR("Error while updating contact",
                                       httpReq.responseText);
-    com.gContactSync.ThrottleTest.onReceive();
+    gContactSync.ThrottleTest.onReceive();
   },
 
   /**
@@ -145,9 +138,9 @@ com.gContactSync.ThrottleTest = {
    * @param {GHttpRequest} The HTTP request.
    */
   on503: function ThrottleTest_on503(httpReq) {
-    ++com.gContactSync.ThrottleTest.mNum503s;
-    com.gContactSync.LOGGER.LOG_ERROR("503", httpReq.responseText);
-    com.gContactSync.ThrottleTest.onReceive();
+    ++gContactSync.ThrottleTest.mNum503s;
+    gContactSync.LOGGER.LOG_ERROR("503", httpReq.responseText);
+    gContactSync.ThrottleTest.onReceive();
   },
 
   /**
@@ -155,18 +148,18 @@ com.gContactSync.ThrottleTest = {
    * @param {GHttpRequest} The HTTP request.
    */
   onReceive: function ThrottleTest_onReceive() {
-    ++com.gContactSync.ThrottleTest.mNumReceived;
-    if (com.gContactSync.ThrottleTest.mNumReceived >= com.gContactSync.ThrottleTest.mIters) {
-      com.gContactSync.ThrottleTest.mTestInProgress = false;
-      if (com.gContactSync.ThrottleTest.mNumErrors) {
-        com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("errorDuringThrottleTest"));
-      } else if (com.gContactSync.ThrottleTest.mNum503s) {
-        com.gContactSync.ThrottleTest.start(com.gContactSync.ThrottleTest.mDelay + 20);
+    ++gContactSync.ThrottleTest.mNumReceived;
+    if (gContactSync.ThrottleTest.mNumReceived >= gContactSync.ThrottleTest.mIters) {
+      gContactSync.ThrottleTest.mTestInProgress = false;
+      if (gContactSync.ThrottleTest.mNumErrors) {
+        gContactSync.alertError(gContactSync.StringBundle.getStr("errorDuringThrottleTest"));
+      } else if (gContactSync.ThrottleTest.mNum503s) {
+        gContactSync.ThrottleTest.start(gContactSync.ThrottleTest.mDelay + 20);
       } else {
-        com.gContactSync.alert(com.gContactSync.StringBundle.getStr("throttleTestMessage") + " " + com.gContactSync.ThrottleTest.mDelay);
-        com.gContactSync.Preferences.setSyncPref("httpRequestDelay", com.gContactSync.ThrottleTest.mDelay);
-        com.gContactSync.Preferences.setSyncPref("statusBarText",
-                                                 com.gContactSync.StringBundle.getStr("throttleTestComplete"));
+        gContactSync.alert(gContactSync.StringBundle.getStr("throttleTestMessage") + " " + gContactSync.ThrottleTest.mDelay);
+        gContactSync.Preferences.setSyncPref("httpRequestDelay", gContactSync.ThrottleTest.mDelay);
+        gContactSync.Preferences.setSyncPref("statusBarText",
+                                                 gContactSync.StringBundle.getStr("throttleTestComplete"));
       }
     }
   }

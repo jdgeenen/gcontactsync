@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2009-2015
+ * Portions created by the Initial Developer are Copyright (C) 2009-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,13 +34,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Makes a new TBContact object that has functions to get and set various values
- * for a contact independently of the version of Thunderbird (using com.gContactSync.GAbManager).
+ * for a contact independently of the version of Thunderbird (using gContactSync.GAbManager).
  * Optionally takes the parent directory and is able to update the card in that
  * directory.
  * 
@@ -49,13 +48,13 @@ if (!com.gContactSync) {com.gContactSync = {};}
  * @class
  * @constructor
  */
-com.gContactSync.TBContact = function gCS_TBContact(aCard, aDirectory) {
+gContactSync.TBContact = function gCS_TBContact(aCard, aDirectory) {
   if (!(aCard instanceof Components.interfaces.nsIAbCard)) {
-    com.gContactSync.LOGGER.LOG_ERROR("Invalid aCard passed to the TBContact constructor: " +
+    gContactSync.LOGGER.LOG_ERROR("Invalid aCard passed to the TBContact constructor: " +
                                       aCard + "\nCalled by: " + this.caller);
     throw "Invalid aCard passed to TBContact";
   }
-  //if (!(aDirectory instanceof com.gContactSync.AddressBook)) {
+  //if (!(aDirectory instanceof gContactSync.AddressBook)) {
   //  throw "Error - invalid directory sent to the TBContact constructor";
   //}
   this.mAddressBook = aDirectory;
@@ -64,7 +63,7 @@ com.gContactSync.TBContact = function gCS_TBContact(aCard, aDirectory) {
   this.mUpdatePhoto = false;
 };
 
-com.gContactSync.TBContact.prototype = {
+gContactSync.TBContact.prototype = {
   /**
    * Returns the value of the requested property of this contact.
    *
@@ -77,16 +76,16 @@ com.gContactSync.TBContact.prototype = {
       throw "Error - invalid attribute sent to TBContact.getValue";
     }
     if (aAttribute === "LastModifiedDate") {
-      var ret = com.gContactSync.GAbManager.getCardValue(this.mContact, aAttribute);
+      var ret = gContactSync.GAbManager.getCardValue(this.mContact, aAttribute);
       if (isNaN(ret) || !isFinite(ret)) {
-        com.gContactSync.LOGGER.LOG_WARNING(" * Couldn't parse date (" + ret + ")");
+        gContactSync.LOGGER.LOG_WARNING(" * Couldn't parse date (" + ret + ")");
         ret = 1;
       }
       return ret;
     } else if (aAttribute === "HomeAddressMult" || aAttribute === "WorkAddressMult") {
       var type = aAttribute.substring(0, 4);
-      var addr = com.gContactSync.GAbManager.getCardValue(this.mContact, type + "Address");
-      var line2 = com.gContactSync.GAbManager.getCardValue(this.mContact, type + "Address2");
+      var addr = gContactSync.GAbManager.getCardValue(this.mContact, type + "Address");
+      var line2 = gContactSync.GAbManager.getCardValue(this.mContact, type + "Address2");
       if (line2) { addr += "\n" + line2; }
       return addr;
     // Postbox stores additional e-mail addresses already
@@ -100,7 +99,7 @@ com.gContactSync.TBContact.prototype = {
       }
       return null;
     }
-    return com.gContactSync.GAbManager.getCardValue(this.mContact, aAttribute);
+    return gContactSync.GAbManager.getCardValue(this.mContact, aAttribute);
   },
   /**
    * Returns the Google ID of this contact, if any, and forces it to be
@@ -110,7 +109,7 @@ com.gContactSync.TBContact.prototype = {
    */
   getID: function TBContact_getID() {
     var id = this.getValue("GoogleID") || "";
-    return com.gContactSync.fixURL(id.toLowerCase());
+    return gContactSync.fixURL(id.toLowerCase());
   },
   /**
    * Sets the value of the requested attribute of this contact and optionally
@@ -140,10 +139,10 @@ com.gContactSync.TBContact.prototype = {
     } else if (aAttribute === "HomeAddressMult" || aAttribute === "WorkAddressMult") {
       var type = aAttribute.substring(0, 4);
       var values = aValue ? aValue.split("\n") : [aValue, aValue];
-      com.gContactSync.GAbManager.setCardValue(this.mContact, type + "Address", values[0]);
-      com.gContactSync.GAbManager.setCardValue(this.mContact, type + "Address2", values[1]);
+      gContactSync.GAbManager.setCardValue(this.mContact, type + "Address", values[0]);
+      gContactSync.GAbManager.setCardValue(this.mContact, type + "Address2", values[1]);
     } else {
-      com.gContactSync.GAbManager.setCardValue(this.mContact, aAttribute, aValue);
+      gContactSync.GAbManager.setCardValue(this.mContact, aAttribute, aValue);
     }
     if (aUpdate) { return this.update(); }
     return false;
@@ -154,7 +153,7 @@ com.gContactSync.TBContact.prototype = {
    */
   update: function TBContact_update() {
     if (!this.mAddressBook) {
-      com.gContactSync.LOGGER.LOG_WARNING("Warning - TBContact.update called w/o a directory");
+      gContactSync.LOGGER.LOG_WARNING("Warning - TBContact.update called w/o a directory");
       return false;
     }
     return this.mAddressBook.updateContact(this);
@@ -165,7 +164,7 @@ com.gContactSync.TBContact.prototype = {
    */
   remove: function TBContact_remove() {
     if (!this.mAddressBook) {
-      com.gContactSync.LOGGER.LOG_WARNING("Warning - TBContact.remove called w/o a directory");
+      gContactSync.LOGGER.LOG_WARNING("Warning - TBContact.remove called w/o a directory");
       return false;
     }
     return this.mAddressBook.deleteContacts([this]);
@@ -211,11 +210,11 @@ com.gContactSync.TBContact.prototype = {
 
     } else if (aInfo.etag === this.getValue("PhotoEtag")) {
 
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo is already up-to-date");
+      gContactSync.LOGGER.VERBOSE_LOG(" * Photo is already up-to-date");
 
     } else {
 
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo will be downloaded");
+      gContactSync.LOGGER.VERBOSE_LOG(" * Photo will be downloaded");
       this.setValue("PhotoEtag", aInfo.etag);
       this.mUpdatePhoto = true;
     }

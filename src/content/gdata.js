@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2015
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,15 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 window.addEventListener("load",
   /** Initializes the gdata class when the window has finished loading */
   function gCS_gdataLoadListener() {
     window.removeEventListener("load", gCS_gdataLoadListener, false);
-    com.gContactSync.gdata.contacts.init();
+    gContactSync.gdata.contacts.init();
   },
 false);
 
@@ -52,7 +51,7 @@ false);
  * http://code.google.com/apis/contacts/
  * @class
  */
-com.gContactSync.gdata = {
+gContactSync.gdata = {
   CLIENT_ID:                  "874495714229-5m7jmsjebv6nrf61q14siutq43bi1gvt.apps.googleusercontent.com",
   CLIENT_SECRET:              "vayAK3lt9f4tMcMK1HZ4XZqG",
   REDIRECT_URI:               "urn:ietf:wg:oauth:2.0:oob",
@@ -79,11 +78,11 @@ com.gContactSync.gdata = {
    * @return {string} The OAuth URL.
    */
   getOAuthURL: function gdata_getOAuthURL(aEmail) {
-    return com.gContactSync.gdata.OAUTH_URL +
-           "?response_type=" + com.gContactSync.gdata.RESPONSE_TYPE +
-           "&client_id=" + com.gContactSync.gdata.CLIENT_ID +
-           "&redirect_uri=" + com.gContactSync.gdata.REDIRECT_URI +
-           "&scope=" + com.gContactSync.gdata.SCOPE +
+    return gContactSync.gdata.OAUTH_URL +
+           "?response_type=" + gContactSync.gdata.RESPONSE_TYPE +
+           "&client_id=" + gContactSync.gdata.CLIENT_ID +
+           "&redirect_uri=" + gContactSync.gdata.REDIRECT_URI +
+           "&scope=" + gContactSync.gdata.SCOPE +
            "&login_hint=" + aEmail;
   },
   /**
@@ -103,28 +102,28 @@ com.gContactSync.gdata = {
     if (start >= end)
       return "";
     address = decodeURIComponent(aId.substring(start, end));
-    com.gContactSync.LOGGER.VERBOSE_LOG("found address: " + address + " from ID: " + aId);
+    gContactSync.LOGGER.VERBOSE_LOG("found address: " + address + " from ID: " + aId);
     return address;
   },
   /** Namespaces used in the API */
   namespaces: {
     /** The APP namespace */
-    APP:         new com.gContactSync.Namespace("http://www.w3.org/2007/app",
+    APP:         new gContactSync.Namespace("http://www.w3.org/2007/app",
                                                 "app:"),
     /** The ATOM namespace */
-    ATOM:        new com.gContactSync.Namespace("http://www.w3.org/2005/Atom",
+    ATOM:        new gContactSync.Namespace("http://www.w3.org/2005/Atom",
                                                 "atom:"),
     /** The GD namespace */
-    GD:          new com.gContactSync.Namespace("http://schemas.google.com/g/2005",
+    GD:          new gContactSync.Namespace("http://schemas.google.com/g/2005",
                                                 "gd:"),
     /** The GCONTACT namespace */
-    GCONTACT:    new com.gContactSync.Namespace("http://schemas.google.com/contact/2008",
+    GCONTACT:    new gContactSync.Namespace("http://schemas.google.com/contact/2008",
                                                 "gContact:"),
     /** The OPEN SEARCH namespace */
-    OPEN_SEARCH: new com.gContactSync.Namespace("http://a9.com/-/spec/opensearch/1.1/",
+    OPEN_SEARCH: new gContactSync.Namespace("http://a9.com/-/spec/opensearch/1.1/",
                                                 "openSearch:"),
     /** The BATCH namespace */
-    BATCH:       new com.gContactSync.Namespace("http://schemas.google.com/gdata/batch",
+    BATCH:       new gContactSync.Namespace("http://schemas.google.com/gdata/batch",
                                                 "batch:")
   },
   /** some things related to contacts, such as related URLs and HTTP Request
@@ -190,15 +189,15 @@ com.gContactSync.gdata = {
      * is stored.
      */
     init: function gdata_contacts_init() {
-      var GElement             = com.gContactSync.GElement,
+      var GElement             = gContactSync.GElement,
           untyped              = this.types.UNTYPED,
           typedWithChild       = this.types.TYPED_WITH_CHILD,
           typedWithAttr        = this.types.TYPED_WITH_ATTR,
           parentTyped          = this.types.PARENT_TYPED,
           eventType            = this.types.EVENT,
-          gd                   = com.gContactSync.gdata.namespaces.GD,
-          atom                 = com.gContactSync.gdata.namespaces.ATOM,
-          gcontact             = com.gContactSync.gdata.namespaces.GCONTACT;
+          gd                   = gContactSync.gdata.namespaces.GD,
+          atom                 = gContactSync.gdata.namespaces.ATOM,
+          gcontact             = gContactSync.gdata.namespaces.GCONTACT;
       this.postalAddress       = new GElement(typedWithChild, "postalAddress",
                                              gd, this.POSTAL_ADDRESS_TYPES);
       this.phoneNumber         = new GElement(typedWithChild, "phoneNumber", gd,
@@ -293,10 +292,10 @@ com.gContactSync.gdata = {
         if (tagName === "website" || tagName === "relation") {
           aElement.setAttribute(relAttr, aType);
         } else if (tagName === "im") {
-          aElement.setAttribute("protocol", com.gContactSync.gdata.contacts.rel + "#" + aType);
-          aElement.setAttribute("rel",      com.gContactSync.gdata.contacts.rel + "#other");
+          aElement.setAttribute("protocol", gContactSync.gdata.contacts.rel + "#" + aType);
+          aElement.setAttribute("rel",      gContactSync.gdata.contacts.rel + "#other");
         } else {
-          aElement.setAttribute(relAttr, com.gContactSync.gdata.contacts.rel + "#" + aType);
+          aElement.setAttribute(relAttr, gContactSync.gdata.contacts.rel + "#" + aType);
         }
         // Remove a label, if present
         if (aElement.hasAttribute("label")) {
@@ -429,7 +428,7 @@ com.gContactSync.gdata = {
      */
     getNumberOfContacts: function gdata_contacts_getNumberOfContacts(aAtom) {
       return aAtom.getElementsByTagNameNS("totalResults",
-                                          com.gContactSync.gdata.namespaces.OPEN_SEARCH.url);
+                                          gContactSync.gdata.namespaces.OPEN_SEARCH.url);
     }
   },
   /**
@@ -437,9 +436,9 @@ com.gContactSync.gdata = {
    * @returns {boolean} True if there is at least one auth token.
    */ 
   isAuthValid: function gdata_isAuthValid() {
-    if (com.gContactSync.LoginManager.mNumAuthTokens === 0)
-      com.gContactSync.LoginManager.getAuthTokens();
-    return com.gContactSync.LoginManager.mNumAuthTokens > 0;
+    if (gContactSync.LoginManager.mNumAuthTokens === 0)
+      gContactSync.LoginManager.getAuthTokens();
+    return gContactSync.LoginManager.mNumAuthTokens > 0;
   },
   /**
    * Backs up the Google contacts or groups feed to a file.
@@ -450,13 +449,13 @@ com.gContactSync.gdata = {
    * @return {boolean} True if the backup was successful.
    */
   backupFeed: function gdata_backupFeed(aFeed, aAccount, aPrefix, aSuffix) {
-    var destFile = com.gContactSync.FileIO.getProfileDirectory();
-    destFile.append(com.gContactSync.FileIO.fileNames.FOLDER_NAME);
-    destFile.append(com.gContactSync.FileIO.fileNames.GOOGLE_BACKUP_DIR);
+    var destFile = gContactSync.FileIO.getProfileDirectory();
+    destFile.append(gContactSync.FileIO.fileNames.FOLDER_NAME);
+    destFile.append(gContactSync.FileIO.fileNames.GOOGLE_BACKUP_DIR);
     destFile.append((aPrefix || "") + aAccount + (aSuffix || ""));
-    com.gContactSync.LOGGER.LOG("Beginning a backup of the Google Account:\n" +
+    gContactSync.LOGGER.LOG("Beginning a backup of the Google Account:\n" +
                                 aAccount + "\nto:\n" + destFile.path);
-    return com.gContactSync.FileIO.writeToFile(destFile, aFeed);
+    return gContactSync.FileIO.writeToFile(destFile, aFeed);
   },
   /**
    * Requests a new refresh token.
@@ -470,16 +469,16 @@ com.gContactSync.gdata = {
     // when the setup window loads, set its onunload property to begin a sync
     wizard.addEventListener("load", function onloadListener() {
       var browser = wizard.document.getElementById("browser");
-      var url = com.gContactSync.gdata.getOAuthURL(aEmail);
-      com.gContactSync.LOGGER.VERBOSE_LOG("Opening browser with URL: " + url);
+      var url = gContactSync.gdata.getOAuthURL(aEmail);
+      gContactSync.LOGGER.VERBOSE_LOG("Opening browser with URL: " + url);
       browser.loadURI(url);
-      com.gContactSync.OAuth2.init(browser,
-                                   com.gContactSync.gdata.REDIRECT_URI,
+      gContactSync.OAuth2.init(browser,
+                                   gContactSync.gdata.REDIRECT_URI,
                                    function callback(aResponse) {
                                       wizard.close();
                                       aCallback(aResponse);
                                     },
-                                   com.gContactSync.gdata.REDIRECT_TITLE
+                                   gContactSync.gdata.REDIRECT_TITLE
       );
     });
   },

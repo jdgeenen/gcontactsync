@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2015
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,15 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 window.addEventListener("load",
   /** Initializes the ContactConverter class when the window has finished loading */
   function gCS_ContactConverterLoadListener() {
     window.removeEventListener("load", gCS_ContactConverterLoadListener, false);
-    com.gContactSync.ContactConverter.init();
+    gContactSync.ContactConverter.init();
   },
 false);
 
@@ -53,7 +52,7 @@ false);
  * calling the init() function.
  * @class
  */
-com.gContactSync.ContactConverter = {
+gContactSync.ContactConverter = {
   /** The GD Namespace */
   GD:            {},
   /** The ATOM/XML Namespace */
@@ -80,80 +79,80 @@ com.gContactSync.ContactConverter = {
    * objects and the two namespaces most commonly used by this object.
    */
   init: function ContactConverter_init() {
-    this.GD = com.gContactSync.gdata.namespaces.GD;
-    this.ATOM = com.gContactSync.gdata.namespaces.ATOM;
-    var phoneTypes = com.gContactSync.Preferences.mSyncPrefs.phoneTypes.value;
+    this.GD = gContactSync.gdata.namespaces.GD;
+    this.ATOM = gContactSync.gdata.namespaces.ATOM;
+    var phoneTypes = gContactSync.Preferences.mSyncPrefs.phoneTypes.value;
     // ConverterElement(aElement, aTbName, aIndex, aType)
     // This array stores info on what tags in Google's feed sync with which
     // properties in Thunderbird.  gdata.contacts has info on these tags
     this.mConverterArr = [
       // Various components of a name
-      new com.gContactSync.ConverterElement("fullName",       "DisplayName",    0),
-      new com.gContactSync.ConverterElement("givenName",      "FirstName",      0),
-      new com.gContactSync.ConverterElement("familyName",     "LastName",       0),
-      new com.gContactSync.ConverterElement("additionalName", "AdditionalName", 0),
-      new com.gContactSync.ConverterElement("namePrefix",     "namePrefix",     0),
-      new com.gContactSync.ConverterElement("nameSuffix",     "nameSuffix",     0),
-      new com.gContactSync.ConverterElement("nickname",       "NickName",       0),
+      new gContactSync.ConverterElement("fullName",       "DisplayName",    0),
+      new gContactSync.ConverterElement("givenName",      "FirstName",      0),
+      new gContactSync.ConverterElement("familyName",     "LastName",       0),
+      new gContactSync.ConverterElement("additionalName", "AdditionalName", 0),
+      new gContactSync.ConverterElement("namePrefix",     "namePrefix",     0),
+      new gContactSync.ConverterElement("nameSuffix",     "nameSuffix",     0),
+      new gContactSync.ConverterElement("nickname",       "NickName",       0),
       // general
-      new com.gContactSync.ConverterElement("notes",          "Notes",          0),
-      new com.gContactSync.ConverterElement("id",             "GoogleID",       0),
+      new gContactSync.ConverterElement("notes",          "Notes",          0),
+      new gContactSync.ConverterElement("id",             "GoogleID",       0),
       // e-mail addresses
-      new com.gContactSync.ConverterElement("email", "PrimaryEmail", 0, "other"),
-      new com.gContactSync.ConverterElement("email", "SecondEmail",  1, "other"),
-      new com.gContactSync.ConverterElement("email", "ThirdEmail",   2, "other"),
-      new com.gContactSync.ConverterElement("email", "FourthEmail",  3, "other"),
+      new gContactSync.ConverterElement("email", "PrimaryEmail", 0, "other"),
+      new gContactSync.ConverterElement("email", "SecondEmail",  1, "other"),
+      new gContactSync.ConverterElement("email", "ThirdEmail",   2, "other"),
+      new gContactSync.ConverterElement("email", "FourthEmail",  3, "other"),
       // IM screennames
-      new com.gContactSync.ConverterElement("im", "_AimScreenName",   0, "AIM"),
-      new com.gContactSync.ConverterElement("im", "_GoogleTalk",      0, "GOOGLE_TALK"),
-      new com.gContactSync.ConverterElement("im", "_ICQ",             0, "ICQ"),
-      new com.gContactSync.ConverterElement("im", "_Yahoo",           0, "YAHOO"),
-      new com.gContactSync.ConverterElement("im", "_MSN",             0, "MSN"),
-      new com.gContactSync.ConverterElement("im", "_JabberId",        0, "JABBER"),
-      new com.gContactSync.ConverterElement("im", "_Skype",           0, "SKYPE"),
-      new com.gContactSync.ConverterElement("im", "_QQ",              0, "QQ"),
+      new gContactSync.ConverterElement("im", "_AimScreenName",   0, "AIM"),
+      new gContactSync.ConverterElement("im", "_GoogleTalk",      0, "GOOGLE_TALK"),
+      new gContactSync.ConverterElement("im", "_ICQ",             0, "ICQ"),
+      new gContactSync.ConverterElement("im", "_Yahoo",           0, "YAHOO"),
+      new gContactSync.ConverterElement("im", "_MSN",             0, "MSN"),
+      new gContactSync.ConverterElement("im", "_JabberId",        0, "JABBER"),
+      new gContactSync.ConverterElement("im", "_Skype",           0, "SKYPE"),
+      new gContactSync.ConverterElement("im", "_QQ",              0, "QQ"),
       // the phone numbers
-      new com.gContactSync.ConverterElement("phoneNumber", "WorkPhone",      0, "work"),
-      new com.gContactSync.ConverterElement("phoneNumber", "HomePhone",      (phoneTypes ? 1 : 0), "home"),
-      new com.gContactSync.ConverterElement("phoneNumber", "FaxNumber",      (phoneTypes ? 2 : 0), "work_fax"),
-      new com.gContactSync.ConverterElement("phoneNumber", "CellularNumber", (phoneTypes ? 3 : 0), "mobile"),
-      new com.gContactSync.ConverterElement("phoneNumber", "PagerNumber",    (phoneTypes ? 4 : 0), "pager"),
-      new com.gContactSync.ConverterElement("phoneNumber", "HomeFaxNumber",  (phoneTypes ? 5 : 0), "home_fax"),
-      new com.gContactSync.ConverterElement("phoneNumber", "OtherNumber",    (phoneTypes ? 6 : 0), "other"),
+      new gContactSync.ConverterElement("phoneNumber", "WorkPhone",      0, "work"),
+      new gContactSync.ConverterElement("phoneNumber", "HomePhone",      (phoneTypes ? 1 : 0), "home"),
+      new gContactSync.ConverterElement("phoneNumber", "FaxNumber",      (phoneTypes ? 2 : 0), "work_fax"),
+      new gContactSync.ConverterElement("phoneNumber", "CellularNumber", (phoneTypes ? 3 : 0), "mobile"),
+      new gContactSync.ConverterElement("phoneNumber", "PagerNumber",    (phoneTypes ? 4 : 0), "pager"),
+      new gContactSync.ConverterElement("phoneNumber", "HomeFaxNumber",  (phoneTypes ? 5 : 0), "home_fax"),
+      new gContactSync.ConverterElement("phoneNumber", "OtherNumber",    (phoneTypes ? 6 : 0), "other"),
       // company info
-      new com.gContactSync.ConverterElement("orgTitle",          "JobTitle",       0),
-      new com.gContactSync.ConverterElement("orgName",           "Company",        0),
-      new com.gContactSync.ConverterElement("orgDepartment",     "Department",     0),
-      new com.gContactSync.ConverterElement("orgJobDescription", "JobDescription", 0),
-      new com.gContactSync.ConverterElement("orgSymbol",         "CompanySymbol",  0),
+      new gContactSync.ConverterElement("orgTitle",          "JobTitle",       0),
+      new gContactSync.ConverterElement("orgName",           "Company",        0),
+      new gContactSync.ConverterElement("orgDepartment",     "Department",     0),
+      new gContactSync.ConverterElement("orgJobDescription", "JobDescription", 0),
+      new gContactSync.ConverterElement("orgSymbol",         "CompanySymbol",  0),
       // the URLs from Google - Photo, Self, and Edit
-      new com.gContactSync.ConverterElement("PhotoURL", "PhotoURL", 0),
-      new com.gContactSync.ConverterElement("SelfURL",  "SelfURL",  0),
-      new com.gContactSync.ConverterElement("EditURL",  "EditURL",  0),
+      new gContactSync.ConverterElement("PhotoURL", "PhotoURL", 0),
+      new gContactSync.ConverterElement("SelfURL",  "SelfURL",  0),
+      new gContactSync.ConverterElement("EditURL",  "EditURL",  0),
       // Websites
-      new com.gContactSync.ConverterElement("website",   "WebPage2", 0, "home"),
-      new com.gContactSync.ConverterElement("website",   "WebPage1", 1, "work"),
+      new gContactSync.ConverterElement("website",   "WebPage2", 0, "home"),
+      new gContactSync.ConverterElement("website",   "WebPage1", 1, "work"),
     ];
 
     // Only synchronize (if possible) postal addresses if the preference was
     // changed to true
-    if (com.gContactSync.Preferences.mSyncPrefs.syncAddresses.value) {
+    if (gContactSync.Preferences.mSyncPrefs.syncAddresses.value) {
       // Home address
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("street",   "HomeAddressMult", 0, "home"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("city",     "HomeCity",        0, "home"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("region",   "HomeState",       0, "home"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("postcode", "HomeZipCode",     0, "home"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("country",  "HomeCountry",     0, "home"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("street",   "HomeAddressMult", 0, "home"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("city",     "HomeCity",        0, "home"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("region",   "HomeState",       0, "home"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("postcode", "HomeZipCode",     0, "home"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("country",  "HomeCountry",     0, "home"));
       // Work address
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("street",   "WorkAddressMult", 0, "work"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("city",     "WorkCity",        0, "work"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("region",   "WorkState",       0, "work"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("postcode", "WorkZipCode",     0, "work"));
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("country",  "WorkCountry",     0, "work"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("street",   "WorkAddressMult", 0, "work"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("city",     "WorkCity",        0, "work"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("region",   "WorkState",       0, "work"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("postcode", "WorkZipCode",     0, "work"));
+      this.mConverterArr.push(new gContactSync.ConverterElement("country",  "WorkCountry",     0, "work"));
     }
-    for (var i = 0; i < com.gContactSync.Preferences.mSyncPrefs.numRelations.value; i++) {
+    for (var i = 0; i < gContactSync.Preferences.mSyncPrefs.numRelations.value; i++) {
       // Relation fields
-      this.mConverterArr.push(new com.gContactSync.ConverterElement("relation", "Relation" + i, i, ""));
+      this.mConverterArr.push(new gContactSync.ConverterElement("relation", "Relation" + i, i, ""));
     }
     this.mInitialized = true;
   },
@@ -166,7 +165,7 @@ com.gContactSync.ContactConverter = {
     if (!this.mInitialized)
       this.init();
     var arr = this.mAddedAttributes.slice();
-    for (var i = 0; i < com.gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
+    for (var i = 0; i < gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
       arr.push("Relation" + i);
       arr.push("Relation" + i + "Type");
     }
@@ -193,14 +192,14 @@ com.gContactSync.ContactConverter = {
         value,
         type;
     if (!aGContact)
-      aGContact = new com.gContactSync.GContact();
+      aGContact = new gContactSync.GContact();
     if (!this.mInitialized)
       this.init();
-    if (!(aTBContact instanceof com.gContactSync.TBContact)) {
+    if (!(aTBContact instanceof gContactSync.TBContact)) {
       throw "Invalid TBContact sent to ContactConverter.cardToAtomXML from " +
             this.caller;
     }
-    if (!(ab instanceof com.gContactSync.AddressBook)) {
+    if (!(ab instanceof gContactSync.AddressBook)) {
       throw "Invalid TBContact (no mAddressBook) sent to " +
             "ContactConverter.cardToAtomXML from " + this.caller;
     }
@@ -212,19 +211,19 @@ com.gContactSync.ContactConverter = {
       if (arr[i].tbName.indexOf("URL") !== -1 || arr[i].tbName === "GoogleID")
         continue;
       obj = arr[i];
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * " + obj.tbName);
+      gContactSync.LOGGER.VERBOSE_LOG(" * " + obj.tbName);
       value = this.checkValue(aTBContact.getValue(obj.tbName));
       // for the type, get the type from the card, or use its default
       type = aTBContact.getValue(obj.tbName + "Type");
       if (!type || type === "")
         type = obj.type;
       // see the dummy e-mail note below
-      if (obj.tbName === com.gContactSync.dummyEmailName &&
-          com.gContactSync.isDummyEmail(value)) {
+      if (obj.tbName === gContactSync.dummyEmailName &&
+          gContactSync.isDummyEmail(value)) {
         value = null;
         type  = null;
       }
-      com.gContactSync.LOGGER.VERBOSE_LOG("   - " + value + " type: " + type);
+      gContactSync.LOGGER.VERBOSE_LOG("   - " + value + " type: " + type);
       aGContact.setValue(obj.elementName, obj.index, type, value);
       nonEmpty = nonEmpty || value;
     }
@@ -237,8 +236,8 @@ com.gContactSync.ContactConverter = {
     // myContactsName group
     // Group membership does not make a contact not "empty" according to Google's API.
     if (ab.mPrefs.myContacts === "true") {
-      if (isNew && com.gContactSync.Sync.mContactsUrl) {
-        aGContact.setGroups([com.gContactSync.Sync.mContactsUrl]);
+      if (isNew && gContactSync.Sync.mContactsUrl) {
+        aGContact.setGroups([gContactSync.Sync.mContactsUrl]);
       }
     // If syncing all groups then find all the lists this contact is in and set
     // those as the contact's groups
@@ -246,38 +245,38 @@ com.gContactSync.ContactConverter = {
       // set the groups
       var groups = [],
           list;
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Determining the groups this contact belongs to");
-      for (i in com.gContactSync.Sync.mLists) {
-        list = com.gContactSync.Sync.mLists[i];
-        if (list instanceof com.gContactSync.GMailList) {
+      gContactSync.LOGGER.VERBOSE_LOG(" * Determining the groups this contact belongs to");
+      for (i in gContactSync.Sync.mLists) {
+        list = gContactSync.Sync.mLists[i];
+        if (list instanceof gContactSync.GMailList) {
           if (list.hasContact(aTBContact)) {
-            com.gContactSync.LOGGER.VERBOSE_LOG("   - " + list.getName());
+            gContactSync.LOGGER.VERBOSE_LOG("   - " + list.getName());
             groups.push(i);
           }
         } else {
-          com.gContactSync.LOGGER.LOG_WARNING("   - Found an invalid list: " + i);
+          gContactSync.LOGGER.LOG_WARNING("   - Found an invalid list: " + i);
         }
       }
       aGContact.setGroups(groups);
     }
     // Upload the photo
     // Photos do not make a contact non-empty by Google's API.
-    if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
+    if (gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
       this.savePhotoFromTBContact(aTBContact, aGContact);
     }
     
     // Add the phonetic first and last names
-    if (com.gContactSync.Preferences.mSyncPrefs.syncPhoneticNames.value) {
+    if (gContactSync.Preferences.mSyncPrefs.syncPhoneticNames.value) {
       var phonFirstName = aTBContact.getValue("PhoneticFirstName");
       var phonLastName = aTBContact.getValue("PhoneticLastName");
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Phonetic: " + phonFirstName + " " + phonLastName);
+      gContactSync.LOGGER.VERBOSE_LOG(" * Phonetic: " + phonFirstName + " " + phonLastName);
       aGContact.setAttribute("givenName",
-                             com.gContactSync.gdata.namespaces.GD.url,
+                             gContactSync.gdata.namespaces.GD.url,
                              0,
                              "yomi",
                              phonFirstName);
       aGContact.setAttribute("familyName",
-                             com.gContactSync.gdata.namespaces.GD.url,
+                             gContactSync.gdata.namespaces.GD.url,
                              0,
                              "yomi",
                              phonLastName);
@@ -311,7 +310,7 @@ com.gContactSync.ContactConverter = {
                                      .getService(Components.interfaces.nsIIOService)
                                      .newFileURI(file));
       } else {
-        com.gContactSync.LOGGER.VERBOSE_LOG(" * Photo is already up-to-date");
+        gContactSync.LOGGER.VERBOSE_LOG(" * Photo is already up-to-date");
       }
     } else {
       aGContact.setPhoto("");
@@ -328,15 +327,15 @@ com.gContactSync.ContactConverter = {
   makeCard: function ContactConverter_makeCard(aGContact, aTBContact) {
     if (!aGContact)
       throw "Invalid aGContact parameter supplied to the 'makeCard' method" +
-            com.gContactSync.StringBundle.getStr("pleaseReport");
+            gContactSync.StringBundle.getStr("pleaseReport");
     if (!this.mInitialized)
       this.init();
-    if (!(aTBContact instanceof com.gContactSync.TBContact)) {
+    if (!(aTBContact instanceof gContactSync.TBContact)) {
       throw "Invalid TBContact sent to ContactConverter.makeCard from " +
             this.caller;
     }
     var ab = aTBContact.mAddressBook;
-    if (!(ab instanceof com.gContactSync.AddressBook)) {
+    if (!(ab instanceof gContactSync.AddressBook)) {
       throw "Invalid TBContact (no mAddressBook) sent to " +
             "ContactConverter.cardToAtomXML from " + this.caller;
     }
@@ -345,14 +344,14 @@ com.gContactSync.ContactConverter = {
     for (var i = 0, length = arr.length; i < length; i++) {
       var obj = arr[i],
           property = aGContact.getValue(obj.elementName, obj.index, obj.type);
-      property = property || new com.gContactSync.Property("", "");
-      com.gContactSync.LOGGER.VERBOSE_LOG(obj.tbName + ": '" + property.value +
+      property = property || new gContactSync.Property("", "");
+      gContactSync.LOGGER.VERBOSE_LOG(obj.tbName + ": '" + property.value +
                                           "', type: '" + property.type + "'");
       // Thunderbird has problems with contacts who do not have an e-mail addr
       // and are in Mailing Lists.  To avoid problems, use a dummy e-mail addr
       // that is hidden from the user
-      if (obj.tbName === com.gContactSync.dummyEmailName && !property.value) {
-        property.value = com.gContactSync.makeDummyEmail(aGContact);
+      if (obj.tbName === gContactSync.dummyEmailName && !property.value) {
+        property.value = gContactSync.makeDummyEmail(aGContact);
         property.type  = "other";
       }
       aTBContact.setValue(obj.tbName, property.value);
@@ -361,7 +360,7 @@ com.gContactSync.ContactConverter = {
         aTBContact.setValue(obj.tbName + "Type", property.type);
     }
     // get the extended properties
-    arr = com.gContactSync.Preferences.mExtendedProperties;
+    arr = gContactSync.Preferences.mExtendedProperties;
     for (i = 0, length = arr.length; i < length; i++) {
       var value = aGContact.getExtendedProperty(arr[i]);
       value = value ? value.value : null;
@@ -372,21 +371,21 @@ com.gContactSync.ContactConverter = {
     this.setTBBirthday(aTBContact, aGContact.getValue("birthday", 0));
     this.setTBAnniversary(aTBContact, aGContact.getValue("event", 0, "anniversary"));
 
-    if (com.gContactSync.Preferences.mSyncPrefs.getPhotos.value) {
+    if (gContactSync.Preferences.mSyncPrefs.getPhotos.value) {
 
       this.savePhotoFromGContact(aTBContact, aGContact);
     }
     
     // Add the phonetic first and last names
-    if (com.gContactSync.Preferences.mSyncPrefs.syncPhoneticNames.value) {
+    if (gContactSync.Preferences.mSyncPrefs.syncPhoneticNames.value) {
       aTBContact.setValue("PhoneticFirstName",
                           aGContact.getAttribute("givenName",
-                                                 com.gContactSync.gdata.namespaces.GD.url,
+                                                 gContactSync.gdata.namespaces.GD.url,
                                                  0,
                                                  "yomi"));
       aTBContact.setValue("PhoneticLastName",
                           aGContact.getAttribute("familyName",
-                                                 com.gContactSync.gdata.namespaces.GD.url,
+                                                 gContactSync.gdata.namespaces.GD.url,
                                                  0,
                                                  "yomi"));
     }
@@ -403,7 +402,7 @@ com.gContactSync.ContactConverter = {
    */
   setTBGroups: function ContactConverter_setTBGroups(aTBContact, aGContact) {
     var groups = aGContact.getValue("groupMembershipInfo"),
-        lists  = com.gContactSync.Sync.mLists,
+        lists  = gContactSync.Sync.mLists,
         list,
         group;
     for (var i in lists) {
@@ -448,10 +447,10 @@ com.gContactSync.ContactConverter = {
     var numbers = [];
     for (var attr in numberAttributes) {
       var tbValue = aTBContact.getValue(numberAttributes[attr]);
-      if (tbValue) {numbers.push(new com.gContactSync.Property(tbValue, aTBContact.getValue(numberAttributes[attr] + "Type")));}
+      if (tbValue) {numbers.push(new gContactSync.Property(tbValue, aTBContact.getValue(numberAttributes[attr] + "Type")));}
     }
     for (var attr in numberAttributes) {
-      var prop = numbers.length ? numbers.shift : new com.gContactSync.Property(null, null);
+      var prop = numbers.length ? numbers.shift : new gContactSync.Property(null, null);
       aTBContact.setValue(numberAttributes[attr], prop.value);
       aTBContact.setValue(numberAttributes[attr] + "Type", prop.type);
     }
@@ -467,15 +466,15 @@ com.gContactSync.ContactConverter = {
           value = this.checkValue(aTBContact.getValue(obj.tbName)),
           type = aTBContact.getValue(obj.tbName + "Type") || obj.type;
 
-      property = property || new com.gContactSync.Property("", "");
+      property = property || new gContactSync.Property("", "");
 
-      if (obj.tbName === com.gContactSync.dummyEmailName &&
-          com.gContactSync.isDummyEmail(value)) {
+      if (obj.tbName === gContactSync.dummyEmailName &&
+          gContactSync.isDummyEmail(value)) {
         value = null;
         type  = null;
       }
 
-      com.gContactSync.LOGGER.VERBOSE_LOG(obj.tbName + ": '" + property.value +
+      gContactSync.LOGGER.VERBOSE_LOG(obj.tbName + ": '" + property.value +
                                           "'/'" + value + "' , type: '" + property.type +
                                           "'/'" + type + "'");
 
@@ -504,11 +503,11 @@ com.gContactSync.ContactConverter = {
     var tbPhoto = aTBContact.getValue("PhotoName");
     var gPhoto = aGContact.getPhotoInfo().etag;
     if (tbPhoto && (!gPhoto || aUpdateGoogleInConflicts)) {
-      if (com.gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
+      if (gContactSync.Preferences.mSyncPrefs.sendPhotos.value) {
         this.savePhotoFromTBContact(aTBContact, aGContact);
       }
     } else if (gPhoto) {
-      if (com.gContactSync.Preferences.mSyncPrefs.getPhotos.value) {
+      if (gContactSync.Preferences.mSyncPrefs.getPhotos.value) {
         tbContactUpdated = true;
         this.savePhotoFromGContact(aTBContact, aGContact);
       }
@@ -538,14 +537,14 @@ com.gContactSync.ContactConverter = {
 
     var tbPhonFirst = aTBContact.getValue("PhoneticFirstName");
     var gPhonFirst  = aGContact.getAttribute("givenName",
-                                             com.gContactSync.gdata.namespaces.GD.url,
+                                             gContactSync.gdata.namespaces.GD.url,
                                              0,
                                              "yomi");
     if (tbPhonFirst != gPhonFirst) {
       if (tbPhonFirst && (!gPhonFirst || aUpdateGoogleInConflicts)) {
         gContactUpdated = true;
         aGContact.setAttribute("givenName",
-                               com.gContactSync.gdata.namespaces.GD.url,
+                               gContactSync.gdata.namespaces.GD.url,
                                0,
                                "yomi",
                                tbPhonFirst);
@@ -557,14 +556,14 @@ com.gContactSync.ContactConverter = {
 
     var tbPhonLast = aTBContact.getValue("PhoneticLastName");
     var gPhonLast  = aGContact.getAttribute("familyName",
-                                             com.gContactSync.gdata.namespaces.GD.url,
+                                             gContactSync.gdata.namespaces.GD.url,
                                              0,
                                              "yomi");
     if (tbPhonLast != gPhonLast) {
       if (tbPhonLast && (!gPhonLast || aUpdateGoogleInConflicts)) {
         gContactUpdated = true;
         aGContact.setAttribute("familyName",
-                               com.gContactSync.gdata.namespaces.GD.url,
+                               gContactSync.gdata.namespaces.GD.url,
                                0,
                                "yomi",
                                tbPhonLast);
@@ -623,7 +622,7 @@ com.gContactSync.ContactConverter = {
    */
   setExtendedProperties: function ContactConverter_setExtendedProperties(aGContact, aTBContact) {
     aGContact.removeExtendedProperties();
-    arr = com.gContactSync.Preferences.mExtendedProperties;
+    arr = gContactSync.Preferences.mExtendedProperties;
     var props = {};
     var nonEmpty = false;
     for (i = 0, length = arr.length; i < length; i++) {
@@ -634,7 +633,7 @@ com.gContactSync.ContactConverter = {
         aGContact.setExtendedProperty(arr[i], value);
       }
       else if (arr[i] != "") {
-        com.gContactSync.LOGGER.LOG_WARNING("Found a duplicate extended property: " +
+        gContactSync.LOGGER.LOG_WARNING("Found a duplicate extended property: " +
                                             arr[i]);
       }
     }
@@ -650,7 +649,7 @@ com.gContactSync.ContactConverter = {
         month = null,
         day   = null;
     if (bday && bday.value) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Found a birthday value of " + bday.value);
+      gContactSync.LOGGER.VERBOSE_LOG(" * Found a birthday value of " + bday.value);
       // If it consists of all three date elements: YYYY-M-D
       if (bday.value.indexOf("--") === -1) {
         arr = bday.value.split("-");
@@ -664,9 +663,9 @@ com.gContactSync.ContactConverter = {
         month = arr[0];
         day   = arr[1];
       }
-      com.gContactSync.LOGGER.VERBOSE_LOG("  - Year:  " +  year);
-      com.gContactSync.LOGGER.VERBOSE_LOG("  - Month: " +  month);
-      com.gContactSync.LOGGER.VERBOSE_LOG("  - Day:   " +  day);
+      gContactSync.LOGGER.VERBOSE_LOG("  - Year:  " +  year);
+      gContactSync.LOGGER.VERBOSE_LOG("  - Month: " +  month);
+      gContactSync.LOGGER.VERBOSE_LOG("  - Day:   " +  day);
     }
     aTBContact.setValue("BirthYear",  year);
     aTBContact.setValue("BirthMonth", month);
@@ -680,14 +679,14 @@ com.gContactSync.ContactConverter = {
   setTBAnniversary: function ContactConverter_setTBAnniversary(aTBContact, anniversary) {
     var anniversaryYear = null, anniversaryMonth = null, anniversaryDay = null;
     if (anniversary && anniversary.value) {
-      com.gContactSync.LOGGER.VERBOSE_LOG(" * Found an anniversary value of " + anniversary.value);
+      gContactSync.LOGGER.VERBOSE_LOG(" * Found an anniversary value of " + anniversary.value);
       var anniversaryArray = anniversary.value.split("-");
       if (anniversaryArray.length === 3) {
         anniversaryYear = anniversaryArray[0];
         anniversaryMonth = anniversaryArray[1];
         anniversaryDay   = anniversaryArray[2];
       } else {
-        com.gContactSync.LOGGER.LOG_WARNING("Invalid anniversary value", anniversary.value);
+        gContactSync.LOGGER.LOG_WARNING("Invalid anniversary value", anniversary.value);
       }
     }
     aTBContact.setValue("AnniversaryYear", anniversaryYear);
@@ -734,7 +733,7 @@ com.gContactSync.ContactConverter = {
       // form the birthday string: year-month-day
       birthdayVal = birthYear + "-" + birthMonth + "-" + birthDay;
     }
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Birthday: " + birthdayVal);
+    gContactSync.LOGGER.VERBOSE_LOG(" * Birthday: " + birthdayVal);
     aGContact.setValue("birthday", 0, null, birthdayVal);
     return birthdayVal;
   },
@@ -766,7 +765,7 @@ com.gContactSync.ContactConverter = {
       anniversaryVal = anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay;
     }
 
-    com.gContactSync.LOGGER.VERBOSE_LOG(" * Anniversary: " + anniversaryVal);
+    gContactSync.LOGGER.VERBOSE_LOG(" * Anniversary: " + anniversaryVal);
     aGContact.setValue("event", 0, "anniversary", anniversaryVal);
     return anniversaryVal;
   }

@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2010
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) var com = {}; // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) com.gContactSync = {};
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 /**
  * Contains all of the string bundles included in gContactSync and provides
@@ -45,7 +44,7 @@ if (!com.gContactSync) com.gContactSync = {};
  * NOTE:  Must be initialized when the window is loaded.
  * @class
  */
-com.gContactSync.StringBundle = {
+gContactSync.StringBundle = {
   /** Stores all string bundle elements */
   mBundles:     {},
   /** Stores whether this class has been initialized */
@@ -59,36 +58,36 @@ com.gContactSync.StringBundle = {
    * Initializes the string bundle.
    */
   init: function StringBundle_init() {
-    if (com.gContactSync.StringBundle.mInitialized) {
+    if (gContactSync.StringBundle.mInitialized) {
       return true;
     }
 
-    com.gContactSync.StringBundle.mBundles.mStrings =
+    gContactSync.StringBundle.mBundles.mStrings =
       document.getElementById("gContactSyncStringBundle");
       
-    if (!com.gContactSync.StringBundle.mBundles.mStrings) {
-      var err = "Error - com.gContactSync.StringBundle could not be initialized\n";
-      com.gContactSync.alert(err, "Error");
+    if (!gContactSync.StringBundle.mBundles.mStrings) {
+      var err = "Error - gContactSync.StringBundle could not be initialized\n";
+      gContactSync.alert(err, "Error");
       throw err;
     }
 
     // Check the user agent
     if (window.navigator.userAgent.indexOf("SeaMonkey") != -1) {
-      com.gContactSync.StringBundle.mUserAgent        = "SeaMonkey";
-      com.gContactSync.StringBundle.mReplaceUserAgent = true;
+      gContactSync.StringBundle.mUserAgent        = "SeaMonkey";
+      gContactSync.StringBundle.mReplaceUserAgent = true;
     } else if (window.navigator.userAgent.indexOf("Postbox") != -1) {
-      com.gContactSync.StringBundle.mUserAgent        = "Postbox";
-      com.gContactSync.StringBundle.mReplaceUserAgent = true;
+      gContactSync.StringBundle.mUserAgent        = "Postbox";
+      gContactSync.StringBundle.mReplaceUserAgent = true;
     }
 
-    com.gContactSync.StringBundle.mInitialized = true;
+    gContactSync.StringBundle.mInitialized = true;
     return true;
   },
   /**
    * Searches every string bundle until a string is found with the given name.
-   * If com.gContactSync.StringBundle.mReplaceUserAgent is set to true, this
+   * If gContactSync.StringBundle.mReplaceUserAgent is set to true, this
    * will replace all instances of "Thunderbird" with the string in
-   * com.gContactSync.StringBundle.mUserAgent.
+   * gContactSync.StringBundle.mUserAgent.
    * @param aName {string} The name of the string to search for.
    * @returns {string} The translated string.
    */
@@ -96,18 +95,18 @@ com.gContactSync.StringBundle = {
     var str = aName, i;
     
     // initialize the string bundle if it wasn't already done
-    if (!com.gContactSync.StringBundle.mInitialized) {
-      com.gContactSync.StringBundle.init();
+    if (!gContactSync.StringBundle.mInitialized) {
+      gContactSync.StringBundle.init();
     }
 
-    for (i in com.gContactSync.StringBundle.mBundles) {
+    for (i in gContactSync.StringBundle.mBundles) {
       try {
-        str = com.gContactSync.StringBundle.mBundles[i].getString(aName);
+        str = gContactSync.StringBundle.mBundles[i].getString(aName);
 
         // If necessary, replace all instances of Thunderbird with the actual
         // user agent.
-        if (com.gContactSync.StringBundle.mReplaceUserAgent) {
-          str = str.replace(/Thunderbird/g, com.gContactSync.StringBundle.mUserAgent);
+        if (gContactSync.StringBundle.mReplaceUserAgent) {
+          str = str.replace(/Thunderbird/g, gContactSync.StringBundle.mUserAgent);
         }
 
         break;

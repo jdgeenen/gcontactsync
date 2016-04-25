@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2015
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,15 +34,14 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 window.addEventListener("load",
   /** Initializes the FileIO class when the window has finished loading */
   function gCS_FileIOLoadListener() {
     window.removeEventListener("load", gCS_FileIOLoadListener, false);
-    com.gContactSync.FileIO.init();
+    gContactSync.FileIO.init();
   },
 false);
 
@@ -51,7 +50,7 @@ false);
  * storing data, authentication info, and logs.
  * @class
  */
-com.gContactSync.FileIO = {
+gContactSync.FileIO = {
   /** An nsIFile where the log is written */
   mLogFile: null,
   /** File names */
@@ -98,10 +97,10 @@ com.gContactSync.FileIO = {
     this.mLogFile   = directory;
     this.mLogFile.append(this.fileNames.LOG_FILE);
     if (this.mLogFile.exists() && !this.mLogFile.isWritable()) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("logNotWritable") +
+      gContactSync.alertError(gContactSync.StringBundle.getStr("logNotWritable") +
                                   "\n" + this.mLogFile.path);
       throw "Error - cannot write to the log file: " +
-            com.gContactSync.FileIO.mLogFile.path;
+            gContactSync.FileIO.mLogFile.path;
     }
   },
   /**
@@ -117,19 +116,19 @@ com.gContactSync.FileIO = {
       try { aDirectory.create("1", parseInt("755", 8)); } catch (e) {}
       // if it still doesn't exist let the user know, then quit
       if (!aDirectory.exists()) {
-        com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("couldntMkDir") +
+        gContactSync.alertError(gContactSync.StringBundle.getStr("couldntMkDir") +
                                     "\n" + aDirectory.path);
         throw "Error - could not create the following directory: " +
               aDirectory.path;
       }
     }
     if (!aDirectory.isDirectory()) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("isNotDir") +
+      gContactSync.alertError(gContactSync.StringBundle.getStr("isNotDir") +
                                   "\n" + aDirectory.path);
       throw "Error - " + aDirectory.path + " is not a directory.";
     }
     if (!aDirectory.isWritable()) {
-      com.gContactSync.alertError(com.gContactSync.StringBundle.getStr("notWritable") +
+      gContactSync.alertError(gContactSync.StringBundle.getStr("notWritable") +
                                   "\n" + aDirectory.path);
       throw "Error - Cannot write to the following directory: " +
             aDirectory.path;
@@ -255,6 +254,6 @@ com.gContactSync.FileIO = {
   checkFile: function FileIO_checkFile(aFile) {
     if (!aFile || !aFile instanceof Components.interfaces.nsIFile || (aFile.exists() && !aFile.isFile()))
       throw "Invalid File: " + aFile + " sent to the '" + this.checkFile.caller +
-            "' method" + com.gContactSync.StringBundle.getStr("pleaseReport");
+            "' method" + gContactSync.StringBundle.getStr("pleaseReport");
   }
 };

@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2015
+ * Portions created by the Initial Developer are Copyright (C) 2008-2016
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -34,9 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-if (!com) {var com = {};} // A generic wrapper variable
-// A wrapper for all GCS functions and variables
-if (!com.gContactSync) {com.gContactSync = {};}
+/** Containing object for gContactSync */
+var gContactSync = gContactSync || {};
 
 window.addEventListener("load",
   /**
@@ -44,8 +43,8 @@ window.addEventListener("load",
    */
   function gCS_PreferencesLoadListener() {
     window.removeEventListener("load", gCS_PreferencesLoadListener, false);
-    com.gContactSync.Preferences.register();
-    com.gContactSync.Preferences.getSyncPrefs();
+    gContactSync.Preferences.register();
+    gContactSync.Preferences.getSyncPrefs();
   },
 false);
 
@@ -55,7 +54,7 @@ window.addEventListener("unload",
    */
   function gCS_PreferencesUnloadListener() {
     window.removeEventListener("unload", gCS_PreferencesUnloadListener, false);
-    com.gContactSync.Preferences.unregister();
+    gContactSync.Preferences.unregister();
   },
 false);
 
@@ -63,7 +62,7 @@ false);
  * Stores information on Preferences related to gContactSync.
  * @class
  */
-com.gContactSync.Preferences = {
+gContactSync.Preferences = {
   /** The preferences service */
   mService: Components.classes["@mozilla.org/preferences-service;1"]
                       .getService(Components.interfaces.nsIPrefService),
@@ -101,7 +100,7 @@ com.gContactSync.Preferences = {
     if(!this.mSyncBranch || !this.mRegistered) {
       return;
     }
-    com.gContactSync.LOGGER.VERBOSE_LOG("**Unregistering preference observer");
+    gContactSync.LOGGER.VERBOSE_LOG("**Unregistering preference observer");
     this.mSyncBranch.removeObserver("", this);
     this.mRegistered = false;
   },
@@ -119,7 +118,7 @@ com.gContactSync.Preferences = {
     // TODO - determine the cause of 'com is not defined' errors
     // this observer shouldn't be registered when com isn't defined.
     try {
-      com.gContactSync.LOGGER.VERBOSE_LOG("**Observed a preference change: " + aData + " - " + aTopic);
+      gContactSync.LOGGER.VERBOSE_LOG("**Observed a preference change: " + aData + " - " + aTopic);
     }
     catch (e) {
       return;
@@ -128,7 +127,7 @@ com.gContactSync.Preferences = {
     if (pref) {
       var oldValue = pref.value;
       pref.value = this.getPref(this.mSyncBranch, pref.label, pref.type);
-      com.gContactSync.LOGGER.VERBOSE_LOG(" - Old value: '" + oldValue + "'\n" +
+      gContactSync.LOGGER.VERBOSE_LOG(" - Old value: '" + oldValue + "'\n" +
                                           " - New value: '" + pref.value + "'");
       switch (aData) {
       case "statusBarText":
@@ -149,12 +148,12 @@ com.gContactSync.Preferences = {
     // GAddressBook
     else {
       try {
-        var ab = com.gContactSync.GAbManager.mABs[this.mBranchName + aData.substring(0, aData.lastIndexOf(".") + 1)];
+        var ab = gContactSync.GAbManager.mABs[this.mBranchName + aData.substring(0, aData.lastIndexOf(".") + 1)];
         if (ab) {
           var pref         = aData.substring(aData.lastIndexOf(".") + 1),
               prefNoPrefix = pref.replace(ab.prefPrefix, ""),
               newPrefValue = ab.getStringPref(pref);
-          com.gContactSync.LOGGER.VERBOSE_LOG("Changing AB pref: " + pref +
+          gContactSync.LOGGER.VERBOSE_LOG("Changing AB pref: " + pref +
                                               "\nFrom: " + ab.mPrefs[prefNoPrefix] +
                                               "\nTo: " + newPrefValue);
           ab.mPrefs[prefNoPrefix] = newPrefValue;
@@ -168,54 +167,54 @@ com.gContactSync.Preferences = {
    * verboseLog is first since it is used when logging preferences
    */
   mSyncPrefs: {
-    verboseLog:               new com.gContactSync.Pref("verboseLog",               "bool", false),
-    initialDelayMinutes:      new com.gContactSync.Pref("initialDelayMinutes",      "int",  5),
-    refreshInterval:          new com.gContactSync.Pref("refreshInterval",          "int",  120),
-    accountDelay:             new com.gContactSync.Pref("accountDelay",             "int",  5000),
-    maxContacts:              new com.gContactSync.Pref("maxContacts",              "int",  10000),
-    backupInterval:           new com.gContactSync.Pref("backupInterval",           "int",  14),
-    confirmDeleteThreshold:   new com.gContactSync.Pref("confirmDeleteThreshold",   "int",  5),
-    syncExtended:             new com.gContactSync.Pref("syncExtended",             "bool", true),
-    overrideCopy:             new com.gContactSync.Pref("overrideCopy",             "bool", true),
-    autoSync:                 new com.gContactSync.Pref("autoSync",                 "bool", true),
-    syncGroups:               new com.gContactSync.Pref("syncGroups",               "bool", true),
-    enableMenu:               new com.gContactSync.Pref("enableMenu",               "bool", true),
-    enableLogging:            new com.gContactSync.Pref("enableLogging",            "bool", true),
-    readOnly:                 new com.gContactSync.Pref("readOnly",                 "bool", false),
-    writeOnly:                new com.gContactSync.Pref("writeOnly",                "bool", false),
-    myContacts:               new com.gContactSync.Pref("myContacts",               "bool", false),
-    phoneColLabels:           new com.gContactSync.Pref("phoneColLabels",           "bool", true),
-    phoneTypes:               new com.gContactSync.Pref("phoneTypes",               "bool", true),
-    swapMobilePager:          new com.gContactSync.Pref("swapMobilePager",          "bool", true),
-    newColLabels:             new com.gContactSync.Pref("newColLabels",             "bool", true),
-    dummyEmail:               new com.gContactSync.Pref("dummyEmail",               "bool", false),
-    fixDupContactManagerCSS:  new com.gContactSync.Pref("fixDupContactManagerCSS",  "bool", false),
-    getPhotos:                new com.gContactSync.Pref("getPhotos",                "bool", true),
-    sendPhotos:               new com.gContactSync.Pref("sendPhotos",               "bool", true),
-    addReset:                 new com.gContactSync.Pref("addReset",                 "bool", true),
-    alertSummary:             new com.gContactSync.Pref("alertSummary",             "bool", true),
-    statusBarText:            new com.gContactSync.Pref("statusBarText",            "char", ""),
-    myContactsName:           new com.gContactSync.Pref("myContactsName",           "char", "Contacts"),
-    lastVersionMajor:         new com.gContactSync.Pref("lastVersionMajor",         "int",  0),
-    lastVersionMinor:         new com.gContactSync.Pref("lastVersionMinor",         "int",  0),
-    lastVersionRelease:       new com.gContactSync.Pref("lastVersionRelease",       "int",  0),
-    lastVersionSuffix:        new com.gContactSync.Pref("lastVersionSuffix",        "char", ""),
-    Plugin:                   new com.gContactSync.Pref("Plugin",                   "char", "Google"),
-    updateGoogleInConflicts:  new com.gContactSync.Pref("updateGoogleInConflicts",  "bool", true),
-    syncAddresses:            new com.gContactSync.Pref("syncAddresses",            "bool", true),
-    needRestart:              new com.gContactSync.Pref("needRestart",              "bool", false),
-    synchronizing:            new com.gContactSync.Pref("synchronizing",            "bool", false),
-    overrideGetCardForEmail:  new com.gContactSync.Pref("overrideGetCardForEmail",  "bool", true),
-    syncPhoneticNames:        new com.gContactSync.Pref("syncPhoneticNames",        "bool", true),
-    newContactPhotoDelay:     new com.gContactSync.Pref("newContactPhotoDelay",      "int", 2000),
-    v04UpgradeNeeded:         new com.gContactSync.Pref("v04UpgradeNeeded",         "bool", false),
-    v04RCUpgradeNeeded:       new com.gContactSync.Pref("v04RCUpgradeNeeded",       "bool", false),
-    httpRequestTimeout:       new com.gContactSync.Pref("httpRequestTimeout",        "int", 0),
-    httpRequestDelay:         new com.gContactSync.Pref("httpRequestDelay",          "int", 120),
-    numRelations:             new com.gContactSync.Pref("numRelations",              "int", 6),
-    numLogsInRotation:        new com.gContactSync.Pref("numLogsInRotation",         "int", 3),
-    selectFirstCardAfterDrop: new com.gContactSync.Pref("selectFirstCardAfterDrop", "bool", true),
-    notesHeight:              new com.gContactSync.Pref("notesHeight",              "char", "")
+    verboseLog:               new gContactSync.Pref("verboseLog",               "bool", false),
+    initialDelayMinutes:      new gContactSync.Pref("initialDelayMinutes",      "int",  5),
+    refreshInterval:          new gContactSync.Pref("refreshInterval",          "int",  120),
+    accountDelay:             new gContactSync.Pref("accountDelay",             "int",  5000),
+    maxContacts:              new gContactSync.Pref("maxContacts",              "int",  10000),
+    backupInterval:           new gContactSync.Pref("backupInterval",           "int",  14),
+    confirmDeleteThreshold:   new gContactSync.Pref("confirmDeleteThreshold",   "int",  5),
+    syncExtended:             new gContactSync.Pref("syncExtended",             "bool", true),
+    overrideCopy:             new gContactSync.Pref("overrideCopy",             "bool", true),
+    autoSync:                 new gContactSync.Pref("autoSync",                 "bool", true),
+    syncGroups:               new gContactSync.Pref("syncGroups",               "bool", true),
+    enableMenu:               new gContactSync.Pref("enableMenu",               "bool", true),
+    enableLogging:            new gContactSync.Pref("enableLogging",            "bool", true),
+    readOnly:                 new gContactSync.Pref("readOnly",                 "bool", false),
+    writeOnly:                new gContactSync.Pref("writeOnly",                "bool", false),
+    myContacts:               new gContactSync.Pref("myContacts",               "bool", false),
+    phoneColLabels:           new gContactSync.Pref("phoneColLabels",           "bool", true),
+    phoneTypes:               new gContactSync.Pref("phoneTypes",               "bool", true),
+    swapMobilePager:          new gContactSync.Pref("swapMobilePager",          "bool", true),
+    newColLabels:             new gContactSync.Pref("newColLabels",             "bool", true),
+    dummyEmail:               new gContactSync.Pref("dummyEmail",               "bool", false),
+    fixDupContactManagerCSS:  new gContactSync.Pref("fixDupContactManagerCSS",  "bool", false),
+    getPhotos:                new gContactSync.Pref("getPhotos",                "bool", true),
+    sendPhotos:               new gContactSync.Pref("sendPhotos",               "bool", true),
+    addReset:                 new gContactSync.Pref("addReset",                 "bool", true),
+    alertSummary:             new gContactSync.Pref("alertSummary",             "bool", true),
+    statusBarText:            new gContactSync.Pref("statusBarText",            "char", ""),
+    myContactsName:           new gContactSync.Pref("myContactsName",           "char", "Contacts"),
+    lastVersionMajor:         new gContactSync.Pref("lastVersionMajor",         "int",  0),
+    lastVersionMinor:         new gContactSync.Pref("lastVersionMinor",         "int",  0),
+    lastVersionRelease:       new gContactSync.Pref("lastVersionRelease",       "int",  0),
+    lastVersionSuffix:        new gContactSync.Pref("lastVersionSuffix",        "char", ""),
+    Plugin:                   new gContactSync.Pref("Plugin",                   "char", "Google"),
+    updateGoogleInConflicts:  new gContactSync.Pref("updateGoogleInConflicts",  "bool", true),
+    syncAddresses:            new gContactSync.Pref("syncAddresses",            "bool", true),
+    needRestart:              new gContactSync.Pref("needRestart",              "bool", false),
+    synchronizing:            new gContactSync.Pref("synchronizing",            "bool", false),
+    overrideGetCardForEmail:  new gContactSync.Pref("overrideGetCardForEmail",  "bool", true),
+    syncPhoneticNames:        new gContactSync.Pref("syncPhoneticNames",        "bool", true),
+    newContactPhotoDelay:     new gContactSync.Pref("newContactPhotoDelay",      "int", 2000),
+    v04UpgradeNeeded:         new gContactSync.Pref("v04UpgradeNeeded",         "bool", false),
+    v04RCUpgradeNeeded:       new gContactSync.Pref("v04RCUpgradeNeeded",       "bool", false),
+    httpRequestTimeout:       new gContactSync.Pref("httpRequestTimeout",        "int", 0),
+    httpRequestDelay:         new gContactSync.Pref("httpRequestDelay",          "int", 120),
+    numRelations:             new gContactSync.Pref("numRelations",              "int", 6),
+    numLogsInRotation:        new gContactSync.Pref("numLogsInRotation",         "int", 3),
+    selectFirstCardAfterDrop: new gContactSync.Pref("selectFirstCardAfterDrop", "bool", true),
+    notesHeight:              new gContactSync.Pref("notesHeight",              "char", "")
   },
   /**
    * Gets a preference given its branch, name, and type
@@ -227,7 +226,7 @@ com.gContactSync.Preferences = {
   getPref: function Preferences_getPref(aBranch, aName, aType) {
     if (!aBranch)
       throw "Invalid aBranch parameter supplied to the getPref method" +
-            com.gContactSync.StringBundle.getStr("pleaseReport");
+            gContactSync.StringBundle.getStr("pleaseReport");
     switch (aType) {
       case this.mTypes.INT:
         return aBranch.getIntPref(aName);
@@ -237,7 +236,7 @@ com.gContactSync.Preferences = {
         return aBranch.getCharPref(aName);
       default:
         throw "Invalid aType parameter supplied to the getPref method" +
-              com.gContactSync.StringBundle.getStr("pleaseReport");
+              gContactSync.StringBundle.getStr("pleaseReport");
     }
   },
   /**
@@ -251,7 +250,7 @@ com.gContactSync.Preferences = {
   setPref: function Preferences_setPref(aBranch, aName, aType, aValue) {
     if (!aBranch)
       throw "Invalid aBranch parameter supplied to the setPref method" +
-            com.gContactSync.StringBundle.getStr("pleaseReport");
+            gContactSync.StringBundle.getStr("pleaseReport");
     switch (aType) {
       case this.mTypes.INT:
         return aBranch.setIntPref(aName, aValue);
@@ -261,7 +260,7 @@ com.gContactSync.Preferences = {
         return aBranch.setCharPref(aName, aValue);
       default:
         throw "Invalid aType parameter supplied to the setPref method" +
-              com.gContactSync.StringBundle.getStr("pleaseReport");
+              gContactSync.StringBundle.getStr("pleaseReport");
     }
   },
   /**
@@ -283,7 +282,7 @@ com.gContactSync.Preferences = {
    * sets its default value if it is not present.
    */
   getSyncPrefs: function Preferences_getSyncPrefs() {
-    com.gContactSync.LOGGER.LOG("\n***Loading Preferences***");
+    gContactSync.LOGGER.LOG("\n***Loading Preferences***");
     for (var i in this.mSyncPrefs) {
       try {
         this.mSyncPrefs[i].value = this.getPref(this.mSyncBranch,
@@ -295,9 +294,9 @@ com.gContactSync.Preferences = {
         this.setPref(this.mSyncBranch, this.mSyncPrefs[i].label,
                      this.mSyncPrefs[i].type, this.mSyncPrefs[i].defaultValue);
       }
-      com.gContactSync.LOGGER.LOG(" * " + i + ": " + this.mSyncPrefs[i].value);
+      gContactSync.LOGGER.LOG(" * " + i + ": " + this.mSyncPrefs[i].value);
     }
-    com.gContactSync.LOGGER.LOG("***Finished Loading Preferences***\n");
+    gContactSync.LOGGER.LOG("***Finished Loading Preferences***\n");
     
     // Only add these extended properties if the pref to sync them is true
     this.mExtendedProperties = [];
@@ -308,7 +307,7 @@ com.gContactSync.Preferences = {
                                                    this.mTypes.CHAR));
       }
     }
-    if (!com.gContactSync.Preferences.mSyncPrefs.enableMenu.value &&
+    if (!gContactSync.Preferences.mSyncPrefs.enableMenu.value &&
           document.getElementById("gContactSyncMenu")) {
       document.getElementById("gContactSyncMenu").collapsed = true;
     }
@@ -317,7 +316,7 @@ com.gContactSync.Preferences = {
    * Resets all gContactSync prefs to their default values.
    */
   defaultAllSyncPrefs: function Preferences_defaultAllSyncPrefs() {
-    com.gContactSync.LOGGER.LOG("\n***Defaulting Sync Preferences***");
+    gContactSync.LOGGER.LOG("\n***Defaulting Sync Preferences***");
     for (var i in this.mSyncPrefs) {
       // TODO - use the default branch value instead?
       this.setSyncPref(this.mSyncPrefs[i].label, this.mSyncPrefs[i].defaultValue);
