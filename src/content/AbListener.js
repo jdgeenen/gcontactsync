@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2016
+ * Portions created by the Initial Developer are Copyright (C) 2008-2017
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -45,11 +45,27 @@ var gContactSync = gContactSync || {};
  */
 gContactSync.AbListener = {
   /**
-   * Unused.
+   * Removes the GoogleID from newly added items when a sync isn't in progress.
+   *
    * @param aParentDir The parent directory to which an item was added.
    * @param aItem      The item added to the directory.
    */
-  onItemAdded: function AbListener_onItemAdded(aParentDir, aItem) {},
+  onItemAdded: function AbListener_onItemAdded(aParentDir, aItem) {
+    aParentDir.QueryInterface(Components.interfaces.nsIAbDirectory);
+
+    // if a contact was added and there is not an ongoing synchronization
+    if (aItem instanceof Components.interfaces.nsIAbCard &&
+        !gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
+
+      // if a contact was added to an AB clear the GoogleID in case it was copied/moved
+      if (!aParentDir.isMailList) {
+        var ab = new gContactSync.GAddressBook(aParentDir);
+        var contact = new gContactSync.TBContact(aItem, ab);
+        contact.setValue("GoogleID", null);
+        contact.update();
+      }
+    }
+  },
   /**
    * Unused.
    * @param aItem     The item whose property was changed.
@@ -128,7 +144,8 @@ gContactSync.AbListener = {
   add: function AbListener_add() {
     var flags;
     if (Components.classes["@mozilla.org/abmanager;1"]) { // Thunderbird 3
-      flags = Components.interfaces.nsIAbListener.directoryItemRemoved;
+      flags = Components.interfaces.nsIAbListener.directoryItemRemoved |
+              Components.interfaces.nsIAbListener.itemAdded;
       Components.classes["@mozilla.org/abmanager;1"]
                 .getService(Components.interfaces.nsIAbManager)
                 .addAddressBookListener(gContactSync.AbListener, flags);
