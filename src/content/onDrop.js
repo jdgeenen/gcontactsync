@@ -51,7 +51,14 @@ var gContactSync = gContactSync || {};
  * @param row          The row
  * @param orientation  {int} An integer specifying on/after/before the given row
  */
-gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation) {
+gContactSync.myOnDrop = function gCS_myOnDrop(row, orientation, dataTransfer) {
+
+  // The three-argument version of this function copies all fields, so this
+  // override is unnecessary.
+  if (dataTransfer) {
+    return abDirTreeObserver.origOnDrop.apply(this, arguments);
+  }
+
   var dragSession = dragService.getCurrentSession();
   if (!dragSession)
     return;

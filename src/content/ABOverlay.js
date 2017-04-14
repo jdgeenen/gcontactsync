@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2016
+ * Portions created by the Initial Developer are Copyright (C) 2008-2017
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -85,8 +85,10 @@ gContactSync.ABOverlay = {
     gContactSync.ABOverlay.addTreeCols(); // sort by in the results pane if this is after 413260 
     // override the onDrop method of abDirTreeObserver
     // so when a card is copied the extra attributes are copied with it
-    if (gContactSync.Preferences.mSyncPrefs.overrideCopy.value)
+    if (gContactSync.Preferences.mSyncPrefs.overrideCopy.value) {
+      abDirTreeObserver.origOnDrop = abDirTreeObserver.onDrop;
       abDirTreeObserver.onDrop = gContactSync.myOnDrop;
+    }
     // override the display card view pane
     gContactSync.originalDisplayCardViewPane = DisplayCardViewPane;
     DisplayCardViewPane = gContactSync.ABOverlay.myDisplayCardViewPane;
