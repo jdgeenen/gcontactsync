@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2016
+ * Portions created by the Initial Developer are Copyright (C) 2008-2017
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -391,8 +391,7 @@ gContactSync.AddressBook.prototype = {
     try {
       var branch = Components.classes["@mozilla.org/preferences-service;1"]
                              .getService(Components.interfaces.nsIPrefService)
-                             .getBranch(id)
-                             .QueryInterface(Components.interfaces.nsIPrefBranch2);
+                             .getBranch(id);
       var value = branch.getCharPref(aName);
       //gContactSync.LOGGER.VERBOSE_LOG("-Found the value: " + value);
       return value;
@@ -405,8 +404,7 @@ gContactSync.AddressBook.prototype = {
       id = this.mDirectory.dirPrefId;
       branch = Components.classes["@mozilla.org/preferences-service;1"]
                          .getService(Components.interfaces.nsIPrefService)
-                         .getBranch(id)
-                         .QueryInterface(Components.interfaces.nsIPrefBranch2);
+                         .getBranch(id);
       value = branch.getCharPref(aName);
       // if the value exists (if it gets here, a value exists):
       //  1) Create the pref using the new branch/method
@@ -443,8 +441,7 @@ gContactSync.AddressBook.prototype = {
     try {
       var branch = Components.classes["@mozilla.org/preferences-service;1"]
                              .getService(Components.interfaces.nsIPrefService)
-                             .getBranch(id)
-                             .QueryInterface(Components.interfaces.nsIPrefBranch2);
+                             .getBranch(id);
       branch.setCharPref(aName, aValue);
     } catch (e) { gContactSync.LOGGER.LOG_WARNING("Error while setting directory pref", e); }
   },

@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2016
+ * Portions created by the Initial Developer are Copyright (C) 2008-2017
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -70,8 +70,7 @@ gContactSync.Preferences = {
   /** The Preferences branch used by gContactSync */
   mSyncBranch: Components.classes["@mozilla.org/preferences-service;1"]
                          .getService(Components.interfaces.nsIPrefService)
-                         .getBranch("extensions.gContactSync.")
-                         .QueryInterface(Components.interfaces.nsIPrefBranch2),
+                         .getBranch("extensions.gContactSync."),
   /** An array of the extended properties to use with Google contacts */
   mExtendedProperties: [],
   /** Different types of preferences (bool, int, and char) */
@@ -89,6 +88,12 @@ gContactSync.Preferences = {
    * Registers the pref observer and gets the initial preference values.
    */
   register: function CP_Preferences_register() {
+
+    // nsIPrefBranch2 was merged into nsIPrefBranch in Gecko 13 (TB 13/SM 2.10)
+    // TB 57 removed support for it.
+    if (!("addObserver" in this.mSyncBranch)) {
+      this.mSyncBranch.QueryInterface(Components.interfaces.nsIPrefBranch2);
+    }
     // Add an observer
     this.mSyncBranch.addObserver("", this, false);
     this.mRegistered = true;
