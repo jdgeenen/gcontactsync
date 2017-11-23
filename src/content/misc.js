@@ -44,7 +44,7 @@ gContactSync.versionMinor   = "0";
 /** The release for the current version of gContactSync (ie 1 in 0.3.1a7) */
 gContactSync.versionRelease = "0";
 /** The suffix for the current version of gContactSync (ie a7 for Alpha 7) */
-gContactSync.versionSuffix  = "a7";
+gContactSync.versionSuffix  = "a8";
 /** The attribute where the dummy e-mail address is stored */
 gContactSync.dummyEmailName = "PrimaryEmail";
 
