@@ -79,7 +79,7 @@
                   type="bool"/>
     </preferences>
     <groupbox flex="1">
-      <label href="http://pirules.org/addons/gcontactsync/preferences.php"
+      <label href="https://pirules.org/addons/gcontactsync/preferences.php"
              class="text-link"
              value="&help.value;"
              accesskey="&help.value;"/>

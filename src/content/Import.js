@@ -269,7 +269,7 @@ gContactSync.Import = {
     imp.mSource  = aSource;
     // get an oauth_token and oauth_token_secret and give pirules.org some
     // strings
-    imp.httpReqWrapper("http://www.pirules.org/oauth/index2.php?quiet&silent&step=1&source=" +
+    imp.httpReqWrapper("https://www.pirules.org/oauth/index2.php?quiet&silent&step=1&source=" +
                        imp.mSource +
                        "&title=" +
                        encodeURIComponent(gContactSync.StringBundle.getStr('importTitle')) +
@@ -301,7 +301,7 @@ gContactSync.Import = {
     // parse and store the parameters from step 1 (oauth_token &
     // oauth_token_secret)
     imp.storeResponse(response.replace("&", "&amp;"));
-    imp.httpReqWrapper("http://www.pirules.org/oauth/index2.php?quiet&silent&step=2&source=" +
+    imp.httpReqWrapper("https://www.pirules.org/oauth/index2.php?quiet&silent&step=2&source=" +
                        imp.mSource +
                        "&oauth_token=" + imp.mOAuth.oauth_token +
                        "&oauth_token_secret=" + imp.mOAuth.oauth_token_secret,
@@ -363,7 +363,7 @@ gContactSync.Import = {
     }
     gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importActivatingToken'));
     // activate the token
-    imp.httpReqWrapper("http://www.pirules.org/oauth/index2.php?quiet&silent&step=3&source=" +
+    imp.httpReqWrapper("https://www.pirules.org/oauth/index2.php?quiet&silent&step=3&source=" +
                          imp.mSource +
                          "&oauth_token=" + imp.mOAuth.oauth_token +
                          "&oauth_token_secret=" + imp.mOAuth.oauth_token_secret +
@@ -388,13 +388,13 @@ gContactSync.Import = {
     // Use the token to fetch the user's contacts
     // access_token is used instead of the oauth_token in OAuth 2.0
     if (imp.mOAuth.access_token) {
-      imp.httpReqWrapper("http://www.pirules.org/oauth/index2.php?quiet&silent&step=4&source=" +
+      imp.httpReqWrapper("https://www.pirules.org/oauth/index2.php?quiet&silent&step=4&source=" +
                          imp.mSource +
                          "&access_token=" + imp.mOAuth.access_token,
                          imp.finish);
     }
     else {
-      imp.httpReqWrapper("http://www.pirules.org/oauth/index2.php?quiet&silent&step=4&source=" +
+      imp.httpReqWrapper("https://www.pirules.org/oauth/index2.php?quiet&silent&step=4&source=" +
                          imp.mSource +
                          "&oauth_token=" + imp.mOAuth.oauth_token +
                          "&oauth_token_secret=" + imp.mOAuth.oauth_token_secret,

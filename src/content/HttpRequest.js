@@ -56,7 +56,7 @@ var gContactSync = gContactSync || {};
  * <pre>
  * // Create and setup a new HttpRequest
  * var myHttpRequest   = new gContactSync.HttpRequest();
- * myHttpRequest.mUrl  = "http://www.pirules.org";
+ * myHttpRequest.mUrl  = "https://www.pirules.org";
  * myHttpRequest.mType = "GET";
  * myHttpRequest.addHeaderItem("Content-length", 0);
  * // setup the callbacks

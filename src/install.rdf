@@ -9,7 +9,7 @@
         <em:creator>Josh Geenen</em:creator>
         <em:optionsURL>chrome://gcontactsync/content/options.xul</em:optionsURL>
         <em:iconURL>chrome://gcontactsync/skin/logo_main.png</em:iconURL>
-        <em:homepageURL>http://www.pirules.org/addons/gcontactsync/</em:homepageURL>
+        <em:homepageURL>https://www.pirules.org/addons/gcontactsync/</em:homepageURL>
         <em:type>2</em:type>
         <!-- Mozilla Thunderbird -->
         <em:targetApplication>
