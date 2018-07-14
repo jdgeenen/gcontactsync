@@ -1,0 +1,12 @@
+<!ENTITY Title.label "Možnosti importu gContactSync">
+<!ENTITY ABList.label "Adresář:">
+<!ENTITY ABList.accesskey "A">
+<!ENTITY NewABButton.label "Nový adresář">
+<!ENTITY NewABButton.accesskey "N">
+<!ENTITY MergeContacts.label "Sloučit kontakty">
+<!ENTITY MergeContacts.accesskey "S">
+<!ENTITY Warning.value "Poznámka: Import kontaktů může chvíli trvat. Pokud ze zobrazí hláška 'Skript neodpovídá', klepněte na 'Pokračovat'.">
+<!ENTITY Finish.label "Dokončit">
+<!ENTITY Finish.accesskey "D">
+<!ENTITY Cancel.label "Zrušit">
+<!ENTITY Cancel.accesskey "Z">

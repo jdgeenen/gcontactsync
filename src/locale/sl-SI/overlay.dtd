@@ -1,0 +1,63 @@
+<!-- The name of the extension (should just be gContactSync) -->
+<!ENTITY gContactSyncTab.label "gContactSync">
+<!-- Ordinal numbers -->
+<!ENTITY first.label "Prvi">
+<!ENTITY second.label "Drugi">
+<!ENTITY third.label "Tretji">
+<!ENTITY fourth.label "Četrti">
+<!ENTITY fifth.label "Peti">
+<!ENTITY sixth.label "Šesti">
+<!ENTITY seventh.label "Sedmi">
+<!ENTITY eighth.label "Osmi">
+<!-- Different address types -->
+<!ENTITY home.label "Doma">
+<!ENTITY work.label "Služba">
+<!ENTITY other.label "Drugo">
+<!-- A label for extra screenname fields -->
+<!ENTITY screenname.box "Dodana zaslonska imena">
+<!-- A label for extra e-mail address fields -->
+<!ENTITY email.box "Dodatni e-poštni naslovi">
+<!-- A label for extra phone number fields -->
+<!ENTITY numbers.box "Dodatne številke">
+<!-- Anniversary-related fields -->
+<!ENTITY Anniversary.label "Obletnica">
+<!ENTITY Anniversary.accesskey "O">
+<!-- This can be blank or something like "Click on Sync to begin" -->
+<!ENTITY initialStatus.label "Kliknite na &quot;Uskladi&quot; za začetek">
+<!-- People who are somehow related to or associated with the contact -->
+<!ENTITY relations.box "Ljudje">
+<!-- Used for the Sync button on the Address Book toolbar -->
+<!ENTITY sync.label "Uskladi">
+<!ENTITY sync.tooltip "Uskladi svoje stike z razširitvijo gContactSync">
+<!-- A tooltip on the status bar -->
+<!ENTITY status.tooltip "kliknite tukaj za ogled dnevniške datoteke">
+<!-- The gContactSync menu -->
+<!ENTITY gContactSyncMenu.label "gContactSync">
+<!ENTITY gContactSyncMenu.accesskey "C">
+<!ENTITY syncMenuItem.label "Uskladi">
+<!ENTITY syncMenuItem.accesskey "U">
+<!ENTITY newAcctMenuItem.label "Nov račun">
+<!ENTITY newAcctMenuItem.accesskey "N">
+<!ENTITY acctMenuItem.label "Uredi račune">
+<!ENTITY acctMenuItem.accesskey "r">
+<!ENTITY prefMenuItem.label "Nastavitve">
+<!ENTITY prefMenuItem.accesskey "a">
+<!ENTITY forumMenuItem.label "Forum za podporo">
+<!ENTITY forumMenuItem.accesskey "F">
+<!ENTITY faqMenuItem.label "Pogosta vprašanja">
+<!ENTITY faqMenuItem.accesskey "P">
+<!ENTITY errorMenuItem.label "Obrazec za poročanje o napakah">
+<!ENTITY errorMenuItem.accesskey "O">
+<!ENTITY logMenuItem.label "Dnevnik">
+<!ENTITY logMenuItem.accesskey "D">
+<!ENTITY gcMenuItem.label "Povezani stiki Google">
+<!ENTITY gcMenuItem.accesskey "v">
+<!-- Import menu -->
+<!-- The text for Import.label should match importNotStarted in gcontactsync.properties -->
+<!ENTITY Import.label "Začni z uvozom (PRESKUSNO)">
+<!ENTITY Import.accesskey "Z">
+<!ENTITY FinishImport.label "Končaj z uvozom">
+<!ENTITY FinishImport.accesskey "K">
+<!ENTITY Facebook.label "Facebook">
+<!ENTITY LinkedIn.label "LinkedIn">
+<!ENTITY Twitter.label "Twitter">

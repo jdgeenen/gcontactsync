@@ -1,0 +1,66 @@
+<!ENTITY title.label "Preferencias gContactSync">
+<!ENTITY main.tab "Principal">
+<!ENTITY help.value "Ayuda">
+<!ENTITY help.accesskey "A">
+<!ENTITY autoSync.value "Sincronización automática">
+<!ENTITY autoSync.label "Sincronizar contactos manualmente">
+<!ENTITY autoSync.accesskey "S">
+<!ENTITY refreshInterval.value "Intervalo de sincronización (minutos) [Por defecto es 120(2 horas)]">
+<!ENTITY refreshInterval.accesskey "l">
+<!ENTITY initialDelayMinutes.value "retraso inicial sincronización (minutos) [Por defecto es 5]">
+<!ENTITY initialDelayMinutes.accesskey "r">
+<!ENTITY abName.value "Nombre de la libreta de direcciones con la que sincronizar (nueva o existente)">
+<!ENTITY abName.accesskey "A">
+<!ENTITY syncBehavior.label "Comportamiento de la sincronización">
+<!ENTITY syncAddresses.label "Sincronizar direcciones postales (Experimental)">
+<!ENTITY syncAddresses.accesskey "p">
+<!ENTITY alertSummary.label "Mostrar un resumen tras cada sincronismo manual">
+<!ENTITY alertSummary.accesskey "m">
+<!ENTITY phoneTypes.label "Añadir campos de tipo de número de teléfono (ignorar los nombres de campos existentes)">
+<!ENTITY phoneTypes.accesskey "n">
+<!ENTITY accountDelay.value "Retraso entre cuentas (ms)[5000]">
+<!ENTITY accountDelay.accesskey "b">
+<!ENTITY logging.label "Registrando">
+<!ENTITY enableLogging.label "Habilitar registro">
+<!ENTITY enableLogging.accesskey "L">
+<!ENTITY verboseLog.label "Habilitar Registro \&quot;Verbose\&quot; (Para depurar)">
+<!ENTITY verboseLog.accesskey "V">
+<!ENTITY showInConsole.label "Informe de errores en la consola de errores (para depurar)">
+<!ENTITY showInConsole.accesskey "E">
+<!ENTITY interface.tab "Interface">
+<!ENTITY buttons.label "Botones y Menús">
+<!ENTITY enableMenu.label "Habilitar el Menú gContactSync">
+<!ENTITY enableMenu.accesskey "E">
+<!ENTITY enableMenuLinks.label "Agregar algunos enlaces (wiki, FAQ, etc) al Menú gContacSync">
+<!ENTITY enableMenuLinks.accesskey "l">
+<!ENTITY addReset.label "Agergar enlaces Reemplazar a y Reemplazar desde servidor al menú contextual del al Libreta de Direcciones">
+<!ENTITY addReset.accesskey "R">
+<!ENTITY abResults.label "Lista de Contactos">
+<!ENTITY phoneColLabels.label "Renombrar las etiquetas de la columna teléfono">
+<!ENTITY phoneColLabels.accesskey "R">
+<!ENTITY newColLabels.label "Agregar los nuevos campos a las etiquetas de las columnas (Solo TB3/SM2)">
+<!ENTITY newColLabels.accesskey "n">
+<!ENTITY advanced.tab "Avanzadas">
+<!ENTITY warning.value "Atención.esto está indicado solo para usuarios avanzados">
+<!ENTITY backup.label "Política de copias de seguridad de la libreta de direcciones">
+<!ENTITY backupInterval.value "Intervalo de Copia de Seguridad (días, -1 para deshabilitar) [14]">
+<!ENTITY backupInterval.accesskey "B">
+<!ENTITY other.label "Otros">
+<!ENTITY chromeTime.value "Retardo del aviso \'Script no responde\' (0 para deshabilitar)">
+<!ENTITY chromeTime.accesskey "U">
+<!ENTITY confirmDeleteThreshold.value "Mínimo número de contactos a borrar antes de solicitar permiso">
+<!ENTITY confirmDeleteThreshold.accesskey "d">
+<!ENTITY httpRequestTimeout.value "Tiempo de espera requerido de HTTP (ms, 0 para deshabilitar) [0]">
+<!ENTITY httpRequestTimeout.accesskey "H">
+<!ENTITY httpRequestDelay.value "Retardo entre solicitudes HTTP (ms, 0 para desactivar) [100]">
+<!ENTITY httpRequestDelay.accesskey "I">
+<!ENTITY resetAll.label "Reiniciar todas las Libretas de Direcciones Sincronizadas">
+<!ENTITY resetAll.accesskey "R">
+<!ENTITY cleanOldPrefs.label "Borrar las preferencias de la antigua LD">
+<!ENTITY cleanOldPrefs.accesskey "C">
+<!ENTITY cleanOldPhotos.label "Borrar antiguas fotos de contactos">
+<!ENTITY cleanOldPhotos.accesskey "P">
+<!ENTITY resetAllSettings.label "Reiniciar todas las configuraciones de gContacSync">
+<!ENTITY resetAllSettings.accesskey "g">
+<!ENTITY throttleTest.label "Ejecutar Test de Frenado">
+<!ENTITY throttleTest.accesskey "T">

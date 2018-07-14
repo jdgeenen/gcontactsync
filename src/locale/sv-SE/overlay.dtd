@@ -1,0 +1,63 @@
+<!-- The name of the extension (should just be gContactSync) -->
+<!ENTITY gContactSyncTab.label "gContactSync">
+<!-- Ordinal numbers -->
+<!ENTITY first.label "Första">
+<!ENTITY second.label "Andra">
+<!ENTITY third.label "Tredje">
+<!ENTITY fourth.label "Fjärde">
+<!ENTITY fifth.label "Femte">
+<!ENTITY sixth.label "Sjätte">
+<!ENTITY seventh.label "Sjunde">
+<!ENTITY eighth.label "Åttonde">
+<!-- Different address types -->
+<!ENTITY home.label "Hem">
+<!ENTITY work.label "Arbete">
+<!ENTITY other.label "Övrigt">
+<!-- A label for extra screenname fields -->
+<!ENTITY screenname.box "Ytterligare skärmnamn">
+<!-- A label for extra e-mail address fields -->
+<!ENTITY email.box "Ytterligare e-postadresser">
+<!-- A label for extra phone number fields -->
+<!ENTITY numbers.box "Ytterligare nummer">
+<!-- A label for extra postal address fields -->
+<!ENTITY Anniversary.label "Årsdag">
+<!ENTITY Anniversary.accesskey "d">
+<!-- Note: these are only displayed in Thunderbird 3/Seamonkey 2 (not Postbox or TB 2) -->
+<!ENTITY initialStatus.label "">
+<!-- LOCALIZATION NOTE: Please try to keep the number of characters down (around 60) to avoid making the window too wide -->
+<!ENTITY relations.box "Kontaktnät">
+<!-- This can be blank or something like "Click on Sync to begin" -->
+<!ENTITY sync.label "Synka">
+<!ENTITY sync.tooltip "Synkronisera dina kontakter med gContactSync">
+<!-- People who are somehow related to or associated with the contact -->
+<!ENTITY status.tooltip "Klicka här för att granska loggfilen">
+<!-- Used for the Sync button on the Address Book toolbar -->
+<!ENTITY gContactSyncMenu.label "gContactSync">
+<!ENTITY gContactSyncMenu.accesskey "C">
+<!ENTITY syncMenuItem.label "Synka">
+<!ENTITY syncMenuItem.accesskey "S">
+<!ENTITY newAcctMenuItem.label "Nytt konto">
+<!ENTITY newAcctMenuItem.accesskey "N">
+<!ENTITY acctMenuItem.label "Konton">
+<!ENTITY acctMenuItem.accesskey "K">
+<!ENTITY prefMenuItem.label "Inställningar">
+<!ENTITY prefMenuItem.accesskey "I">
+<!ENTITY forumMenuItem.label "Hjälpforum">
+<!ENTITY forumMenuItem.accesskey "j">
+<!ENTITY faqMenuItem.label "Vanliga frågor och svar">
+<!ENTITY faqMenuItem.accesskey "f">
+<!ENTITY errorMenuItem.label "Rapportera fel">
+<!ENTITY errorMenuItem.accesskey "r">
+<!ENTITY logMenuItem.label "Logg">
+<!ENTITY logMenuItem.accesskey "L">
+<!ENTITY gcMenuItem.label "Google Kontakter på nätet">
+<!ENTITY gcMenuItem.accesskey "G">
+<!-- A tooltip on the status bar -->
+<!-- The text for Import.label should match importNotStarted in gcontactsync.properties -->
+<!ENTITY Import.label "Starta import">
+<!ENTITY Import.accesskey "i">
+<!ENTITY FinishImport.label "Avsluta import">
+<!ENTITY FinishImport.accesskey "A">
+<!ENTITY Facebook.label "Facebook">
+<!ENTITY LinkedIn.label "LinkedIn">
+<!ENTITY Twitter.label "Twitter">

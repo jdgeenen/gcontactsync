@@ -1,0 +1,66 @@
+<!ENTITY title.label "gContactSync-Einstellungen">
+<!ENTITY main.tab "Allgemein">
+<!ENTITY help.value "Hilfe">
+<!ENTITY help.accesskey "H">
+<!ENTITY autoSync.value "Automatische Synchronisation">
+<!ENTITY autoSync.label "Kontakte automatisch synchronisieren">
+<!ENTITY autoSync.accesskey "s">
+<!ENTITY refreshInterval.value "Synchronisationsintervall (Minuten) [Standard: 120 (2 Stunden)]">
+<!ENTITY refreshInterval.accesskey "y">
+<!ENTITY initialDelayMinutes.value "Initiale Synchronisationsverzögerung (Minuten) [Standard: 5]">
+<!ENTITY initialDelayMinutes.accesskey "I">
+<!ENTITY abName.value "Zu synchronisierendes Adressbuch">
+<!ENTITY abName.accesskey "b">
+<!ENTITY syncBehavior.label "Synchronisationsverhalten">
+<!ENTITY syncAddresses.label "Postalische Adressen synchronisieren">
+<!ENTITY syncAddresses.accesskey "P">
+<!ENTITY alertSummary.label "Zusammenfassung nach jeder manuellen Synchronisation anzeigen">
+<!ENTITY alertSummary.accesskey "Z">
+<!ENTITY phoneTypes.label "Telefonnummertypfelder hinzufügen (ignoriere bestehende Feldnamen)">
+<!ENTITY phoneTypes.accesskey "T">
+<!ENTITY accountDelay.value "Verzögerung zwischen Konten (ms) [Standard: 5000]">
+<!ENTITY accountDelay.accesskey "V">
+<!ENTITY logging.label "Protokollierung">
+<!ENTITY enableLogging.label "Protokollierung aktivieren">
+<!ENTITY enableLogging.accesskey "l">
+<!ENTITY verboseLog.label "Ausführliche Protokollierung aktivieren (zur Fehlersuche)">
+<!ENTITY verboseLog.accesskey "A">
+<!ENTITY showInConsole.label "Fehler in der Fehlerkonsole protokollieren (zur Fehlersuche)">
+<!ENTITY showInConsole.accesskey "F">
+<!ENTITY interface.tab "Bedienung">
+<!ENTITY buttons.label "Schaltflächen und Menüs">
+<!ENTITY enableMenu.label "gContactSync-Menü aktivieren">
+<!ENTITY enableMenu.accesskey "a">
+<!ENTITY enableMenuLinks.label "Einige Links (Fehlerberichtsformular, FAQ, etc.) zum gContactSync-Menü hinzufügen">
+<!ENTITY enableMenuLinks.accesskey "L">
+<!ENTITY addReset.label "'neu vom Server holen' und 'komplett an Server senden' zum Adressbuchkontextmenü hinzufügen">
+<!ENTITY addReset.accesskey "k">
+<!ENTITY abResults.label "Kontaktliste">
+<!ENTITY phoneColLabels.label "Telefonnummerspalten umbenennen">
+<!ENTITY phoneColLabels.accesskey "b">
+<!ENTITY newColLabels.label "Neue Felder zu den Spaltenbeschriftungen hinzufügen">
+<!ENTITY newColLabels.accesskey "N">
+<!ENTITY advanced.tab "Erweitert">
+<!ENTITY warning.value "Warnung - Dies ist nur für erfahrene Benutzer gedacht">
+<!ENTITY backup.label "Adressbuchsicherungsstrategie">
+<!ENTITY backupInterval.value "Sicherungsintervall (Tage, -1 zum Deaktivieren) [Standard: 14]">
+<!ENTITY backupInterval.accesskey "S">
+<!ENTITY other.label "Sonstiges">
+<!ENTITY chromeTime.value "Verzögerungszeit für 'Nicht antwortendes Skript'-Warnung (0 zum Deaktivieren)">
+<!ENTITY chromeTime.accesskey "N">
+<!ENTITY confirmDeleteThreshold.value "Minimale Anzahl zu löschender Kontakte, bevor nach Erlaubnis gefragt wird [Standard: 5]">
+<!ENTITY confirmDeleteThreshold.accesskey "M">
+<!ENTITY httpRequestTimeout.value "HTTP-Anfrage-Zeitüberschreitung (ms, 0 zum Deaktivieren) [Standard: 0]">
+<!ENTITY httpRequestTimeout.accesskey "H">
+<!ENTITY httpRequestDelay.value "Verzögerung zwischen HTTP-Anfragen (ms, 0 zum Deaktivieren) [Standard: 100]">
+<!ENTITY httpRequestDelay.accesskey "V">
+<!ENTITY resetAll.label "Alle synchronisierten Adressbücher zurücksetzen">
+<!ENTITY resetAll.accesskey "z">
+<!ENTITY cleanOldPrefs.label "Alte Adressbucheinstellungen bereinigen">
+<!ENTITY cleanOldPrefs.accesskey "b">
+<!ENTITY cleanOldPhotos.label "Alte Kontaktfotos löschen">
+<!ENTITY cleanOldPhotos.accesskey "K">
+<!ENTITY resetAllSettings.label "Alle gContactSync-Einstellungen zurücksetzen">
+<!ENTITY resetAllSettings.accesskey "g">
+<!ENTITY throttleTest.label "Drosseltest ausführen">
+<!ENTITY throttleTest.accesskey "D">

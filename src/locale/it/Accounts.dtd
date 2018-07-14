@@ -1,0 +1,48 @@
+<!ENTITY title.label "Account gContactSync">
+<!ENTITY accounts.tab "Account">
+<!ENTITY addressBook.label "Rubrica">
+<!ENTITY abSynced.label "Account Google">
+<!-- Global buttons -->
+<!ENTITY addAB.label "Nuova rubrica">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "Aggiorna">
+<!ENTITY refreshTree.accesskey "A">
+<!-- Account labels and options -->
+<!-- Basic Settings -->
+<!ENTITY Username.label "Scegli un account">
+<!ENTITY Username.accesskey "C">
+<!ENTITY NoUsername.label "Nessun nome utente trovato">
+<!ENTITY Groups.label "Gruppi e contatti da sincronizzare">
+<!ENTITY Groups.accesskey "G">
+<!ENTITY AllGroups.label "Tutti i gruppi e tutti i contatti">
+<!ENTITY NoGroups.label "Solo i contatti (e non i gruppi)">
+<!ENTITY Contacts.label "Contatti personali">
+<!ENTITY Coworkers.label "Collaboratori">
+<!ENTITY Family.label "Famiglia">
+<!ENTITY Friends.label "Amici">
+<!ENTITY GetGroups.label "Trova tutti i gruppi">
+<!ENTITY GetGroups.accesskey "T">
+<!ENTITY Plugin.label "Seleziona un plugin da usare">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "Seleziona la direzione di sincronizzazione">
+<!ENTITY SyncDirection.accesskey "S">
+<!ENTITY DirectionHelp.label "Che cosa significa?">
+<!ENTITY Complete.label "Bidirezionale (aggiornamento della rubrica in TB e in Google)">
+<!ENTITY ReadOnly.label "A sola lettura (TB riceve gli aggiornamenti da Google ma non viceversa)">
+<!ENTITY WriteOnly.label "A sola scrittura (TB invia gli aggiornamenti a Google ma non viceversa)">
+<!ENTITY SkipContactsWithoutEmail.label "Skip contacts without an e-mail address">
+<!ENTITY SkipContactsWithoutEmail.accesskey "k">
+<!ENTITY Disable.label "Disabilita la sincronizzazione di questa rubrica">
+<!ENTITY Disable.accesskey "D">
+<!ENTITY Disable.tooltiptext "Selezionare questa opzione per non sincronizzare questa rubrica. Deselezionarla quando si vuol ritornare alla sincronizzazione.">
+<!ENTITY updateG.label "Le modifiche locali hanno priorità su quelle in remoto">
+<!ENTITY updateG.accesskey "L">
+<!ENTITY updateG.tooltiptext "Se, dopo l'ultima sincronizzazione, un contatto è stato aggiornato sia in locale sia in remoto, gContactSync deve sapere quale aggiornamento tenere. Spuntare questa opzione per fare in modo che le modifiche locali sovrascrivano quelle remote.">
+<!-- Account buttons -->
+<!ENTITY deleteAB.label "Cancella questa rubrica">
+<!ENTITY removeLogin.label "Rimuovi le impostazioni">
+<!ENTITY saveChanges.label "Salva le modifiche">
+<!ENTITY saveChanges.accesskey "S">
+<!-- Other -->
+<!ENTITY Close.label "Chiudi">
+<!ENTITY Close.accesskey "C">

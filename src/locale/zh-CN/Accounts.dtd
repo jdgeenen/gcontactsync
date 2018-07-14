@@ -1,0 +1,48 @@
+<!ENTITY title.label "gContactSync 账户">
+<!ENTITY accounts.tab "Accounts">
+<!ENTITY addressBook.label "通讯录">
+<!ENTITY abSynced.label "Google 账户">
+<!-- Global buttons -->
+<!ENTITY addAB.label "新建通讯录">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "刷新">
+<!ENTITY refreshTree.accesskey "R">
+<!-- Account labels and options -->
+<!-- Basic Settings -->
+<!ENTITY Username.label "选择一个账户">
+<!ENTITY Username.accesskey "C">
+<!ENTITY NoUsername.label "未找到用户名">
+<!ENTITY Groups.label "要同步的分组和联系人">
+<!ENTITY Groups.accesskey "G">
+<!ENTITY AllGroups.label "所有分组和联系人">
+<!ENTITY NoGroups.label "仅联系人 (不包括分组)">
+<!ENTITY Contacts.label "我的联系人">
+<!ENTITY Coworkers.label "同事">
+<!ENTITY Family.label "家庭">
+<!ENTITY Friends.label "朋友">
+<!ENTITY GetGroups.label "查找所有分组">
+<!ENTITY GetGroups.accesskey "F">
+<!ENTITY Plugin.label "选择一个插件来用">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "选择同步目标">
+<!ENTITY SyncDirection.accesskey "P">
+<!ENTITY DirectionHelp.label "这是什么?">
+<!ENTITY Complete.label "完整 ( Google 和您的客户端均被更新)">
+<!ENTITY ReadOnly.label "只读 (您的客户端从 Google 获取更新)">
+<!ENTITY WriteOnly.label "只写 (您的客户端发送更新到 Google)">
+<!ENTITY SkipContactsWithoutEmail.label "Skip contacts without an e-mail address">
+<!ENTITY SkipContactsWithoutEmail.accesskey "k">
+<!ENTITY Disable.label "对此通讯录临时禁用同步">
+<!ENTITY Disable.accesskey "D">
+<!ENTITY Disable.tooltiptext "勾选此框从而在同步时跳过此通讯录.  想要同步时取消勾选.">
+<!ENTITY updateG.label "本地更改优先于远程端更改">
+<!ENTITY updateG.accesskey "L">
+<!ENTITY updateG.tooltiptext "最近一次同步后,如果本地和远程端均已更新联系人, gContactSync需要知道保留哪个修改, 勾选此框使本地更改覆写远程端更改">
+<!-- Advanced Settings -->
+<!ENTITY deleteAB.label "删除此通讯录">
+<!ENTITY removeLogin.label "移除设定">
+<!ENTITY saveChanges.label "保存更改">
+<!ENTITY saveChanges.accesskey "S">
+<!-- Account buttons -->
+<!ENTITY Close.label "关闭">
+<!ENTITY Close.accesskey "C">

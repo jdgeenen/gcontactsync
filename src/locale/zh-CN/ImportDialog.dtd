@@ -1,0 +1,12 @@
+<!ENTITY Title.label "gContactSync 导入选项">
+<!ENTITY ABList.label "地址簿:">
+<!ENTITY ABList.accesskey "A">
+<!ENTITY NewABButton.label "新建地址簿">
+<!ENTITY NewABButton.accesskey "N">
+<!ENTITY MergeContacts.label "合并联系人">
+<!ENTITY MergeContacts.accesskey "M">
+<!ENTITY Warning.value "注意：导入联系人需要花一点时间，如果看到”脚本未响应“ 警告请点击继续。">
+<!ENTITY Finish.label "完成">
+<!ENTITY Finish.accesskey "F">
+<!ENTITY Cancel.label "取消">
+<!ENTITY Cancel.accesskey "C">

@@ -1,0 +1,66 @@
+<!ENTITY title.label "gContactSync – Inställningar">
+<!ENTITY main.tab "Allmänt">
+<!ENTITY help.value "Hjälp">
+<!ENTITY help.accesskey "H">
+<!ENTITY autoSync.value "Automatisk synkronisering">
+<!ENTITY autoSync.label "Synkronisera kontakter automatiskt">
+<!ENTITY autoSync.accesskey "S">
+<!ENTITY refreshInterval.value "Synkroniseringsintervall (min.) [Standard är 120 (2 tim.)]">
+<!ENTITY refreshInterval.accesskey "I">
+<!ENTITY initialDelayMinutes.value "Inledande synkroniseringsfördröjning (min.) [Standard är 5]">
+<!ENTITY initialDelayMinutes.accesskey "d">
+<!ENTITY abName.value "Namn på adressbok att synka med (befintlig eller ny)">
+<!ENTITY abName.accesskey "A">
+<!ENTITY syncBehavior.label "Synkroniseringsbeteende">
+<!ENTITY syncAddresses.label "Synkronisera postala adresser">
+<!ENTITY syncAddresses.accesskey "p">
+<!ENTITY alertSummary.label "Visa en sammanfattning efter varje manuell synkning">
+<!ENTITY alertSummary.accesskey "m">
+<!ENTITY phoneTypes.label "Lägg till fält av telefonnummertyp (ignorera TB:s fältnamn)">
+<!ENTITY phoneTypes.accesskey "n">
+<!ENTITY accountDelay.value "Fördröjning mellan konton (ms) [5000]">
+<!ENTITY accountDelay.accesskey "b">
+<!ENTITY logging.label "Loggning">
+<!ENTITY enableLogging.label "Aktivera loggning">
+<!ENTITY enableLogging.accesskey "L">
+<!ENTITY verboseLog.label "Aktivera utförlig loggning (för felsökning)">
+<!ENTITY verboseLog.accesskey "V">
+<!ENTITY showInConsole.label "Logga fel i felkonsolen (för felsökning)">
+<!ENTITY showInConsole.accesskey "E">
+<!ENTITY interface.tab "Gränssnitt">
+<!ENTITY buttons.label "Knappar och menyer">
+<!ENTITY enableMenu.label "Aktivera gContactSync-menyn">
+<!ENTITY enableMenu.accesskey "E">
+<!ENTITY enableMenuLinks.label "Lägg till länkar (Wiki, Vanliga frågor och svar etc.) i gContactSync-menyn">
+<!ENTITY enableMenuLinks.accesskey "l">
+<!ENTITY addReset.label "Lägg till länkarna &apos;Ersätt till server&apos; och &apos;Ersätt från server&apos; i Adressbokens snabbmeny">
+<!ENTITY addReset.accesskey "R">
+<!ENTITY abResults.label "Kontaktlista">
+<!ENTITY phoneColLabels.label "Byt namn på telefonkolumnetiketterna">
+<!ENTITY phoneColLabels.accesskey "R">
+<!ENTITY newColLabels.label "Lägg till de nya fälten för kolumnetiketterna (endast Thunderbird 3)">
+<!ENTITY newColLabels.accesskey "n">
+<!ENTITY advanced.tab "Avancerat">
+<!ENTITY warning.value "Varning - det här är endast avsett för avancerade användare">
+<!ENTITY backup.label "Säkerhetskopieringsprinciper för adressbok">
+<!ENTITY backupInterval.value "Säkerhetskopieringsintervall (dagar, -1 för att inaktivera) [14]">
+<!ENTITY backupInterval.accesskey "k">
+<!ENTITY other.label "Övrigt">
+<!ENTITY chromeTime.value "Fördröjning av varningen &apos;Skriptet svarar inte&apos; (0 för att inaktivera)">
+<!ENTITY chromeTime.accesskey "f">
+<!ENTITY confirmDeleteThreshold.value "Lägsta antal kontakter att ta bort innan bekräftelse krävs">
+<!ENTITY confirmDeleteThreshold.accesskey "b">
+<!ENTITY httpRequestTimeout.value "Tidsgräns för HTTP-förfrågan (ms, 0 för att inaktivera) [0]">
+<!ENTITY httpRequestTimeout.accesskey "H">
+<!ENTITY httpRequestDelay.value "Fördröjning mellan HTTP-förfrågningar (ms, 0 för att inaktivera) [100]">
+<!ENTITY httpRequestDelay.accesskey "l">
+<!ENTITY resetAll.label "Återställ alla synkade AB:er">
+<!ENTITY resetAll.accesskey "R">
+<!ENTITY cleanOldPrefs.label "Rensa gamla AB-inställningar">
+<!ENTITY cleanOldPrefs.accesskey "C">
+<!ENTITY cleanOldPhotos.label "Ta bort gamla kontaktfoton">
+<!ENTITY cleanOldPhotos.accesskey "g">
+<!ENTITY resetAllSettings.label "Återställ alla inställningar">
+<!ENTITY resetAllSettings.accesskey "i">
+<!ENTITY throttleTest.label "Kör dataflödestest">
+<!ENTITY throttleTest.accesskey "T">
