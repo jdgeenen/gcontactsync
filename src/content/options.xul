@@ -37,6 +37,7 @@
    - ***** END LICENSE BLOCK ***** -->
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <?xml-stylesheet href="chrome://gcontactsync/skin/options.css" type="text/css"?>
+<?xml-stylesheet href="chrome://messenger/skin/preferences/preferences.css"?>
 
 <!DOCTYPE prefwindow SYSTEM "chrome://gContactSync/locale/options.dtd">
 
