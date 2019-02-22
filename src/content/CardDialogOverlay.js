@@ -85,6 +85,30 @@ gContactSync.CardDialogOverlay = {
    * loaded.
    */
   init: function CardDialogOverlay_init() {
+    //check string property of directory, if init() of gContactSync should be skipped
+    let arg = window.arguments[0];
+    let abURI = "";
+    let gContactSyncSkipped = "";
+    //newCardDialog and editCardDialog use different names for the ab argument
+    if (arg.hasOwnProperty("abURI")) {
+        abURI = arg.abURI;
+    } else if (arg.hasOwnProperty("selectedAB")) {
+        abURI = arg.selectedAB;
+    }
+
+    if (abURI) {
+        let abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
+        let ab = abManager.getDirectory(abURI);
+        try {
+            gContactSyncSkipped = ab.getStringValue("gContactSyncSkipped", "");
+        } catch (e) {} 
+    }
+    
+    if (gContactSyncSkipped) {
+      return;
+    }
+
+
     // if it isn't finished loading yet wait another 200 ms and try again
     if (!document.getElementById("abTabs")) {
       // if it has tried to load more than 50 times something is wrong, so quit
