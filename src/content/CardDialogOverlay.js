@@ -80,9 +80,9 @@ gContactSync.CardDialogOverlay = {
   mDisabled:   false,
   /** Whether the application is Postbox */
   mIsPostbox:  false,
+
   /**
-   * Adds a tab to the tab box, if possible.  Waits until the abCardOverlay is
-   * loaded.
+   * Checks whether gContactSync field should be injected or not.
    */
   init: function CardDialogOverlay_init() {
     //check string property of directory, if init() of gContactSync should be skipped
@@ -97,9 +97,14 @@ gContactSync.CardDialogOverlay = {
     }
 
     if (abURI) {
-        let abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
-        let ab = abManager.getDirectory(abURI);
         try {
+            let abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
+            let ab = abManager.getDirectory(abURI);
+            if (ab.isMailList) {
+                let parentURI = abURI.split("/");
+                parentURI.pop();
+                ab = abManager.getDirectory(parentURI.join("/"));
+            }
             gContactSyncSkipped = ab.getStringValue("gContactSyncSkipped", "");
         } catch (e) {} 
     }
@@ -107,13 +112,19 @@ gContactSync.CardDialogOverlay = {
     if (gContactSyncSkipped) {
       return;
     }
-
-
+    gContactSync.CardDialogOverlay.inject();
+  },
+  
+  /**
+   * Adds a tab to the tab box, if possible.  Waits until the abCardOverlay is
+   * loaded.
+   */
+  inject: function CardDialogOverlay_inject() {
     // if it isn't finished loading yet wait another 200 ms and try again
     if (!document.getElementById("abTabs")) {
       // if it has tried to load more than 50 times something is wrong, so quit
       if (gContactSync.CardDialogOverlay.mLoadNumber < 50)
-        setTimeout(gContactSync.CardDialogOverlay.init, 200);
+        setTimeout(gContactSync.CardDialogOverlay.inject, 200);
       gContactSync.CardDialogOverlay.mLoadNumber++;
       return;
     }
