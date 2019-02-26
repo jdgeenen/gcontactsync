@@ -117,6 +117,11 @@ gContactSync.CardDialogOverlay = {
       gContactSync.CardDialogOverlay.mLoadNumber++;
       return;
     }
+
+    //the XUL injected all extra elements as hidden, unhide them
+    document.getElementById("gContactSyncTab").hidden = false;
+    document.getElementById("anniversaryField").hidden = false;
+    
     for (var i = 0; i < gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
       gContactSync.gAttributes["Relation" + i] = "";
       gContactSync.gAttributes["Relation" + i + "Type"] = "";
