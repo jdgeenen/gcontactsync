@@ -71,13 +71,13 @@
   </stringbundleset>
   
   <tabs id="abTabs">
-    <tab label="&gContactSyncTab.label;"     id="gContactSyncTab"/>
+    <tab label="&gContactSyncTab.label;" hidden="true" id="gContactSyncTab"/>
   </tabs>
 
   <tabpanels id="abTabPanels" flex="1">
 
     <vbox id="abHomeTab">
-      <hbox id="anniversaryField" align="center" after="birthdayField">
+      <hbox id="anniversaryField" align="center" after="birthdayField" hidden="true">
         <spacer flex="1"/>
         <label control="Anniversary" value="&Anniversary.label;"
                accesskey="&Anniversary.accesskey;"/>
