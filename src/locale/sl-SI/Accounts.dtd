@@ -1,0 +1,48 @@
+<!ENTITY title.label "Računi gContactSync">
+<!ENTITY accounts.tab "Računi">
+<!ENTITY addressBook.label "Imenik">
+<!ENTITY abSynced.label "Račun Google">
+<!-- Global buttons -->
+<!ENTITY addAB.label "Nov imenik">
+<!ENTITY addAB.accesskey "N">
+<!ENTITY refreshTree.label "Osveži">
+<!ENTITY refreshTree.accesskey "O">
+<!-- Account labels and options -->
+<!-- Basic Settings -->
+<!ENTITY Username.label "Izberite račun">
+<!ENTITY Username.accesskey "b">
+<!ENTITY NoUsername.label "Uporabniških imen in bilo mogoče najti">
+<!ENTITY Groups.label "Skupine in stiki za usklajevanje">
+<!ENTITY Groups.accesskey "u">
+<!ENTITY AllGroups.label "Vse skupine in stiki">
+<!ENTITY NoGroups.label "Samo stiki (brez skupin)">
+<!ENTITY Contacts.label "Moji stiki">
+<!ENTITY Coworkers.label "Sodelavci">
+<!ENTITY Family.label "Družina">
+<!ENTITY Friends.label "Prijatelji">
+<!ENTITY GetGroups.label "Najdi vse skupine">
+<!ENTITY GetGroups.accesskey "a">
+<!ENTITY Plugin.label "Izberi vtičnik za uporabo">
+<!ENTITY Google.label "Google">
+<!ENTITY SyncDirection.label "Izberite smer usklajevanja">
+<!ENTITY SyncDirection.accesskey "z">
+<!ENTITY DirectionHelp.label "Kaj je to?">
+<!ENTITY Complete.label "Popolno (posodobljena sta tako Google kot vaš odjemalec)">
+<!ENTITY ReadOnly.label "Samo za branje (vaš odjemalec prejme posodobitve od Googla)">
+<!ENTITY WriteOnly.label "Samo za pisanje (vaš odjemalec pošlje posodobitve Googlu)">
+<!ENTITY SkipContactsWithoutEmail.label "Preskoči stike brez e-poštnega naslova">
+<!ENTITY SkipContactsWithoutEmail.accesskey "P">
+<!ENTITY Disable.label "Onemogoči usklajevanje s tem imenikom">
+<!ENTITY Disable.accesskey "e">
+<!ENTITY Disable.tooltiptext "Označite to polje, da preskočite ta imenik med usklajevanjem. Odznačite, kadar ga želite ponovno uskladiti.">
+<!ENTITY updateG.label "Krajevne spremembe imajo prednost pred oddaljenimi">
+<!ENTITY updateG.accesskey "K">
+<!ENTITY updateG.tooltiptext "Kadar je bil stik krajevno in oddaljeno posodobljen  po zadnji uskladitvi, mora gContactSync vedeti, katere spremembe ohraniti. Označite to polje, da krajevne spremembe prepišejo oddaljene">
+<!-- Account buttons -->
+<!ENTITY deleteAB.label "Izbriši ta imenik">
+<!ENTITY removeLogin.label "Odstrani nastavitve">
+<!ENTITY saveChanges.label "Shrani nastavitve">
+<!ENTITY saveChanges.accesskey "S">
+<!-- Other -->
+<!ENTITY Close.label "Zapri">
+<!ENTITY Close.accesskey "Z">

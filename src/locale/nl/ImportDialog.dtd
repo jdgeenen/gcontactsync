@@ -1,0 +1,12 @@
+<!ENTITY Title.label "gContactSync-opties importeren">
+<!ENTITY ABList.label "Adresboek:">
+<!ENTITY ABList.accesskey "A">
+<!ENTITY NewABButton.label "Nieuw adresboek">
+<!ENTITY NewABButton.accesskey "N">
+<!ENTITY MergeContacts.label "Contactpersonen samenvoegen">
+<!ENTITY MergeContacts.accesskey "v">
+<!ENTITY Warning.value "NOOT: Importeren van contactpersonen kan even duren. Klik Doorgaan als u een waarschuwing ‘Script reageert niet’ ziet.">
+<!ENTITY Finish.label "Afronden">
+<!ENTITY Finish.accesskey "f">
+<!ENTITY Cancel.label "Annuleren">
+<!ENTITY Cancel.accesskey "n">

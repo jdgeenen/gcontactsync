@@ -1,0 +1,12 @@
+<!ENTITY Title.label "gContactSync-Importoptionen">
+<!ENTITY ABList.label "Adressbuch:">
+<!ENTITY ABList.accesskey "A">
+<!ENTITY NewABButton.label "Neues Adressbuch">
+<!ENTITY NewABButton.accesskey "N">
+<!ENTITY MergeContacts.label "Kontakte zusammenführen">
+<!ENTITY MergeContacts.accesskey "z">
+<!ENTITY Warning.value "HINWEIS: Das Importieren der Kontakte kann eine Weile dauern. Wenn Sie eine 'Nicht antwortendes Skript'-Warnung sehen, klicken Sie auf 'Weiter ausführen'.">
+<!ENTITY Finish.label "Fertigstellen">
+<!ENTITY Finish.accesskey "F">
+<!ENTITY Cancel.label "Abbrechen">
+<!ENTITY Cancel.accesskey "b">

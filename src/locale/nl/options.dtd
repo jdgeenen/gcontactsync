@@ -1,0 +1,66 @@
+<!ENTITY title.label "gContactSync-voorkeursinstellingen">
+<!ENTITY main.tab "Hoofd">
+<!ENTITY help.value "Help">
+<!ENTITY help.accesskey "H">
+<!ENTITY autoSync.value "Automatische synchronisatie">
+<!ENTITY autoSync.label "Contactpersonen automatisch synchroniseren">
+<!ENTITY autoSync.accesskey "S">
+<!ENTITY refreshInterval.value "Synchronisatie-interval (minuten) [standaard is 120 (2 uur)]">
+<!ENTITY refreshInterval.accesskey "i">
+<!ENTITY initialDelayMinutes.value "Aanvankelijke synchronisatievertraging [standaard is 5]">
+<!ENTITY initialDelayMinutes.accesskey "t">
+<!ENTITY abName.value "Te synchroniseren adresboek">
+<!ENTITY abName.accesskey "A">
+<!ENTITY syncBehavior.label "Synchronisatiegedrag">
+<!ENTITY syncAddresses.label "Postadressen synchroniseren">
+<!ENTITY syncAddresses.accesskey "P">
+<!ENTITY alertSummary.label "Samenvatting na iedere handmatige synchronisatie weergeven">
+<!ENTITY alertSummary.accesskey "m">
+<!ENTITY phoneTypes.label "Telefoonnummervelden toevoegen (bestaande veldnamen negeren)">
+<!ENTITY phoneTypes.accesskey "n">
+<!ENTITY accountDelay.value "Wachttijd tussen accounts (ms) [5000]">
+<!ENTITY accountDelay.accesskey "t">
+<!ENTITY logging.label "Loggen">
+<!ENTITY enableLogging.label "Loggen inschakelen">
+<!ENTITY enableLogging.accesskey "L">
+<!ENTITY verboseLog.label "Uitgebreid loggen inschakelen (voor foutopsporing)">
+<!ENTITY verboseLog.accesskey "U">
+<!ENTITY showInConsole.label "Fouten naar foutconsole loggen (voor foutopsporing)">
+<!ENTITY showInConsole.accesskey "E">
+<!ENTITY interface.tab "Interface">
+<!ENTITY buttons.label "Knoppen en Menu's">
+<!ENTITY enableMenu.label "gContactSync Menu tonen">
+<!ENTITY enableMenu.accesskey "t">
+<!ENTITY enableMenuLinks.label "Voeg een aantal links toe (Wiki, FAQ, etc.) in het gContactSync Menu">
+<!ENTITY enableMenuLinks.accesskey "K">
+<!ENTITY addReset.label "Vervang Naar en Vervang Van Server knoppen tonen in Adresboek menu's">
+<!ENTITY addReset.accesskey "R">
+<!ENTITY abResults.label "Contactpersonen Lijst">
+<!ENTITY phoneColLabels.label "Hernoem de telefoonnummer labels">
+<!ENTITY phoneColLabels.accesskey "R">
+<!ENTITY newColLabels.label "Voeg de nieuwe velden aan de kolom labels toe (Alleen TB 3/SM 2)">
+<!ENTITY newColLabels.accesskey "n">
+<!ENTITY advanced.tab "Geavanceerd">
+<!ENTITY warning.value "Waarschuwing - Dit is voor gevorderde gebruikers">
+<!ENTITY backup.label "Adresboek backups">
+<!ENTITY backupInterval.value "Backup interval (Dagen, -1 om uit te schakelen) [14]">
+<!ENTITY backupInterval.accesskey "B">
+<!ENTITY other.label "Andere">
+<!ENTITY chromeTime.value "'Unresponsive Script' waarschuwingstijd (0 om uit te schakelen)">
+<!ENTITY chromeTime.accesskey "U">
+<!ENTITY confirmDeleteThreshold.value "Minimum aantal Contactpersonen die verwijderd worden alvorens om toestemming te vragen">
+<!ENTITY confirmDeleteThreshold.accesskey "d">
+<!ENTITY httpRequestTimeout.value "HTTP-verzoektime-out (ms, 0 om uit te schakelen) [0]">
+<!ENTITY httpRequestTimeout.accesskey "H">
+<!ENTITY httpRequestDelay.value "Vertraging tussen HTTP-verzoeken (ms, 0 om uit te schakelen) [100]">
+<!ENTITY httpRequestDelay.accesskey "g">
+<!ENTITY resetAll.label "Reset Alle Gesynchron. ABs">
+<!ENTITY resetAll.accesskey "R">
+<!ENTITY cleanOldPrefs.label "verwijder oude AB instellingen">
+<!ENTITY cleanOldPrefs.accesskey "W">
+<!ENTITY cleanOldPhotos.label "Oude contactpersoonfoto’s verwijderen">
+<!ENTITY cleanOldPhotos.accesskey "P">
+<!ENTITY resetAllSettings.label "Alle gContactSync-instellingen resetten">
+<!ENTITY resetAllSettings.accesskey "g">
+<!ENTITY throttleTest.label "Versnellingstest uitvoeren">
+<!ENTITY throttleTest.accesskey "l">

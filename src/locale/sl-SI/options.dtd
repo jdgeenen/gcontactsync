@@ -1,0 +1,66 @@
+<!ENTITY title.label "Nastavitve gContactSync">
+<!ENTITY main.tab "Glavno">
+<!ENTITY help.value "Pomoč">
+<!ENTITY help.accesskey "P">
+<!ENTITY autoSync.value "Samodejno usklajevanje">
+<!ENTITY autoSync.label "Samodejno uskladi stike">
+<!ENTITY autoSync.accesskey "S">
+<!ENTITY refreshInterval.value "Časovno obdobje usklajevanja (minute) [privzeto je 120 (2 uri)]">
+<!ENTITY refreshInterval.accesskey "Č">
+<!ENTITY initialDelayMinutes.value "Začetna zakasnitev usklajevanja (minute) [privzeto je 5]">
+<!ENTITY initialDelayMinutes.accesskey "Z">
+<!ENTITY abName.value "Imenik za usklajevanje">
+<!ENTITY abName.accesskey "e">
+<!ENTITY syncBehavior.label "Vedenje usklajevanja">
+<!ENTITY syncAddresses.label "Uskladi poštne naslove">
+<!ENTITY syncAddresses.accesskey "U">
+<!ENTITY alertSummary.label "Po vsaki ročni uskladitvi prikaži povzetek">
+<!ENTITY alertSummary.accesskey "P">
+<!ENTITY phoneTypes.label "Dodaj polja vrste za telefonske številke (prezri obstoječa imena polj)">
+<!ENTITY phoneTypes.accesskey "D">
+<!ENTITY accountDelay.value "Zakasnitev med računi (ms) [5000]">
+<!ENTITY accountDelay.accesskey "Z">
+<!ENTITY logging.label "Beleženje">
+<!ENTITY enableLogging.label "Omogoči beleženje">
+<!ENTITY enableLogging.accesskey "b">
+<!ENTITY verboseLog.label "Omogoči obširno beleženje (za razhroščevanje)">
+<!ENTITY verboseLog.accesskey "š">
+<!ENTITY showInConsole.label "Zabeleži napake v konzoli za napake (za razhroščevanje)">
+<!ENTITY showInConsole.accesskey "a">
+<!ENTITY interface.tab "Vmesnik">
+<!ENTITY buttons.label "Gumbi in meniji">
+<!ENTITY enableMenu.label "Omogoči meni gContactSync">
+<!ENTITY enableMenu.accesskey "O">
+<!ENTITY enableMenuLinks.label "Dodaj nekaj povezav (Obrazec za poročanje o napakah, itd.) k meniju gContactSync">
+<!ENTITY enableMenuLinks.accesskey "D">
+<!ENTITY addReset.label "Dodaj povezave Nadomesti v in Nadomesti iz strežnika v vsebinski meni imenika">
+<!ENTITY addReset.accesskey "v">
+<!ENTITY abResults.label "Seznam stikov">
+<!ENTITY phoneColLabels.label "Preimenuj vse oznake stolpcev za telefonske številke">
+<!ENTITY phoneColLabels.accesskey "P">
+<!ENTITY newColLabels.label "Dodaj nova polja oznakam stolpcev">
+<!ENTITY newColLabels.accesskey "n">
+<!ENTITY advanced.tab "Napredno">
+<!ENTITY warning.value "Opozorilo - to je namenjeno samo naprednim uporabnikom">
+<!ENTITY backup.label "Politika varnostnega kopiranje imenika">
+<!ENTITY backupInterval.value "Časovno obdobje varnostnega kopiranja (dni, -1 za onemogočanje) [14]">
+<!ENTITY backupInterval.accesskey "b">
+<!ENTITY other.label "Drugo">
+<!ENTITY chromeTime.value "Čas zakasnitve opozorila 'Neodzivni skript' (0 za onemogočanje)">
+<!ENTITY chromeTime.accesskey "Č">
+<!ENTITY confirmDeleteThreshold.value "Najmanjše število stikov za izbris pred zahtevanjem dovoljenja [5]">
+<!ENTITY confirmDeleteThreshold.accesskey "N">
+<!ENTITY httpRequestTimeout.value "Časovna omejitev zahteve HTTP (ms, 0 za onemogočanje) [0]">
+<!ENTITY httpRequestTimeout.accesskey "m">
+<!ENTITY httpRequestDelay.value "Zakasnitev med zahtevami HTTP (ms, 0 za onemogočanje)">
+<!ENTITY httpRequestDelay.accesskey "Z">
+<!ENTITY resetAll.label "Ponastavi vse usklajene imenike">
+<!ENTITY resetAll.accesskey "u">
+<!ENTITY cleanOldPrefs.label "Počisti stare nastavitve imenikov">
+<!ENTITY cleanOldPrefs.accesskey "P">
+<!ENTITY cleanOldPhotos.label "Izbriši stare fotografije stikov">
+<!ENTITY cleanOldPhotos.accesskey "b">
+<!ENTITY resetAllSettings.label "Ponastavi vse nastavitve gContactSync">
+<!ENTITY resetAllSettings.accesskey "s">
+<!ENTITY throttleTest.label "Zaženi preskus moči">
+<!ENTITY throttleTest.accesskey "a">
