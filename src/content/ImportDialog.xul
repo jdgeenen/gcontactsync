@@ -59,10 +59,6 @@
     <spacer />
     <label id="WarningLabel" value="&Warning.value;"/>
   </vbox>
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="gContactSyncStringBundle"
-                  src="chrome://gContactSync/locale/gcontactsync.properties"/>
-  </stringbundleset>
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/misc.js"/>
   <script type="application/x-javascript"

@@ -45,8 +45,8 @@ var gContactSync = gContactSync || {};
  * @class
  */
 gContactSync.StringBundle = {
-  /** Stores all string bundle elements */
-  mBundles:     {},
+  /** Stores the nsIStringBundle. */
+  mBundle: [],
   /** Stores whether this class has been initialized */
   mInitialized: false,
   /** Stores whether the user agent should be replaced in strings */
@@ -62,14 +62,10 @@ gContactSync.StringBundle = {
       return true;
     }
 
-    gContactSync.StringBundle.mBundles.mStrings =
-      document.getElementById("gContactSyncStringBundle");
-      
-    if (!gContactSync.StringBundle.mBundles.mStrings) {
-      var err = "Error - gContactSync.StringBundle could not be initialized\n";
-      gContactSync.alert(err, "Error");
-      throw err;
-    }
+    let stringBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"]
+                                        .getService(Components.interfaces.nsIStringBundleService);
+    gContactSync.StringBundle.mBundle =
+      stringBundleService.createBundle("chrome://gContactSync/locale/gcontactsync.properties");
 
     // Check the user agent
     if (window.navigator.userAgent.indexOf("SeaMonkey") != -1) {
@@ -99,20 +95,18 @@ gContactSync.StringBundle = {
       gContactSync.StringBundle.init();
     }
 
-    for (i in gContactSync.StringBundle.mBundles) {
-      try {
-        str = gContactSync.StringBundle.mBundles[i].getString(aName);
+    try {
+      str = gContactSync.StringBundle.mBundle.GetStringFromName(aName);
 
-        // If necessary, replace all instances of Thunderbird with the actual
-        // user agent.
-        if (gContactSync.StringBundle.mReplaceUserAgent) {
-          str = str.replace(/Thunderbird/g, gContactSync.StringBundle.mUserAgent);
-        }
+      // If necessary, replace all instances of Thunderbird with the actual
+      // user agent.
+      if (gContactSync.StringBundle.mReplaceUserAgent) {
+        str = str.replace(/Thunderbird/g, gContactSync.StringBundle.mUserAgent);
+      }
 
-        break;
-      } catch (e) {} // if the bundle doesn't exist or if the string
-                     // isn't in it skip to the next
-    }
+      return str;
+
+    } catch (e) {}
 
     return str;
   }

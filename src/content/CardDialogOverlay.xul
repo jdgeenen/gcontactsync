@@ -64,11 +64,6 @@
   <script src="gdata.js"/>
   <script src="Logger.js"/>
   <script src="CardDialogOverlay.js"/>
-
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="gContactSyncStringBundle"
-                  src="chrome://gContactSync/locale/gcontactsync.properties"/>
-  </stringbundleset>
   
   <tabs id="abTabs">
     <tab label="&gContactSyncTab.label;"     id="gContactSyncTab"/>

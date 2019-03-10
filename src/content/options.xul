@@ -376,8 +376,4 @@
           src="chrome://gcontactsync/content/Preferences.js"/>
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/ThrottleTest.js"/>
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="gContactSyncStringBundle"
-                  src="chrome://gContactSync/locale/gcontactsync.properties"/>
-  </stringbundleset>
 </prefwindow>
