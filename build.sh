@@ -8,7 +8,7 @@
 
 # NOTE: The VERSION here is just used for the package name
 # Edit install.rdf and content/misc.js to change the actual VERSION
-VERSION=3.0.0
+VERSION=3.1.4
 SRC_DIR=./src
 
 # Dest should be absolute or relative to SRC_DIR
@@ -38,7 +38,7 @@ cd $SRC_DIR
 LOCALE_FILES=$(find locale/ -maxdepth 2 -type f ! -name CVS ! -name Repository ! -name Root ! -name Entries)
 
 # zip the source files
-zip -r $DEST content/*.* defaults/preferences/*.* $LOCALE_FILES skin/*.* install.rdf chrome.manifest -x \*.sw\*
+zip -r $DEST content/*.* defaults/preferences/*.* $LOCALE_FILES skin/*.* manifest.json chrome.manifest -x \*.sw\*
 
 # quit if zip failed
 if [ "$?" != 0 ]; then
