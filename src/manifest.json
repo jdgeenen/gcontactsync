@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "gContactSync",
   "description": "Synchronizes Google Contacts with Thunderbird",
-  "version": "4.0.0a1pre",
+  "version": "3.1.4",
   "author": "Josh Geenen",
   "homepage_url": "https://www.pirules.org/addons/gcontactsync/",
   "legacy" : {
@@ -14,7 +14,7 @@
   "applications": {
     "gecko": {
       "id": "gContactSync@pirules.net",
-      "strict_min_version": "60.0"
+      "strict_min_version": "65.0"
     }
   },
   "icons": {

@@ -38,13 +38,13 @@
 var gContactSync = gContactSync || {};
 
 /** The major version of gContactSync (ie 0 in 0.2.18) */
-gContactSync.versionMajor   = "4";
+gContactSync.versionMajor   = "3";
 /** The minor version of gContactSync (ie 3 in 0.3.0b1) */
-gContactSync.versionMinor   = "0";
+gContactSync.versionMinor   = "1";
 /** The release for the current version of gContactSync (ie 1 in 0.3.1a7) */
-gContactSync.versionRelease = "0";
+gContactSync.versionRelease = "4";
 /** The suffix for the current version of gContactSync (ie a7 for Alpha 7) */
-gContactSync.versionSuffix  = "a1pre";
+gContactSync.versionSuffix  = "";
 /** The attribute where the dummy e-mail address is stored */
 gContactSync.dummyEmailName = "PrimaryEmail";
 
