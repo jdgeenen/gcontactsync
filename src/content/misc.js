@@ -95,9 +95,7 @@ gContactSync.serialize = function gCS_serialize(aXML) {
   if (!aXML)
     return "";
   try {
-    return Components.classes["@mozilla.org/xmlextras/xmlserializer;1"]
-                     .createInstance(Components.interfaces.nsIDOMSerializer)
-                     .serializeToString(aXML);
+    return new XMLSerializer().serializeToString(aXML);
   }
   catch (e) {
     gContactSync.LOGGER.LOG_WARNING("Error while serializing the following XML: " +
