@@ -80,19 +80,59 @@ gContactSync.CardDialogOverlay = {
   mDisabled:   false,
   /** Whether the application is Postbox */
   mIsPostbox:  false,
+
+  /**
+   * Checks whether gContactSync field should be injected or not.
+   */
+  init: function CardDialogOverlay_init() {
+    //check string property of directory, if init() of gContactSync should be skipped
+    let arg = window.arguments[0];
+    let abURI = "";
+    let gContactSyncSkipped = "";
+    //newCardDialog and editCardDialog use different names for the ab argument
+    if (arg.hasOwnProperty("abURI")) {
+        abURI = arg.abURI;
+    } else if (arg.hasOwnProperty("selectedAB")) {
+        abURI = arg.selectedAB;
+    }
+
+    if (abURI) {
+        try {
+            let abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
+            let ab = abManager.getDirectory(abURI);
+            if (ab.isMailList) {
+                let parentURI = abURI.split("/");
+                parentURI.pop();
+                ab = abManager.getDirectory(parentURI.join("/"));
+            }
+            gContactSyncSkipped = ab.getStringValue("gContactSyncSkipped", "");
+        } catch (e) {} 
+    }
+    
+    if (gContactSyncSkipped) {
+      return;
+    }
+    gContactSync.CardDialogOverlay.inject();
+  },
+  
   /**
    * Adds a tab to the tab box, if possible.  Waits until the abCardOverlay is
    * loaded.
    */
-  init: function CardDialogOverlay_init() {
+  inject: function CardDialogOverlay_inject() {
     // if it isn't finished loading yet wait another 200 ms and try again
     if (!document.getElementById("abTabs")) {
       // if it has tried to load more than 50 times something is wrong, so quit
       if (gContactSync.CardDialogOverlay.mLoadNumber < 50)
-        setTimeout(gContactSync.CardDialogOverlay.init, 200);
+        setTimeout(gContactSync.CardDialogOverlay.inject, 200);
       gContactSync.CardDialogOverlay.mLoadNumber++;
       return;
     }
+
+    //the XUL injected all extra elements as hidden, unhide them
+    document.getElementById("gContactSyncTab").hidden = false;
+    document.getElementById("anniversaryField").hidden = false;
+    
     for (var i = 0; i < gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
       gContactSync.gAttributes["Relation" + i] = "";
       gContactSync.gAttributes["Relation" + i + "Type"] = "";
