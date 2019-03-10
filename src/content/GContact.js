@@ -862,20 +862,17 @@ gContactSync.GContact.prototype = {
    */
   uploadPhoto: function GContact_uploadPhoto(aURI) {
     var photoInfo = this.getPhotoInfo();
+
     // Send the PUT request
     // TODO - this really needs error handling...
-    var ios = Components.classes["@mozilla.org/network/io-service;1"]
-                        .getService(Components.interfaces.nsIIOService),
-        outChannel = ios.newChannel(photoInfo.url, null, null),
-        inChannel  = aURI instanceof Components.interfaces.nsIURI ?
-                       ios.newChannelFromURI(aURI) :
-                       ios.newChannel(aURI, null, null);
+    var outChannel = gContactSync.createChannel(photoInfo.url),
+        inChannel  = gContactSync.createChannel(aURI);
     outChannel = outChannel.QueryInterface(Components.interfaces.nsIHttpChannel);
     // Set the upload data
     outChannel = outChannel.QueryInterface(Components.interfaces.nsIUploadChannel);
     // Set the input stream as the photo URI
     // See https://www.mozdev.org/bugs/show_bug.cgi?id=22757 for the try/catch
-    // block, I didn't see a way to tell if the item pointed to by aURI exists
+    // block, there is no easy way to tell if the item pointed to by aURI exists
     try {
       outChannel.setUploadStream(inChannel.open(), photoInfo.type, -1);
     }
@@ -955,9 +952,7 @@ gContactSync.GContact.prototype = {
     file.append("photos");
     if (!file.exists() || !file.isDirectory())
       file.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, parseInt("0755", 8));
-    var ios = Components.classes["@mozilla.org/network/io-service;1"]
-                        .getService(Components.interfaces.nsIIOService);
-    var ch = ios.newChannel2(info.url, null, null, null, null, null, 0, 0);
+    var ch = gContactSync.createChannel(info.url);
     ch.QueryInterface(Components.interfaces.nsIHttpChannel);
     ch.setRequestHeader("Authorization", aAuthToken, false);
     var istream = ch.open();

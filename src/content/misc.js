@@ -37,6 +37,9 @@
 /** Containing object for gContactSync */
 var gContactSync = gContactSync || {};
 
+/** Import Services.jsm. */
+var {Services} = ChromeUtils.import("resource://gre/modules/Services.jsm");
+
 /** The major version of gContactSync (ie 0 in 0.2.18) */
 gContactSync.versionMajor   = "3";
 /** The minor version of gContactSync (ie 3 in 0.3.0b1) */
@@ -481,9 +484,7 @@ gContactSync.writePhoto = function gCS_writePhoto(aURL, aFilename, aRedirect) {
   file.append("photos");
   if (!file.exists() || !file.isDirectory())
     file.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, parseInt("0755", 8));
-  var ios = Components.classes["@mozilla.org/network/io-service;1"]
-                      .getService(Components.interfaces.nsIIOService);
-  var ch = ios.newChannel(aURL, null, null);
+  var ch = gContactSync.createChannel(aURL);
   ch.QueryInterface(Components.interfaces.nsIHttpChannel);
   //ch.setRequestHeader("Authorization", aAuthToken, false);
   var istream = ch.open();
@@ -666,6 +667,15 @@ gContactSync.version04Upgrade = function gCS_version04Upgrade() {
   }
   gContactSync.Preferences.setSyncPref("v04UpgradeNeeded", false);
   gContactSync.Preferences.setSyncPref("v04RCUpgradeNeeded", false);
+};
+
+gContactSync.createChannel = function gCS_createChannel(aURI) {
+    if (aURI instanceof Components.interfaces.nsIURI) {
+        aURI = aURI.spec;
+    }
+    let ios = Components.classes["@mozilla.org/network/io-service;1"]
+                        .getService(Components.interfaces.nsIIOService);
+   return ios.newChannel2(aURI, null, null, null, Services.scriptSecurityManager.getSystemPrincipal(), null, 0, 0);
 };
 
 /**
