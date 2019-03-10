@@ -318,17 +318,19 @@ gContactSync.ABOverlay = {
       var year  = gContactSync.GAbManager.getCardValue(aCard, "AnniversaryYear");
       var dateStr = null;
       if (day > 0 && day < 32 && month > 0 && month < 13) {
-        var date = new Date(year, month - 1, day);
-        // if the year exists, just use Date.toLocaleString
+        var date = new Date(Date.UTC(year || 2000, month - 1, day));
+        var formatter;
         if (year) {
-          date.setFullYear(year);
-          dateStr = date.toLocaleDateString();
+          date.setUTCFullYear(year);
+          formatter = new Services.intl.DateTimeFormat(undefined,
+                                                       {dateStyle: "long", timeZone: "UTC"});
         } else {
-          var formatStr = "%d-%B";
-          try {formatStr = gAddressBookBundle.getString("dateFormatMonthDay");} catch (e) {}
           // if the year doesn't exist, display Month DD (ex. January 01)
-          dateStr = date.toLocaleFormat(formatStr);
+          date = new Date(Date.UTC(saneBirthYear(year), month - 1, day));
+          formatter = new Services.intl.DateTimeFormat(undefined,
+                                                       {month: "long", day: "numeric", timeZone: "UTC"});
         }
+        dateStr = formatter.format(date);
       } else if (year) {
         dateStr = year;
       }

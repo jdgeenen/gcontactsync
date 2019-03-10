@@ -155,22 +155,22 @@ gContactSync.GAddressBook.prototype.setLastSyncDate = function GAddressBook_setL
  */
 gContactSync.GAddressBook.prototype.reset = function GAddressBook_reset() {
   gContactSync.LOGGER.LOG("Resetting the " + this.getName() + " directory.");
-  var lists, i, dt;
   if (this.mPrefs.reset === "true") {
     gContactSync.LOGGER.LOG_WARNING("An attempt was made to reset an AB which was already reset.  Ignoring request.");
     return false;
   }
-  dt = new Date().toLocaleFormat("%Y_%m_%d_");
-  gContactSync.GAbManager.backupAB(this, "reset_" + dt, ".bak");
+  let date = new Date();
+  let dateStr = date.getFullYear() + "_" + (date.getMonth() + 1) + "_" + date.getDate() + "_";
+  gContactSync.GAbManager.backupAB(this, "reset_" + dateStr, ".bak");
+  let lists = {};
   try {
     lists = this.getAllLists(true);
   }
   catch (e) {
     gContactSync.LOGGER.LOG_ERROR("Unable to get all lists", e);
-    lists = {};
   }
   gContactSync.LOGGER.VERBOSE_LOG(" * Deleting all lists");
-  for (i in lists) {
+  for (let i in lists) {
     if (lists[i] instanceof gContactSync.GMailList) {
       gContactSync.LOGGER.VERBOSE_LOG("  - Deleting list " + lists[i].getName());
       lists[i].remove();
