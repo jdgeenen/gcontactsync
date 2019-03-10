@@ -230,8 +230,8 @@ gContactSync.AccountSetupWizard = {
         if (!ab || (ab.mPrefs.Username === "none")) {break;}
         name = aSearch + " (" + j + ")";
       }
-      abNameElem.insertItemAt(0, name, 0);
-      selectedIndex = 0;
+      abNameElem.appendItem(name);
+      selectedIndex = i;
     }
     abNameElem.selectedIndex = selectedIndex;
     gContactSync.Accounts.restoreGroups();

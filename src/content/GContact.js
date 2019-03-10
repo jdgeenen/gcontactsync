@@ -957,7 +957,7 @@ gContactSync.GContact.prototype = {
       file.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, parseInt("0755", 8));
     var ios = Components.classes["@mozilla.org/network/io-service;1"]
                         .getService(Components.interfaces.nsIIOService);
-    var ch = ios.newChannel(info.url, null, null);
+    var ch = ios.newChannel2(info.url, null, null, null, null, null, 0, 0);
     ch.QueryInterface(Components.interfaces.nsIHttpChannel);
     ch.setRequestHeader("Authorization", aAuthToken, false);
     var istream = ch.open();
