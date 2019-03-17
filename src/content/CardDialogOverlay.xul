@@ -34,7 +34,6 @@
    - the terms of any one of the MPL, the GPL or the LGPL.
    -
    - ***** END LICENSE BLOCK ***** -->
-<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
 <!DOCTYPE overlay [
   <!ENTITY % gcsOverlayDTD SYSTEM "chrome://gcontactsync/locale/overlay.dtd">
   %gcsOverlayDTD;
@@ -87,7 +86,7 @@
         <vbox>
           <vbox id="gcontactSyncFields" class="alignBoxWithFieldset" align="left">
             <groupbox flex="1" id="additionalEmailBox">
-            <caption label="&email.box;"/>
+            <label value="&email.box;"/>
             <hbox>
               <spacer flex="1"/>
               <hbox class="CardEditWidth">
@@ -104,7 +103,7 @@
           <!-- This groupbox is hidden because it is only used before Mailnews
                  Bug 63941 was applied and reorganized the card dialog -->
           <groupbox id="numbersGroupBox" flex="1" hidden="true">
-            <caption label="&numbers.box;"/>
+            <label value="&numbers.box;"/>
             <hbox>
               <spacer flex="1"/>
               <label control="HomeFaxNumber" value="&sixth.label;" class="CardEditLabel"/>
@@ -125,7 +124,7 @@
       <vbox id="relationFields" hidden="true">
           <vbox id="gcontactSyncFields2" class="alignBoxWithFieldset" align="left">
             <groupbox flex="1" id="relationsGroupBox">
-              <caption label="&relations.box;"/>
+              <label value="&relations.box;"/>
               <!-- Contents are added by CardDialogOverlay.js -->
             </groupbox>
           </vbox>
