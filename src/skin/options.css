@@ -8,22 +8,27 @@
   color: blue;
 }
 
+tabs {
+    background-color: white;
+}
+
 /* Originally written by Leszek(teo)Życzkowski */
-radio[pane] {
+tab {
   -moz-appearance:     none;
   background-color:    transparent;
   background-position: center bottom;
   background-repeat:   repeat-x;
   min-width:           80px;
+  -moz-box-orient: vertical;
 }
 
-radio[pane]:hover {
+tab:hover {
   background-color: rgb(94, 138, 188);
   background-image: url("chrome://gcontactsync/skin/hover.png");
   color:            white;
 }
 
-radio[pane][selected="true"] {
+tab[selected="true"] {
   background-color: rgb(174, 198, 226);
   background-image: none;
   background-image: url("chrome://gcontactsync/skin/selected.png");
@@ -31,15 +36,12 @@ radio[pane][selected="true"] {
 }
 
 /* Preference tabs */
-radio[pane=pane_main] {
+#main_tab {
   list-style-image: url("chrome://gcontactsync/skin/main.png");
 }
-radio[pane=pane_interface] {
+#interface_tab {
   list-style-image: url("chrome://gcontactsync/skin/interface.png");
 }
-radio[pane=pane_extended] {
-  list-style-image: url("chrome://gcontactsync/skin/extended.png");
-}
-radio[pane=pane_advanced] {
+#advanced_tab {
   list-style-image: url("chrome://gcontactsync/skin/advanced.png");
 }
