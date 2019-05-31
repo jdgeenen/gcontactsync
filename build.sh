@@ -8,7 +8,7 @@
 
 # NOTE: The VERSION here is just used for the package name
 # Edit install.rdf and content/misc.js to change the actual VERSION
-VERSION=3.1.5
+VERSION=3.1.6
 SRC_DIR=./src
 
 # Dest should be absolute or relative to SRC_DIR
