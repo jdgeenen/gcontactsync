@@ -131,24 +131,12 @@ gContactSync.CardDialogOverlay = {
 
     //the XUL injected all extra elements as hidden, unhide them
     document.getElementById("gContactSyncTab").hidden = false;
-    document.getElementById("anniversaryField").hidden = false;
     
     for (var i = 0; i < gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
       gContactSync.gAttributes["Relation" + i] = "";
       gContactSync.gAttributes["Relation" + i + "Type"] = "";
     }
 
-    try {
-      // QI the card if it doesn't have the getProperty method
-      // if the card cannot accept custom attributes, quit and do not add the
-      // extra tabs
-      if (!gEditCard.card.getProperty)
-        gEditCard.card.QueryInterface(Components.interfaces.nsIAbMDBCard);
-    }
-    catch (e) {
-      document.getElementById("gContactSyncTab").collapsed = true;
-      return;
-    }
     // some contacts are read-only so extra attributes should be disabled for
     // those cards (see Mozdev Bug 20169)
     try {
@@ -376,12 +364,6 @@ gContactSync.CardDialogOverlay = {
       document.getElementById("Anniversary").readOnly      = true;
     }
 
-    // Copy certain functions from the birthday datepicker (but show the year element)
-    var anniversaryElem = document.getElementById("Anniversary");
-    var birthdayElem    = document.getElementById("Birthday");
-    anniversaryElem._constrainValue = birthdayElem._constrainValue;
-    anniversaryElem._setFieldValue = birthdayElem._setFieldValue;
-
     // Set the height of the Notes field
     var notesElem = document.getElementById("Notes");
     if (notesElem && gContactSync.Preferences.mSyncPrefs.notesHeight.value) {
@@ -391,9 +373,7 @@ gContactSync.CardDialogOverlay = {
     // Update the size of the dialog
     window.sizeToContent();
 
-    // override the check and set card values function
-    gContactSync.originalCheckAndSetCardValues = CheckAndSetCardValues;
-    CheckAndSetCardValues = gContactSync.CardDialogOverlay.CheckAndSetCardValues;
+    RegisterSaveListener(gContactSync.CardDialogOverlay.checkAndSetCardValues);
     // get the extra card values
     this.GetCardValues(gEditCard.card, document);
   },
@@ -423,36 +403,15 @@ gContactSync.CardDialogOverlay = {
     if (!aElem || aElem.tagName !== "emailaddress-input") {
       return false;
     }
-    /*
-    var emailTypes = gContactSync.gdata.contacts.EMAIL_TYPES;
-    this.addMenuItems(aElem, emailTypes, "", "other");
-    // save the original addRow method
-    aElem.origAddRow = aElem.addRow;
-    // override addRow to call the original then add the e-mail types
-    aElem.addRow = function gContactSync_addRow() {
-      // call the original
-      this.origAddRow.apply(this, arguments);
-      // add the e-mail type menulist
-      gContactSync.CardDialogOverlay.addPostboxEmailType(this.nextSibling);
-      // resize the window
-      window.sizeToContent();
-    }
-    */
     return true;
   },
   /**
    * Sets the attributes added by this extension as the value in the textbox or
    * drop down menu in aDoc whose ID is identical to the attribute's name.
-   * Calls the original CheckAndSetCardValues function when finished.
    * @param aCard  {nsIAbCard} The card to set the values for.
    * @param aDoc   {Document Object} The document.
-   * @param aCheck Unused, but passed to the original method.
    */
-  CheckAndSetCardValues: function CardDialogOverlay_CheckAndSetCardValues(aCard, aDoc, aCheck) {
-    // make sure the required data is present (abCardOverlay.js)
-    if (!CheckCardRequiredDataPresence(aDoc)) {
-      return false;
-    }
+  checkAndSetCardValues: function CardDialogOverlay_checkAndSetCardValues(aCard, aDoc) {
     var contact = new gContactSync.TBContact(aCard);
     var existingTypes = {
       "WorkPhoneType":      {},
@@ -478,31 +437,7 @@ gContactSync.CardDialogOverlay = {
         }
       }
       catch (e) {
-        gContactSync.alertError("Error in gContactSync.CheckAndSetCardValues: " + attr + "\n" + e);
-      }
-    }
-
-    // get the anniversary information from the dialog
-    var anniversaryElem = aDoc.getElementById("Anniversary");
-    var anniversaryMonth = anniversaryElem.monthField.value;
-    var anniversaryDay = anniversaryElem.dateField.value;
-    var anniversaryYear = anniversaryElem.yearField.value;
-
-    gContactSync.LOGGER.VERBOSE_LOG("Anniversary: " + anniversaryYear + "-" + anniversaryMonth + "-" + anniversaryDay);
-
-    // set the anniversary day, month, and year properties
-    contact.setValue("AnniversaryDay", anniversaryDay);
-    contact.setValue("AnniversaryMonth", anniversaryMonth);
-    contact.setValue("AnniversaryYear", anniversaryYear);
-
-    if (!contact.mContact.getProperty && gEditCard.abURI) {
-      if (contact.mContact.editCardToDatabase) { // Thunderbird 2
-        contact.mContact.editCardToDatabase(gEditCard.abURI);
-      } else if (GetDirectoryFromURI) { // Postbox doesn't have editCardToDatabase
-        var dir = GetDirectoryFromURI(gEditCard.abURI);
-        if (dir) {
-          dir.modifyCard(contact.mContact);
-        }
+        gContactSync.alertError("Error in gContactSync.checkAndSetCardValues: " + attr + "\n" + e);
       }
     }
 
@@ -536,10 +471,6 @@ gContactSync.CardDialogOverlay = {
         }
       } catch (e) {alert("Error checking if the contact needs a dummy e-mail address\n" + e);}
     }
-    try {
-      // call the original and return its return value
-      return gContactSync.originalCheckAndSetCardValues.apply(this, arguments);
-    } catch (ex) {alert("CheckAndSetCardValues threw an exception:\n" + ex);}
   },
   /**
    * A method that gets all of the attributes added by this extension and sets
@@ -556,11 +487,7 @@ gContactSync.CardDialogOverlay = {
         var elem = aDoc.getElementById(attr);
         // if the element exists, set its value as the card's value
         if (elem) {
-          var value;
-          if (aCard.getProperty) // post Bug 413260
-            value = aCard.getProperty(attr, null);
-          else // pre Bug 413260
-            value = aCard.getStringAttribute(attr);
+          var value = aCard.getProperty(attr, null);
           // set the element's value if attr isn't a type OR it is a type and
           // the card's value for the attribute isn't null or blank
           if (attr.indexOf("Type") == -1 || (value && value != "")) {
@@ -577,38 +504,6 @@ gContactSync.CardDialogOverlay = {
           }
         }
       } catch (e) { gContactSync.alertError("Error in gContactSync.GetCardValues: " + attr + "\n" + e); }
-    }
-
-    // Anniversary
-    var anniversaryElem = document.getElementById("Anniversary");
-    var year, month, day;
-    if (aCard.getProperty) { // post Bug 413260
-      year  = aCard.getProperty("AnniversaryYear", null);
-      month = aCard.getProperty("AnniversaryMonth", null);
-      day   = aCard.getProperty("AnniversaryDay", null);
-    } else { // pre Bug 413260
-      year  = aCard.getStringAttribute("AnniversaryYear");
-      month = aCard.getStringAttribute("AnniversaryMonth");
-      day   = aCard.getStringAttribute("AnniversaryDay");
-    }
-
-    // Default the year to 2000 (a leap year)
-    if (year && year < 10000 && year > 0) {
-      anniversaryElem.year = year;
-      anniversaryElem.yearField.value = year;
-    } else {
-      anniversaryElem.year = 2000;
-      anniversaryElem.yearField.value = null;
-    }
-    if (month > 0 && month < 13) {
-      anniversaryElem.month = month - 1;
-    } else {
-      anniversaryElem.monthField.value = null;
-    }
-    if (day > 0 && day < 32) {
-      anniversaryElem.date = day;
-    } else {
-      anniversaryElem.dateField.value = null;
     }
 
     // In TB 10 the way photos are saved changed and now requires two copies of

@@ -70,17 +70,6 @@
 
   <tabpanels id="abTabPanels" flex="1">
 
-    <vbox id="abHomeTab">
-      <hbox id="anniversaryField" align="center" after="birthdayField" hidden="true">
-        <spacer flex="1"/>
-        <label control="Anniversary" value="&Anniversary.label;"
-               accesskey="&Anniversary.accesskey;"/>
-        <hbox class="AddressCardEditWidth" align="center">
-          <datepicker id="Anniversary" type="popup"/>
-        </hbox>
-      </hbox>
-    </vbox>
-
     <vbox flex="1">
       <hbox>
         <vbox>
