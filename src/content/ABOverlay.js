@@ -133,11 +133,11 @@ gContactSync.ABOverlay = {
       if (id.indexOf("Type") !== -1)
         continue; // skip addresses and Types
       // make and add the splitter first
-      splitter = document.createElement("splitter");
+      splitter = document.createXULElement("splitter");
       splitter.setAttribute("class", "tree-splitter");
       treeCols.appendChild(splitter);
       // make the new treecol
-      treeCol = document.createElement("treecol");
+      treeCol = document.createXULElement("treecol");
       // then set it up with the ID and other attributes
       treeCol.setAttribute("id",      id);
       treeCol.setAttribute("class",   "sortDirectionIndicator");
@@ -457,12 +457,12 @@ gContactSync.ABOverlay = {
     var xhtml = "http://www.w3.org/1999/xhtml";
     cvData.cvThirdEmailBox = gContactSync.ABOverlay.makeDescElement("ThirdEmailBox",
                                                                         "CardViewLink");
-    cvData.cvThirdEmail = document.createElementNS(xhtml, "html:a");
+    cvData.cvThirdEmail = document.createElementNS(xhtml, "a");
     cvData.cvThirdEmail.setAttribute("id", "ThirdEmail");
     cvData.cvThirdEmailBox.appendChild(cvData.cvThirdEmail);
     cvData.cvFourthEmailBox = gContactSync.ABOverlay.makeDescElement("FourthEmailBox",
                                                                          "CardViewLink");
-    cvData.cvFourthEmail = document.createElementNS(xhtml, "html:a");
+    cvData.cvFourthEmail = document.createElementNS(xhtml, "a");
     cvData.cvFourthEmail.setAttribute("id", "FourthEmail");
     cvData.cvFourthEmailBox.appendChild(cvData.cvFourthEmail);
     vbox.insertBefore(cvData.cvFourthEmailBox, document.getElementById("cvScreennameBox"));
@@ -470,8 +470,8 @@ gContactSync.ABOverlay = {
 
     // Home section
     cvData.cvbHome.removeChild(cvData.cvHomeWebPageBox);
-    cvData.cvHomeWebPageHBox = document.createElement("hbox");
-    cvData.cvWebPage2Type = document.createElement("description");
+    cvData.cvHomeWebPageHBox = document.createXULElement("hbox");
+    cvData.cvWebPage2Type = document.createXULElement("description");
     cvData.cvWebPage2Type.setAttribute("id", "WebPage2Type");
     cvData.cvHomeWebPageHBox.appendChild(cvData.cvHomeWebPageBox);
     cvData.cvHomeWebPageHBox.appendChild(cvData.cvWebPage2Type);
@@ -487,8 +487,8 @@ gContactSync.ABOverlay = {
     vbox.insertBefore(cvData.cvCompanySymbol, cvData.cvCompany.nextSibling);
 
     cvData.cvbWork.removeChild(cvData.cvWorkWebPageBox);
-    cvData.cvWorkWebPageHBox = document.createElement("hbox");
-    cvData.cvWebPage1Type = document.createElement("description");
+    cvData.cvWorkWebPageHBox = document.createXULElement("hbox");
+    cvData.cvWebPage1Type = document.createXULElement("description");
     cvData.cvWebPage1Type.setAttribute("id", "WebPage1Type");
     cvData.cvWorkWebPageHBox.appendChild(cvData.cvWorkWebPageBox);
     cvData.cvWorkWebPageHBox.appendChild(cvData.cvWebPage1Type);
@@ -496,8 +496,8 @@ gContactSync.ABOverlay = {
 
     // Other section    
     vbox = document.getElementById("cvbOther");
-    var otherHbox = document.createElement("hbox");
-    var otherVbox = document.createElement("vbox");
+    var otherHbox = document.createXULElement("hbox");
+    var otherVbox = document.createXULElement("vbox");
     otherVbox.setAttribute("flex", "1");
     // Relation fields)
     for (var i = 0; i < gContactSync.Preferences.mSyncPrefs.numRelations.value; ++i) {
@@ -520,7 +520,7 @@ gContactSync.ABOverlay = {
     // Add a description where the mailing lists the selected contact is in
     // will appear, if possible
     if (GetSelectedDirectory !== undefined) {
-      var desc = document.createElement("description");
+      var desc = document.createXULElement("description");
       cvData.cvLists = document.createTextNode("1");
       desc.style.paddingTop = "6px";
       desc.appendChild(cvData.cvLists);
@@ -539,7 +539,7 @@ gContactSync.ABOverlay = {
    * @returns {XML} A new <description> element.
    */
   makeDescElement: function ABOverlay_makeDescElement(aName, aClass) {
-    var elem = document.createElement("description");
+    var elem = document.createXULElement("description");
     elem.setAttribute("class", aClass);
     elem.setAttribute("id", "cv" + aName);
     return elem;
@@ -549,10 +549,10 @@ gContactSync.ABOverlay = {
    * the left side of the Address Book window.
    */
   addResetContext: function ABOverlay_addResetContext() {
-    var replaceFrom = document.createElement("menuitem"),
-        replaceTo   = document.createElement("menuitem"),
-        syncNow     = document.createElement("menuitem"),
-        separator   = document.createElement("menuseparator");
+    var replaceFrom = document.createXULElement("menuitem"),
+        replaceTo   = document.createXULElement("menuitem"),
+        syncNow     = document.createXULElement("menuitem"),
+        separator   = document.createXULElement("menuseparator");
 
     replaceFrom.id  = "dirTreeContext-replaceFrom";
     replaceTo.id    = "dirTreeContext-replaceTo";
