@@ -66,7 +66,7 @@ gContactSync.OAuth2 = {
    */
   onCodeReceived: function OAuth2_onCodeReceived(aCode) {
     gContactSync.LOGGER.LOG("Received an authorization code: " + aCode);
-    this.mBrowserElem.loadURI("");
+    this.mBrowserElem.setAttribute("src", "about:blank");
     var request = new gContactSync.GHttpRequest("TOKEN_REQUEST", aCode);
     request.mOnSuccess = gContactSync.OAuth2.onTokenReceived;
     request.mOnError = function onTokenError(aHttpReq) {

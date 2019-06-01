@@ -49,7 +49,6 @@
 
 <wizard id="newAccountWizard" title="&title.label;"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        onwizardfinish="gContactSync.AccountSetupWizard.finish();"
         height="740px"
         width="700px">
   <script type="application/x-javascript"
@@ -93,8 +92,7 @@
   <script type="application/x-javascript"
           src="chrome://gcontactsync/content/AccountSetupWizard.js"/>
 
-  <wizardpage onpageadvanced="return gContactSync.AccountSetupWizard.advanceAccountPage();"
-              pageid="accountPage"
+  <wizardpage pageid="accountPage"
               id="accountPage"
               next="oauthPage">
     <description>
@@ -120,8 +118,6 @@
     </radiogroup>
   </wizardpage>
   <wizardpage description="&accountSettings.description;"
-              onpagerewound="document.getElementById('newAccountWizard').canAdvance = true;"
-              onpageshow="gContactSync.AccountSetupWizard.loadOAuthPage();"
               pageid="oauthPage"
               id="oauthPage"
               next="settingsPage">
@@ -130,8 +126,6 @@
     </hbox>
   </wizardpage>
   <wizardpage description="&accountSettings.description;"
-              onpagerewound="gContactSync.AccountSetupWizard.mAuthToken='';"
-              onpageshow="gContactSync.AccountSetupWizard.setupAccountSettings();"
               id="settingsPage"
               pageid="settingsPage">
     <label control="abName" value="&abName.value;" accesskey="&abName.accesskey;"/>

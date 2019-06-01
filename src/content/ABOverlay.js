@@ -603,7 +603,7 @@ gContactSync.ABOverlay = {
       if (ab.reset()) {
         var restartStr = gContactSync.StringBundle.getStr("pleaseRestart");
         gContactSync.Preferences.setSyncPref("needRestart", true);
-        gContactSync.ABOverlay.setStatusBarText(restartStr);
+        gContactSync.Overlay.setStatusBarText(restartStr);
         gContactSync.alertError(restartStr);
       }
     }

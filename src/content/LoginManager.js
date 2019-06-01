@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2008-2016
+ * Portions created by the Initial Developer are Copyright (C) 2008-2019
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -66,28 +66,17 @@ gContactSync.LoginManager = {
     if (this.mNumAuthTokens === 0) {
       this.getAuthTokens();
     }
-    // Thunderbird 2
-    if ("@mozilla.org/passwordmanager;1" in Components.classes) {
-      var passwordManager =  Components.classes["@mozilla.org/passwordmanager;1"]
-                                       .getService(Components.interfaces.nsIPasswordManager);
-      passwordManager.addUser(this.mHostname, aUsername, aToken);
-      this.mAuthTokens[aUsername] = aToken;
-      this.mNumAuthTokens++;
-    }
-    // Thunderbird 3, Seamonkey 2
-    else if ("@mozilla.org/login-manager;1" in Components.classes) {
-      var loginManager =  Components.classes["@mozilla.org/login-manager;1"]
-                                    .getService(Components.interfaces.nsILoginManager),
-          nsLoginInfo  = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
-                                                    Components.interfaces.nsILoginInfo,
-                                                    "init"),
-          extLoginInfo = new nsLoginInfo(this.mHostname, this.mSubmitURL,
-                                         this.mHttpRealm, aUsername, aToken,
-                                         this.mUsernameField, this.mPasswordField);
-      loginManager.addLogin(extLoginInfo);
-      this.mAuthTokens[aUsername] = aToken;
-      this.mNumAuthTokens++;
-    }
+    var loginManager =  Components.classes["@mozilla.org/login-manager;1"]
+                                  .getService(Components.interfaces.nsILoginManager),
+        nsLoginInfo  = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
+                                                  Components.interfaces.nsILoginInfo,
+                                                  "init"),
+        extLoginInfo = new nsLoginInfo(this.mHostname, this.mSubmitURL,
+                                       this.mHttpRealm, aUsername, aToken,
+                                       this.mUsernameField, this.mPasswordField);
+    loginManager.addLogin(extLoginInfo);
+    this.mAuthTokens[aUsername] = aToken;
+    this.mNumAuthTokens++;
   },
   /**
    * Gets the tokens in the Login Manager.
@@ -96,33 +85,14 @@ gContactSync.LoginManager = {
   getAuthTokens: function LoginManager_getAuthTokens() {
     this.mAuthTokens = {};
     this.mNumAuthTokens = 0;
-    // Thunderbird 2
-    if ("@mozilla.org/passwordmanager;1" in Components.classes) {
-      var passwordManager = Components.classes["@mozilla.org/passwordmanager;1"]
-                                      .getService(Components.interfaces.nsIPasswordManager),
-          iter = passwordManager.enumerator;
-      while (iter.hasMoreElements()) {
-        try {
-          var pass = iter.getNext().QueryInterface(Components.interfaces.nsIPassword);
-          if (pass.host === this.mHostname) {
-            this.mAuthTokens[pass.user] = pass.password;
-            this.mNumAuthTokens++;
-          }
-        } catch (e) {}
-      }
-    }
-    // Thunderbird 3, Seamonkey 2
-    else if ("@mozilla.org/login-manager;1" in Components.classes) {
-      var loginManager =  Components.classes["@mozilla.org/login-manager;1"]
-                                    .getService(Components.interfaces.nsILoginManager);
-      // Find users for the given parameters
-      var logins = loginManager.findLogins({}, this.mHostname, this.mSubmitURL,
-                                           this.mHttpRealm);
-      // Find user from returned array of nsILoginInfo objects
-      for (var i = 0; i < logins.length; i++) {
-        this.mAuthTokens[logins[i].username] = logins[i].password;
-        this.mNumAuthTokens++;
-      }
+    var loginManager = Components.classes["@mozilla.org/login-manager;1"]
+                                 .getService(Components.interfaces.nsILoginManager);
+    // Find users for the given parameters
+    var logins = loginManager.findLogins(this.mHostname, this.mSubmitURL, this.mHttpRealm);
+    // Find user from returned array of nsILoginInfo objects
+    for (var i = 0; i < logins.length; i++) {
+      this.mAuthTokens[logins[i].username] = logins[i].password;
+      this.mNumAuthTokens++;
     }
     return this.mAuthTokens;
   },
@@ -141,45 +111,28 @@ gContactSync.LoginManager = {
    * @returns {boolean} True if the auth token was successfully removed.
    */
   removeAuthToken: function LoginManager_removeAuthToken(aUsername) {
-    // Thunderbird 2
-    if ("@mozilla.org/passwordmanager;1" in Components.classes) {
-      var passwordManager = Components.classes["@mozilla.org/passwordmanager;1"]
-                                      .getService(Components.interfaces.nsIPasswordManager);
-      try {
-        passwordManager.removeUser(this.mHostname, aUsername);
-        this.mAuthTokens[aUsername] = null;
-        this.mNumAuthTokens--;
-      }
-      catch (e) {
-        gContactSync.alertError(gContactSync.StringBundle.getStr("removeLoginFailure") + "\n\n" + e);
-      }
-    }
-    // Thunderbird 3, Seamonkey 2
-    else if ("@mozilla.org/login-manager;1" in Components.classes) {
-      var loginManager = Components.classes["@mozilla.org/login-manager;1"]
-                                   .getService(Components.interfaces.nsILoginManager);
-      // Find logins for the given parameters
-      var logins = loginManager.findLogins({}, this.mHostname, this.mSubmitURL,
-                                            this.mHttpRealm);
-      aUsername = aUsername.toLowerCase();
-      // Find user from returned array of nsILoginInfo objects
-      for (var i = 0; i < logins.length; i++) {
-        if (logins[i].username.toLowerCase() === aUsername) {
-          try {
-            gContactSync.LOGGER.VERBOSE_LOG("Found the login to remove");
-            loginManager.removeLogin(logins[i]);
-            this.mAuthTokens[aUsername] = null;
-            this.mNumAuthTokens--;
-            return;
-          }
-          catch (ex) {
-            gContactSync.alertError(gContactSync.StringBundle.getStr("removeLoginFailure") + "\n\n" + ex);
-          }
+    var loginManager = Components.classes["@mozilla.org/login-manager;1"]
+                                 .getService(Components.interfaces.nsILoginManager);
+    // Find logins for the given parameters
+    var logins = loginManager.findLogins(this.mHostname, this.mSubmitURL, this.mHttpRealm);
+    aUsername = aUsername.toLowerCase();
+    // Find user from returned array of nsILoginInfo objects
+    for (var i = 0; i < logins.length; i++) {
+      if (logins[i].username.toLowerCase() === aUsername) {
+        try {
+          gContactSync.LOGGER.VERBOSE_LOG("Found the login to remove");
+          loginManager.removeLogin(logins[i]);
+          this.mAuthTokens[aUsername] = null;
+          this.mNumAuthTokens--;
+          return;
+        }
+        catch (ex) {
+          gContactSync.alertError(gContactSync.StringBundle.getStr("removeLoginFailure") + "\n\n" + ex);
         }
       }
-      // Could not find the login...
-      gContactSync.alertError(gContactSync.StringBundle.getStr("removeLoginFailure"));
     }
+    // Could not find the login...
+    gContactSync.alertError(gContactSync.StringBundle.getStr("removeLoginFailure"));
   },
   /**
    * Returns an array of all e-mail account usernames matching an optional
@@ -190,39 +143,20 @@ gContactSync.LoginManager = {
    */
   getAllEmailAccts: function LoginManager_getAllEmailAccts(aPattern) {
     var arr = [];
-    // Thunderbird 2
-    if ("@mozilla.org/passwordmanager;1" in Components.classes) {
-      var passwordManager = Components.classes["@mozilla.org/passwordmanager;1"]
-                                      .getService(Components.interfaces.nsIPasswordManager),
-          iter = passwordManager.enumerator;
-      while (iter.hasMoreElements()) {
-        try {
-          var pass = iter.getNext().QueryInterface(Components.interfaces.nsIPassword);
-          if (pass.host.indexOf("imap://") === 0 || pass.host.indexOf("mailbox://") === 0) {
-            if (!aPattern || aPattern.test(pass.user)) {
-              arr.push({username: pass.user, hostname: pass.host, password: pass.password});
-            }
-          }
-        } catch (e) {}
-      }
-    }
-    // Thunderbird 3, Seamonkey 2
-    else if ("@mozilla.org/login-manager;1" in Components.classes) {
-      var loginManager =  Components.classes["@mozilla.org/login-manager;1"]
-                                    .getService(Components.interfaces.nsILoginManager),
-      // Find users for the given parameters
-          count  = {},
-          out    = {},
-          logins = loginManager.getAllLogins(count, out),
-          i      = 0,
-          hostname;
-      // Find user from returned array of nsILoginInfo objects
-      for (; i < logins.length; i++) {
-        hostname = logins[i].hostname;
-        if (hostname.indexOf("imap://") === 0 || hostname.indexOf("mailbox://") === 0) {
-          if (!aPattern || aPattern.test(logins[i].username)) {
-            arr.push({username: logins[i].username, hostname: hostname, password: logins[i].password});
-          }
+    var loginManager =  Components.classes["@mozilla.org/login-manager;1"]
+                                  .getService(Components.interfaces.nsILoginManager),
+    // Find users for the given parameters
+        count  = {},
+        out    = {},
+        logins = loginManager.getAllLogins(count, out),
+        i      = 0,
+        hostname;
+    // Find user from returned array of nsILoginInfo objects
+    for (; i < logins.length; i++) {
+      hostname = logins[i].hostname;
+      if (hostname.indexOf("imap://") === 0 || hostname.indexOf("mailbox://") === 0) {
+        if (!aPattern || aPattern.test(logins[i].username)) {
+          arr.push({username: logins[i].username, hostname: hostname, password: logins[i].password});
         }
       }
     }

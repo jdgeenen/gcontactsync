@@ -15,7 +15,7 @@
  *
  * The Initial Developer of the Original Code is
  * Josh Geenen <gcontactsync@pirules.org>.
- * Portions created by the Initial Developer are Copyright (C) 2013-2016
+ * Portions created by the Initial Developer are Copyright (C) 2013-2019
  * the Initial Developer. All Rights Reserved.
  *
  * Contributor(s):
@@ -45,6 +45,74 @@ window.addEventListener("load",
   },
 false);
 
+window.addEventListener("wizardfinish",
+    /** Finish the account wizard. */
+    function gCS_onWizardFinish() {
+        gContactSync.AccountSetupWizard.finish();
+    },
+false);
+
+window.addEventListener("pageshow",
+    /** Perform action onpageshow. */
+    function gCS_onPageShow() {
+        let wizard = document.getElementById("newAccountWizard");
+        gContactSync.LOGGER.VERBOSE_LOG("pageshow: " + wizard.currentPage.pageid);
+        switch (wizard.currentPage.pageid) {
+        case "accountPage":
+            break;
+        case "oauthPage":
+            gContactSync.AccountSetupWizard.loadOAuthPage();
+            break;
+        case "settingsPage":
+            gContactSync.AccountSetupWizard.setupAccountSettings();
+            break;
+        default:
+            gContactSync.LOGGER.LOG_WARNING("AccountSetupWizard encountered an unexpected pageid: " + pageid);
+        }
+        return true;
+    }
+);
+
+window.addEventListener("pageadvanced",
+    /** Perform action onpageadvanced. */
+    function gCS_onPageAdvanced() {
+        let wizard = document.getElementById("newAccountWizard");
+        gContactSync.LOGGER.VERBOSE_LOG("pageadvanced: " + wizard.currentPage.pageid);
+        switch (wizard.currentPage.pageid) {
+        case "accountPage":
+            gContactSync.AccountSetupWizard.advanceAccountPage();
+            break;
+        case "oauthPage":
+        case "settingsPage":
+            break;
+        default:
+            gContactSync.LOGGER.LOG_WARNING("AccountSetupWizard encountered an unexpected pageid: " + pageid);
+        }
+        return true;
+    }
+);
+
+window.addEventListener("pagerewound",
+    /** Perform action onpagerewound. */
+    function gCS_onPageRewound() {
+        let wizard = document.getElementById("newAccountWizard");
+        gContactSync.LOGGER.VERBOSE_LOG("pagerewound: " + wizard.currentPage.pageid);
+        switch (wizard.currentPage.pageid) {
+        case "accountPage":
+            break;
+        case "oauthPage":
+            wizard.canAdvance = true;
+            break;
+        case "settingsPage":
+            gContactSync.AccountSetupWizard.mAuthToken='';
+            break;
+        default:
+            gContactSync.LOGGER.LOG_WARNING("AccountSetupWizard encountered an unexpected pageid: " + pageid);
+        }
+        return true;
+    }
+);
+
 /**
  * Provides helper functions for the new account wizard.
  */
@@ -59,36 +127,36 @@ gContactSync.AccountSetupWizard = {
    * Initializes the first page of the wizard.
    */
   init: function AccountSetupWizard_init() {
-    this.updateAccountIDs();
-    this.addAccounts();
-    this.mBrowserLoaded = false;
+    gContactSync.AccountSetupWizard.updateAccountIDs();
+    gContactSync.AccountSetupWizard.addAccounts();
+    gContactSync.AccountSetupWizard.mBrowserLoaded = false;
   },
   /**
    * Adds IMAP, POP3, and gContactSync accounts from the login manager to the dropdown.
    */
   addAccounts: function AccountSetupWizard_addAccounts() {
     gContactSync.LOGGER.VERBOSE_LOG("Adding accounts");
-    this.mAccounts = [];
+    gContactSync.AccountSetupWizard.mAccounts = [];
     var authTokens = gContactSync.LoginManager.getAuthTokens();
     var accountsMenuList = document.getElementById("existingAccountList");
     for (var username in authTokens) {
-      if (this.accountAlreadyExists(username)) {continue;}
+      if (gContactSync.AccountSetupWizard.accountAlreadyExists(username)) {continue;}
       gContactSync.LOGGER.VERBOSE_LOG(" * Adding existing auth token for " + username);
-      this.mAccounts.push({username: username, token: authTokens[username]});
+      gContactSync.AccountSetupWizard.mAccounts.push({username: username, token: authTokens[username]});
       accountsMenuList.appendItem(username);
     }
     var emailAccounts = gContactSync.LoginManager.getAllEmailAccts();
     for (var i = 0; i < emailAccounts.length; ++i) {
-      if (this.accountAlreadyExists(emailAccounts[i].username)) {continue;}
+      if (gContactSync.AccountSetupWizard.accountAlreadyExists(emailAccounts[i].username)) {continue;}
       gContactSync.LOGGER.VERBOSE_LOG(" * Adding e-mail address: " + emailAccounts[i].username);
-      this.mAccounts.push(emailAccounts[i]);
+      gContactSync.AccountSetupWizard.mAccounts.push(emailAccounts[i]);
       accountsMenuList.appendItem(emailAccounts[i].username);
     }
     if (accountsMenuList.itemCount === 0) {
       document.getElementById("accountOption").selectedIndex = 1;
       document.getElementById("existingAccount").disabled = 1;
       accountsMenuList.appendItem(gContactSync.StringBundle.getStr('noAccountsFound'));
-      this.updateAccountIDs();
+      gContactSync.AccountSetupWizard.updateAccountIDs();
     }
     accountsMenuList.selectedIndex = 0;
   },
@@ -99,8 +167,8 @@ gContactSync.AccountSetupWizard = {
    */
   accountAlreadyExists: function AccountSetupWizard_accountAlreadyExists(aUsername) {
     aUsername = aUsername.toLowerCase();
-    for (var i = 0; i < this.mAccounts.length; ++i) {
-      if (this.mAccounts[i].username.toLowerCase() === aUsername) {return true;}
+    for (var i = 0; i < gContactSync.AccountSetupWizard.mAccounts.length; ++i) {
+      if (gContactSync.AccountSetupWizard.mAccounts[i].username.toLowerCase() === aUsername) {return true;}
     }
     return false;
   },
@@ -109,11 +177,11 @@ gContactSync.AccountSetupWizard = {
    */
   updateAccountIDs: function AccountSetupWizard_updateAccountIDs() {
     var option = document.getElementById("accountOption");
-    var disableIDs = this.EXISTING_ACCOUNT_IDS;
-    var enableIDs  = this.NEW_ACCOUNT_IDS;
+    var disableIDs = gContactSync.AccountSetupWizard.EXISTING_ACCOUNT_IDS;
+    var enableIDs  = gContactSync.AccountSetupWizard.NEW_ACCOUNT_IDS;
     if (option.value === "existing") {
-      disableIDs = this.NEW_ACCOUNT_IDS;
-      enableIDs  = this.EXISTING_ACCOUNT_IDS;
+      disableIDs = gContactSync.AccountSetupWizard.NEW_ACCOUNT_IDS;
+      enableIDs  = gContactSync.AccountSetupWizard.EXISTING_ACCOUNT_IDS;
     }
     for (var i = 0; i < disableIDs.length; ++i) {
       document.getElementById(disableIDs[i]).disabled = true;
@@ -128,19 +196,19 @@ gContactSync.AccountSetupWizard = {
   loadOAuthPage: function AccountSetupWizard_loadOAuthPage() {
     var wizard = document.getElementById("newAccountWizard");
     var browser = document.getElementById("browser");
-    var url = gContactSync.gdata.getOAuthURL(this.mEmailAddress);
+    var url = gContactSync.gdata.getOAuthURL(gContactSync.AccountSetupWizard.mEmailAddress);
 
     wizard.canAdvance = false;
     gContactSync.LOGGER.VERBOSE_LOG("Opening browser with URL: " + url);
-    browser.loadURI(url);
+    browser.setAttribute("src", url);
 
-    if (!this.mWizardLoaded) {
+    if (!gContactSync.AccountSetupWizard.mWizardLoaded) {
 
       gContactSync.OAuth2.init(browser,
                                    gContactSync.gdata.REDIRECT_URI,
-                                   this.onSuccessfulAuthentication,
+                                   gContactSync.AccountSetupWizard.onSuccessfulAuthentication,
                                    gContactSync.gdata.REDIRECT_TITLE);
-      this.mWizardLoaded = true;
+      gContactSync.AccountSetupWizard.mWizardLoaded = true;
     }
   },
   /**
@@ -171,36 +239,36 @@ gContactSync.AccountSetupWizard = {
 
     if (option.value === "existing") {
       var index = document.getElementById("existingAccountList").selectedIndex;
-      this.mEmailAddress = this.mAccounts[index].username;
-      if ("token" in this.mAccounts[index]) {
+      gContactSync.AccountSetupWizard.mEmailAddress = gContactSync.AccountSetupWizard.mAccounts[index].username;
+      if ("token" in gContactSync.AccountSetupWizard.mAccounts[index]) {
         gContactSync.LOGGER.VERBOSE_LOG(" * Already have a token");
-        this.mAuthToken = this.mAccounts[index].token;
+        gContactSync.AccountSetupWizard.mAuthToken = gContactSync.AccountSetupWizard.mAccounts[index].token;
         nextPage = "settingsPage";
       }
     } else {
       var emailElem = document.getElementById("email");
-      this.mEmailAddress = emailElem.value;
+      gContactSync.AccountSetupWizard.mEmailAddress = emailElem.value;
       // This is a primitive way of validating an e-mail address, but Google takes
       // care of the rest.  It seems to allow getting an auth token w/ only the
       // username, but returns an error when trying to do anything w/ that token
       // so this makes sure it is a full e-mail address.
-      if (this.mEmailAddress.indexOf("@") < 1) {
+      if (gContactSync.AccountSetupWizard.mEmailAddress.indexOf("@") < 1) {
         gContactSync.alertError(gContactSync.StringBundle.getStr("invalidEmail"));
         return false;
-      } else if (this.accountAlreadyExists(this.mEmailAddress)) {
+      } else if (gContactSync.AccountSetupWizard.accountAlreadyExists(gContactSync.AccountSetupWizard.mEmailAddress)) {
         gContactSync.alertError(gContactSync.StringBundle.getStr("emailAlreadyExists"));
         return false;
       }
     }
 
-    gContactSync.LOGGER.VERBOSE_LOG(" * Selected e-mail address: " + this.mEmailAddress);
+    gContactSync.LOGGER.VERBOSE_LOG(" * Selected e-mail address: " + gContactSync.AccountSetupWizard.mEmailAddress);
     document.getElementById("accountPage").setAttribute("next", nextPage);
 
     return true;
   },
   /**
    * Initializes the account settings (address books and groups) and selects the AB with
-   * the name 'aSearch' if present.  If not found, creates an AB with the name this.mEmailAddress.
+   * the name 'aSearch' if present.  If not found, creates an AB with the name gContactSync.AccountSetupWizard.mEmailAddress.
    * Does not show ABs that are already being synchronized.
    * @param {string} aSearch The AB to be highlighted.
    */
@@ -210,7 +278,7 @@ gContactSync.AccountSetupWizard = {
     var abs = gContactSync.GAbManager.getAllAddressBooks();
     var selectedIndex = -1;
     var i = 0;
-    aSearch = (aSearch || this.mEmailAddress);
+    aSearch = (aSearch || gContactSync.AccountSetupWizard.mEmailAddress);
     for (var uri in abs) {
       // Skip over address books that are already synchronized
       if (abs.hasOwnProperty(uri) && (!abs[uri].mPrefs.Username || abs[uri].mPrefs.Username === "none")) {
@@ -224,7 +292,7 @@ gContactSync.AccountSetupWizard = {
     if (selectedIndex === -1) {
       var name = aSearch;
       // If an AB with the e-mail address doesn't already exist (or is synchronized) find
-      // the first AB of the form <email (#)> that 
+      // the first AB of the form <email (#)> that
       for (var j = 1; true; ++j) {
         var ab = gContactSync.GAbManager.getGAbByName(name.toLowerCase(), true);
         if (!ab || (ab.mPrefs.Username === "none")) {break;}
@@ -250,7 +318,7 @@ gContactSync.AccountSetupWizard = {
       gContactSync.alertWarning(gContactSync.StringBundle.getStr("abAlreadySynchronized"));
       return;
     }
-    this.setupAccountSettings(name);
+    gContactSync.AccountSetupWizard.setupAccountSettings(name);
   },
   /**
    * Finishes the wizard by setting up the selected AB to sync with the selected account and group.
@@ -263,9 +331,9 @@ gContactSync.AccountSetupWizard = {
     var syncGroups = String(group === "All"),
         myContacts = String(group !== "All" && group !== "false");
     // TODO combine with saveSelectedAccount
-    gContactSync.LOGGER.LOG("***Account Wizard is synchronizing " + abName + " with " + this.mEmailAddress + " / " + group + "***");
+    gContactSync.LOGGER.LOG("***Account Wizard is synchronizing " + abName + " with " + gContactSync.AccountSetupWizard.mEmailAddress + " / " + group + "***");
     var ab = gContactSync.GAbManager.getGAbByName(abName);
-    ab.savePref("Username", this.mEmailAddress);
+    ab.savePref("Username", gContactSync.AccountSetupWizard.mEmailAddress);
     ab.savePref("Plugin", "Google");
     ab.savePref("Disabled", "false");
     ab.savePref("skipContactsWithoutEmail", String(skipCElem.checked));
