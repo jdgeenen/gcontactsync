@@ -675,7 +675,14 @@ gContactSync.createChannel = function gCS_createChannel(aURI) {
     }
     let ios = Components.classes["@mozilla.org/network/io-service;1"]
                         .getService(Components.interfaces.nsIIOService);
-   return ios.newChannel2(aURI, null, null, null, Services.scriptSecurityManager.getSystemPrincipal(), null, 0, 0);
+   return ios.newChannel(aURI,
+                         null,
+                         null,
+                         null,
+                         Services.scriptSecurityManager.getSystemPrincipal(),
+                         null,
+                         Ci.nsILoadInfo.SEC_ALLOW_CROSS_ORIGIN_DATA_INHERITS,
+                         Ci.nsIContentPolicy.TYPE_OBJECT);
 };
 
 /**
