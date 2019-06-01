@@ -88,7 +88,11 @@ gContactSync.LoginManager = {
     var loginManager = Components.classes["@mozilla.org/login-manager;1"]
                                  .getService(Components.interfaces.nsILoginManager);
     // Find users for the given parameters
-    var logins = loginManager.findLogins(this.mHostname, this.mSubmitURL, this.mHttpRealm);
+    try {
+        var logins = loginManager.findLogins(this.mHostname, this.mSubmitURL, this.mHttpRealm);
+    } catch (ex) {
+        var logins = loginManager.findLogins({}, this.mHostname, this.mSubmitURL, this.mHttpRealm);
+    }
     // Find user from returned array of nsILoginInfo objects
     for (var i = 0; i < logins.length; i++) {
       this.mAuthTokens[logins[i].username] = logins[i].password;
@@ -114,7 +118,11 @@ gContactSync.LoginManager = {
     var loginManager = Components.classes["@mozilla.org/login-manager;1"]
                                  .getService(Components.interfaces.nsILoginManager);
     // Find logins for the given parameters
-    var logins = loginManager.findLogins(this.mHostname, this.mSubmitURL, this.mHttpRealm);
+    try {
+        var logins = loginManager.findLogins(this.mHostname, this.mSubmitURL, this.mHttpRealm);
+    } catch (ex) {
+        var logins = loginManager.findLogins({}, this.mHostname, this.mSubmitURL, this.mHttpRealm);
+    }
     aUsername = aUsername.toLowerCase();
     // Find user from returned array of nsILoginInfo objects
     for (var i = 0; i < logins.length; i++) {
