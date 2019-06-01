@@ -712,62 +712,6 @@ gContactSync.Import = {
     };
     httpReq.send();
   },
-  /**
-   * Attempts to import from the Mozilla Labs Contacts add-on.
-   * https://wiki.mozilla.org/Labs/Contacts/ContentAPI
-   */
-  mozillaLabsContactsImporter: function Import_mozLabsImporter() {
-    //if (gContactSync.Import.mStarted) {
-      // TODO warn the user and allow him or her to cancel
-    //}
-    
-    gContactSync.Import.mSource = "mozLabsContacts";
-    try {
-    
-      // Import the Mozilla Labs Contacts module that loads the contacts DB
-      Components.utils.import("resource://people/modules/people.js");
-
-      var json = JSON.stringify({data: People.find({})});
-      var toEncode = {data: []};
-      var people = [];
-      
-      // decode the JSON and get the array of cards
-      try {
-        people = JSON.parse(json);
-      }
-      catch (e) {
-        gContactSync.alertError(gContactSync.StringBundle.getStr("importFailedMsg"));
-        gContactSync.LOGGER.LOG_ERROR("Import failed: ", json);
-        gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('importFailed'));
-        return;
-      }
-      
-      // Iterate through each person add add them to the JSON
-      // This loop essentially just converts the people into a portable contacts
-      // format for beginImport()
-      for (let i in people.data) {
-        var person = people.data[i].obj;
-        if (person && person.documents) {
-          var personInfo = {};
-          
-          // People can have the same info in multiple documents, this just
-          // iterates through each document and copies the details over.
-          for (let j in person.documents) {
-            for (let k in person.documents[j]) {
-              for (let l in person.documents[j][k])
-              personInfo[l] = person.documents[j][k][l];
-              gContactSync.LOGGER.VERBOSE_LOG(j + "." + k + "." + l + " - " + person.documents[j][k][l])
-            }
-          }
-          toEncode.data.push(personInfo);
-        }
-      }
-      gContactSync.Import.showImportDialog(JSON.stringify(toEncode));
-    } catch (e) {
-      gContactSync.alertError(gContactSync.StringBundle.getStr("mozLabsContactsImportFailed"));
-      gContactSync.LOGGER.LOG_ERROR("Mozilla Labs Contacts Import Failed", e);
-    }
-  },
   searchForContact: function Import_searchForContact(aData, aAB, aABContacts) {
     var contact = null;
     var displayName = aData.displayName || aData.name;

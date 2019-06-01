@@ -36,8 +36,6 @@
 
 /** Containing object for gContactSync */
 var gContactSync = gContactSync || {};
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
-
 
 /**
  * A simple class to assist with OAuth2 authentication.
