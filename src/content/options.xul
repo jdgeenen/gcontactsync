@@ -44,7 +44,8 @@
 <dialog id="gContactSyncPrefs"
         title="&title.label;"
         buttons="accept"
-        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        xmlns:html="http://www.w3.org/1999/xhtml">
 
     <tabbox flex="1">
         <tabs>
@@ -55,13 +56,13 @@
         <tabpanels flex="1">
             <tabpanel orient="vertical">
                 <vbox id="pane_main" index="main" label="&main.tab;">
-                    <groupbox flex="1">
-                        <label href="https://pirules.org/addons/gcontactsync/preferences.php"
-                               class="text-link"
-                               value="&help.value;"
-                               accesskey="&help.value;"/>
-                        <groupbox>
-                            <caption label="&autoSync.value;"/>
+                    <label href="https://pirules.org/addons/gcontactsync/preferences.php"
+                           class="text-link"
+                           value="&help.value;"
+                           accesskey="&help.value;"/>
+                    <html:fieldset>
+                        <html:legend>&autoSync.value;</html:legend>
+                        <vbox flex="1">
                             <checkbox preference="extensions.gContactSync.autoSync"
                                       id="autoSync"
                                       label="&autoSync.label;"
@@ -91,10 +92,12 @@
                                     </row>
                                 </rows>
                             </grid>
-                        </groupbox>
-                        <separator class="thin"/>
-                        <groupbox>
-                            <caption label="&syncBehavior.label;"/>
+                        </vbox>
+                    </html:fieldset>
+                    <separator class="thin"/>
+                    <html:fieldset>
+                        <html:legend>&syncBehavior.label;</html:legend>
+                        <vbox flex="1">
                             <checkbox preference="extensions.gContactSync.syncAddresses"
                                       id="syncAddresses"
                                       label="&syncAddresses.label;"
@@ -124,10 +127,12 @@
                                     </row>
                                 </rows>
                             </grid>
-                        </groupbox>
-                        <separator class="thin"/>
-                        <groupbox>
-                            <caption label="&logging.label;"/>
+                        </vbox>
+                    </html:fieldset>
+                    <separator class="thin"/>
+                    <html:fieldset>
+                        <html:legend>&logging.label;</html:legend>
+                        <vbox flex="1">
                             <checkbox preference="extensions.gContactSync.enableLogging"
                                       id="enableLogging"
                                       label="&enableLogging.label;"
@@ -140,16 +145,15 @@
                                       id="showInConsole"
                                       label="&showInConsole.label;"
                                       accesskey="&showInConsole.accesskey;"/>
-                        </groupbox>
-                    </groupbox>
+                        </vbox>
+                    </html:fieldset>
                 </vbox>
             </tabpanel>
             <tabpanel orient="vertical">
                 <vbox id="pane_interface" index="interface" label="&interface.tab;">
-                    <groupbox flex="1">
-                        <separator class="thin"/>
-                        <groupbox>
-                            <caption label="&buttons.label;"/>
+                    <html:fieldset>
+                        <html:legend>&buttons.label;</html:legend>
+                        <vbox flex="1">
                             <checkbox preference="extensions.gContactSync.enableMenu"
                                       id="enableMenu"
                                       label="&enableMenu.label;"
@@ -158,9 +162,11 @@
                                       id="addReset"
                                       label="&addReset.label;"
                                       accesskey="&addReset.accesskey;"/>
-                        </groupbox>
-                        <groupbox>
-                            <caption label="&abResults.label;"/>
+                        </vbox>
+                    </html:fieldset>
+                    <html:fieldset>
+                        <html:legend>&abResults.label;</html:legend>
+                        <vbox flex="1">
                             <checkbox preference="extensions.gContactSync.phoneColLabels"
                                       id="phoneColLabels"
                                       label="&phoneColLabels.label;"
@@ -169,120 +175,118 @@
                                       id="newColLabels"
                                       label="&newColLabels.label;"
                                       accesskey="&newColLabels.accesskey;"/>
-                        </groupbox>
-                    </groupbox>
+                        </vbox>
+                    </html:fieldset>
                 </vbox>
             </tabpanel>
             <tabpanel orient="vertical">
                 <vbox id="pane_advanced"
                     index="advanced"
                     label="&advanced.tab;">
-                    <vbox>
-                        <label value="&warning.value;"/>
-                        <separator class="thin"/>
-                        <groupbox>
-                            <caption label="&backup.label;"/>
-                            <grid flex="1">
-                                <columns>
-                                    <column/>
-                                    <column/>
-                                </columns>
-                                <rows>
-                                    <row align="center">
-                                        <label control="backupIntervalBox"
-                                               value="&backupInterval.value;"
-                                               accesskey="&backupInterval.accesskey;"/>
-                                        <textbox preference="extensions.gContactSync.backupInterval"
-                                                 id="backupIntervalBox"
-                                                 maxlength="6"
-                                                 maxwidth="60"/>
-                                    </row>
-                                </rows>
-                            </grid>
-                        </groupbox>
-                        <separator class="thin"/>
-                        <groupbox>
-                            <caption label="&other.label;"/>
-                            <grid flex="1">
-                                <columns>
-                                    <column/>
-                                </columns>
-                                <rows>
-                                    <row align="center">
-                                        <label control="chromeTimeBox"
-                                               value="&chromeTime.value;"
-                                               accesskey="&chromeTime.accesskey;"/>
-                                    </row>
-                                    <row align="center">
-                                        <textbox preference="dom.max_chrome_script_run_time"
-                                                 id="chromeTimeBox"
+                    <label value="&warning.value;"/>
+                    <separator class="thin"/>
+                    <html:fieldset>
+                        <html:legend>&backup.label;</html:legend>
+                        <grid flex="1">
+                            <columns>
+                                <column/>
+                                <column/>
+                            </columns>
+                            <rows>
+                                <row align="center">
+                                    <label control="backupIntervalBox"
+                                           value="&backupInterval.value;"
+                                           accesskey="&backupInterval.accesskey;"/>
+                                    <textbox preference="extensions.gContactSync.backupInterval"
+                                             id="backupIntervalBox"
+                                             maxlength="6"
+                                             maxwidth="60"/>
+                                </row>
+                            </rows>
+                        </grid>
+                    </html:fieldset>
+                    <separator class="thin"/>
+                    <html:fieldset>
+                        <html:legend>&other.label;</html:legend>
+                        <grid flex="1">
+                            <columns>
+                                <column/>
+                            </columns>
+                            <rows>
+                                <row align="center">
+                                    <label control="chromeTimeBox"
+                                           value="&chromeTime.value;"
+                                           accesskey="&chromeTime.accesskey;"/>
+                                </row>
+                                <row align="center">
+                                    <textbox preference="dom.max_chrome_script_run_time"
+                                             id="chromeTimeBox"
+                                             maxlength="5"
+                                             maxwidth="60"/>
+                                </row>
+                                <row align="center">
+                                    <label control="confirmDeleteThresholdBox"
+                                           value="&confirmDeleteThreshold.value;"
+                                           accesskey="&confirmDeleteThreshold.accesskey;"/>
+                                </row>
+                                <row align="center">
+                                    <textbox preference="extensions.gContactSync.confirmDeleteThreshold"
+                                             id="confirmDeleteThresholdBox"
+                                             maxlength="5"
+                                             maxwidth="60"/>
+                                </row>
+                                <row align="center">
+                                    <label control="httpRequestTimeoutBox"
+                                           value="&httpRequestTimeout.value;"
+                                           accesskey="&httpRequestTimeout.accesskey;"/>
+                                </row>
+                                <row align="center">
+                                    <textbox preference="extensions.gContactSync.httpRequestTimeout"
+                                             id="httpRequestTimeoutBox"
+                                             maxlength="5"
+                                             maxwidth="60"/>
+                                </row>
+                                <row align="center">
+                                    <label control="httpRequestDelayBox"
+                                           value="&httpRequestDelay.value;"
+                                           accesskey="&httpRequestDelay.accesskey;"/>
+                                </row>
+                                <row align="center">
+                                    <hbox>
+                                        <textbox preference="extensions.gContactSync.httpRequestDelay"
+                                                 id="httpRequestDelayBox"
                                                  maxlength="5"
                                                  maxwidth="60"/>
-                                    </row>
-                                    <row align="center">
-                                        <label control="confirmDeleteThresholdBox"
-                                               value="&confirmDeleteThreshold.value;"
-                                               accesskey="&confirmDeleteThreshold.accesskey;"/>
-                                    </row>
-                                    <row align="center">
-                                        <textbox preference="extensions.gContactSync.confirmDeleteThreshold"
-                                                 id="confirmDeleteThresholdBox"
-                                                 maxlength="5"
-                                                 maxwidth="60"/>
-                                    </row>
-                                    <row align="center">
-                                        <label control="httpRequestTimeoutBox"
-                                               value="&httpRequestTimeout.value;"
-                                               accesskey="&httpRequestTimeout.accesskey;"/>
-                                    </row>
-                                    <row align="center">
-                                        <textbox preference="extensions.gContactSync.httpRequestTimeout"
-                                                 id="httpRequestTimeoutBox"
-                                                 maxlength="5"
-                                                 maxwidth="60"/>
-                                    </row>
-                                    <row align="center">
-                                        <label control="httpRequestDelayBox"
-                                               value="&httpRequestDelay.value;"
-                                               accesskey="&httpRequestDelay.accesskey;"/>
-                                    </row>
-                                    <row align="center">
-                                        <hbox>
-                                            <textbox preference="extensions.gContactSync.httpRequestDelay"
-                                                     id="httpRequestDelayBox"
-                                                     maxlength="5"
-                                                     maxwidth="60"/>
-                                            <button id="throttleTest"
-                                                    label="&throttleTest.label;"
-                                                    accesskey="&throttleTest.accesskey;"
-                                                    oncommand="gContactSync.ThrottleTest.start(0);"/>
-                                        </hbox>
-                                    </row>
-                                </rows>
-                            </grid>
-                        </groupbox>
-                        <separator class="thin"/>
-                        <hbox>
-                            <button id="resetAll"
-                                    label="&resetAll.label;"
-                                    accesskey="&resetAll.accesskey;"
-                                    oncommand="gContactSync.GAbManager.resetAllSyncedABs(true);"/>
-                            <button id="resetAllSettings"
-                                    label="&resetAllSettings.label;"
-                                    accesskey="&resetAllSettings.accesskey;"
-                                    oncommand="gContactSync.Options.resetAllSettings();"/>
-                        </hbox>
-                        <hbox>
-                            <button id="cleanOldPhotos"
-                                    label="&cleanOldPhotos.label;"
-                                    accesskey="&cleanOldPhotos.accesskey;"
-                                    oncommand="gContactSync.Options.deleteOldPhotos(true);"/>
-                            <button id="cleanOldPrefs"
-                                    label="&cleanOldPrefs.label;"
-                                    accesskey="&cleanOldPrefs.accesskey;"
-                                    oncommand="gContactSync.Options.removeABPrefs(true, true);"/>
-                        </hbox>
-                    </vbox>
+                                        <button id="throttleTest"
+                                                label="&throttleTest.label;"
+                                                accesskey="&throttleTest.accesskey;"
+                                                oncommand="gContactSync.ThrottleTest.start(0);"/>
+                                    </hbox>
+                                </row>
+                            </rows>
+                        </grid>
+                    </html:fieldset>
+                    <separator class="thin"/>
+                    <hbox>
+                        <button id="resetAll"
+                                label="&resetAll.label;"
+                                accesskey="&resetAll.accesskey;"
+                                oncommand="gContactSync.GAbManager.resetAllSyncedABs(true);"/>
+                        <button id="resetAllSettings"
+                                label="&resetAllSettings.label;"
+                                accesskey="&resetAllSettings.accesskey;"
+                                oncommand="gContactSync.Options.resetAllSettings();"/>
+                    </hbox>
+                    <hbox>
+                        <button id="cleanOldPhotos"
+                                label="&cleanOldPhotos.label;"
+                                accesskey="&cleanOldPhotos.accesskey;"
+                                oncommand="gContactSync.Options.deleteOldPhotos(true);"/>
+                        <button id="cleanOldPrefs"
+                                label="&cleanOldPrefs.label;"
+                                accesskey="&cleanOldPrefs.accesskey;"
+                                oncommand="gContactSync.Options.removeABPrefs(true, true);"/>
+                    </hbox>
                 </vbox>
             </tabpanel>
         </tabpanels>
