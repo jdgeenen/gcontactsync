@@ -16,7 +16,7 @@
    -
    - The Initial Developer of the Original Code is
    - Josh Geenen <gcontactsync@pirules.org>.
-   - Portions created by the Initial Developer are Copyright (C) 2008-2015
+   - Portions created by the Initial Developer are Copyright (C) 2008-2019
    - the Initial Developer. All Rights Reserved.
    -
    - Contributor(s):
@@ -39,11 +39,12 @@
 <?xml-stylesheet href="chrome://gcontactsync/skin/options.css" type="text/css"?>
 <?xml-stylesheet href="chrome://messenger/skin/preferences/preferences.css"?>
 
-<!DOCTYPE prefwindow SYSTEM "chrome://gContactSync/locale/options.dtd">
+<!DOCTYPE dialog SYSTEM "chrome://gContactSync/locale/options.dtd">
 
-<prefwindow id="gContactSyncPrefs"
-            title="&title.label;"
-            xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<dialog id="gContactSyncPrefs"
+        title="&title.label;"
+        buttons="accept"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
     <tabbox flex="1">
         <tabs>
@@ -53,39 +54,7 @@
         </tabs>
         <tabpanels flex="1">
             <tabpanel orient="vertical">
-                <prefpane id="pane_main" index="main" label="&main.tab;">
-                    <preferences>
-                        <preference id="autoSync"
-                                    name="extensions.gContactSync.autoSync"
-                                    type="bool"/>
-                        <preference id="refreshInterval"
-                                    name="extensions.gContactSync.refreshInterval"
-                                    type="int"/>
-                        <preference id="initialDelayMinutes"
-                                    name="extensions.gContactSync.initialDelayMinutes"
-                                    type="int"/>
-                        <preference id="syncAddresses"
-                                    name="extensions.gContactSync.syncAddresses"
-                                    type="bool"/>
-                        <preference id="alertSummary"
-                                    name="extensions.gContactSync.alertSummary"
-                                    type="bool"/>
-                        <preference id="phoneTypes"
-                                    name="extensions.gContactSync.phoneTypes"
-                                    type="bool"/>
-                        <preference id="accountDelay"
-                                    name="extensions.gContactSync.accountDelay"
-                                    type="int"/>
-                        <preference id="enableLogging"
-                                    name="extensions.gContactSync.enableLogging"
-                                    type="bool"/>
-                        <preference id="verboseLog"
-                                    name="extensions.gContactSync.verboseLog"
-                                    type="bool"/>
-                        <preference id="showInConsole"
-                                    name="javascript.options.showInConsole"
-                                    type="bool"/>
-                    </preferences>
+                <vbox id="pane_main" index="main" label="&main.tab;">
                     <groupbox flex="1">
                         <label href="https://pirules.org/addons/gcontactsync/preferences.php"
                                class="text-link"
@@ -93,7 +62,7 @@
                                accesskey="&help.value;"/>
                         <groupbox>
                             <caption label="&autoSync.value;"/>
-                            <checkbox preference="autoSync"
+                            <checkbox preference="extensions.gContactSync.autoSync"
                                       id="autoSync"
                                       label="&autoSync.label;"
                                       accesskey="&autoSync.accesskey;"/>
@@ -106,7 +75,7 @@
                                         <label control="refreshIntervalBox"
                                                value="&refreshInterval.value;"
                                                accesskey="&refreshInterval.accesskey;"/>
-                                        <textbox preference="refreshInterval"
+                                        <textbox preference="extensions.gContactSync.refreshInterval"
                                                  id="refreshIntervalBox"
                                                  maxlength="4"
                                                  maxwidth="60"/>
@@ -115,7 +84,7 @@
                                         <label control="initialDelayMinutesBox"
                                             value="&initialDelayMinutes.value;"
                                             accesskey="&initialDelayMinutes.accesskey;"/>
-                                        <textbox preference="initialDelayMinutes"
+                                        <textbox preference="extensions.gContactSync.initialDelayMinutes"
                                             id="initialDelayMinutesBox"
                                             maxlength="8"
                                             maxwidth="60"/>
@@ -126,15 +95,15 @@
                         <separator class="thin"/>
                         <groupbox>
                             <caption label="&syncBehavior.label;"/>
-                            <checkbox preference="syncAddresses"
+                            <checkbox preference="extensions.gContactSync.syncAddresses"
                                       id="syncAddresses"
                                       label="&syncAddresses.label;"
                                       accesskey="&syncAddresses.accesskey;"/>
-                            <checkbox preference="alertSummary"
+                            <checkbox preference="extensions.gContactSync.alertSummary"
                                       id="alertSummary"
                                       label="&alertSummary.label;"
                                       accesskey="&alertSummary.accesskey;"/>
-                            <checkbox preference="phoneTypes"
+                            <checkbox preference="extensions.gContactSync.phoneTypes"
                                       id="phoneTypes"
                                       label="&phoneTypes.label;"
                                       accesskey="&phoneTypes.accesskey;"/>
@@ -148,7 +117,7 @@
                                         <label control="accountDelayBox"
                                                value="&accountDelay.value;"
                                                accesskey="&accountDelay.accesskey;"/>
-                                        <textbox preference="accountDelay"
+                                        <textbox preference="extensions.gContactSync.accountDelay"
                                                  id="accountDelayBox"
                                                   maxlength="6"
                                                   maxwidth="60"/>
@@ -159,86 +128,55 @@
                         <separator class="thin"/>
                         <groupbox>
                             <caption label="&logging.label;"/>
-                            <checkbox preference="enableLogging"
+                            <checkbox preference="extensions.gContactSync.enableLogging"
                                       id="enableLogging"
                                       label="&enableLogging.label;"
                                       accesskey="&enableLogging.accesskey;"/>
-                            <checkbox preference="verboseLog"
+                            <checkbox preference="extensions.gContactSync.verboseLog"
                                       id="verboseLog"
                                       label="&verboseLog.label;"
                                       accesskey="&verboseLog.accesskey;"/>
-                            <checkbox preference="showInConsole"
+                            <checkbox preference="javascript.options.showInConsole"
                                       id="showInConsole"
                                       label="&showInConsole.label;"
                                       accesskey="&showInConsole.accesskey;"/>
                         </groupbox>
                     </groupbox>
-                </prefpane>
+                </vbox>
             </tabpanel>
             <tabpanel orient="vertical">
-                <prefpane id="pane_interface" index="interface" label="&interface.tab;">
-                    <preferences>
-                        <preference id="enableMenu"
-                                    name="extensions.gContactSync.enableMenu"
-                                    type="bool"/>
-                        <preference id="addReset"
-                                    name="extensions.gContactSync.addReset"
-                                    type="bool"/>
-                        <preference id="phoneColLabels"
-                                    name="extensions.gContactSync.phoneColLabels"
-                                    type="bool"/>
-                        <preference id="newColLabels"
-                                    name="extensions.gContactSync.newColLabels"
-                                    type="bool"/>
-                    </preferences>
+                <vbox id="pane_interface" index="interface" label="&interface.tab;">
                     <groupbox flex="1">
                         <separator class="thin"/>
                         <groupbox>
                             <caption label="&buttons.label;"/>
-                            <checkbox preference="enableMenu"
+                            <checkbox preference="extensions.gContactSync.enableMenu"
                                       id="enableMenu"
                                       label="&enableMenu.label;"
                                       accesskey="&enableMenu.accesskey;"/>
-                            <checkbox preference="addReset"
+                            <checkbox preference="extensions.gContactSync.addReset"
                                       id="addReset"
                                       label="&addReset.label;"
                                       accesskey="&addReset.accesskey;"/>
                         </groupbox>
                         <groupbox>
                             <caption label="&abResults.label;"/>
-                            <checkbox preference="phoneColLabels"
+                            <checkbox preference="extensions.gContactSync.phoneColLabels"
                                       id="phoneColLabels"
                                       label="&phoneColLabels.label;"
                                       accesskey="&phoneColLabels.accesskey;"/>
-                            <checkbox preference="newColLabels"
+                            <checkbox preference="extensions.gContactSync.newColLabels"
                                       id="newColLabels"
                                       label="&newColLabels.label;"
                                       accesskey="&newColLabels.accesskey;"/>
                         </groupbox>
                     </groupbox>
-                </prefpane>
+                </vbox>
             </tabpanel>
             <tabpanel orient="vertical">
-                <prefpane id="pane_advanced"
+                <vbox id="pane_advanced"
                     index="advanced"
                     label="&advanced.tab;">
-                    <preferences>
-                        <preference id="backupInterval"
-                                    name="extensions.gContactSync.backupInterval"
-                                    type="int"/>
-                        <preference id="max_chrome_script_run_time"
-                                    name="dom.max_chrome_script_run_time"
-                                    type="int"/>
-                        <preference id="confirmDeleteThreshold"
-                                    name="extensions.gContactSync.confirmDeleteThreshold"
-                                    type="int"/>
-                        <preference id="httpRequestTimeout"
-                                    name="extensions.gContactSync.httpRequestTimeout"
-                                    type="int"/>
-                        <preference id="httpRequestDelay"
-                                    name="extensions.gContactSync.httpRequestDelay"
-                                    type="int"/>
-                    </preferences>
                     <vbox>
                         <label value="&warning.value;"/>
                         <separator class="thin"/>
@@ -254,7 +192,7 @@
                                         <label control="backupIntervalBox"
                                                value="&backupInterval.value;"
                                                accesskey="&backupInterval.accesskey;"/>
-                                        <textbox preference="backupInterval"
+                                        <textbox preference="extensions.gContactSync.backupInterval"
                                                  id="backupIntervalBox"
                                                  maxlength="6"
                                                  maxwidth="60"/>
@@ -276,7 +214,7 @@
                                                accesskey="&chromeTime.accesskey;"/>
                                     </row>
                                     <row align="center">
-                                        <textbox preference="max_chrome_script_run_time"
+                                        <textbox preference="dom.max_chrome_script_run_time"
                                                  id="chromeTimeBox"
                                                  maxlength="5"
                                                  maxwidth="60"/>
@@ -287,7 +225,7 @@
                                                accesskey="&confirmDeleteThreshold.accesskey;"/>
                                     </row>
                                     <row align="center">
-                                        <textbox preference="confirmDeleteThreshold"
+                                        <textbox preference="extensions.gContactSync.confirmDeleteThreshold"
                                                  id="confirmDeleteThresholdBox"
                                                  maxlength="5"
                                                  maxwidth="60"/>
@@ -298,7 +236,7 @@
                                                accesskey="&httpRequestTimeout.accesskey;"/>
                                     </row>
                                     <row align="center">
-                                        <textbox preference="httpRequestTimeout"
+                                        <textbox preference="extensions.gContactSync.httpRequestTimeout"
                                                  id="httpRequestTimeoutBox"
                                                  maxlength="5"
                                                  maxwidth="60"/>
@@ -310,7 +248,7 @@
                                     </row>
                                     <row align="center">
                                         <hbox>
-                                            <textbox preference="httpRequestDelay"
+                                            <textbox preference="extensions.gContactSync.httpRequestDelay"
                                                      id="httpRequestDelayBox"
                                                      maxlength="5"
                                                      maxwidth="60"/>
@@ -345,10 +283,12 @@
                                     oncommand="gContactSync.Options.removeABPrefs(true, true);"/>
                         </hbox>
                     </vbox>
-                </prefpane>
+                </vbox>
             </tabpanel>
         </tabpanels>
     </tabbox>
+    <script type="application/x-javascript"
+            src="chrome://global/content/preferencesBindings.js"/>
     <script type="application/x-javascript"
             src="chrome://gcontactsync/content/misc.js"/>
     <script type="application/x-javascript"
@@ -359,8 +299,6 @@
             src="chrome://gcontactsync/content/LoginManager.js"/>
     <script type="application/x-javascript"
             src="chrome://gcontactsync/content/StringBundle.js"/>
-    <script type="application/x-javascript"
-            src="chrome://gcontactsync/content/options.js"/>
     <script type="application/x-javascript"
             src="chrome://gcontactsync/content/AddressBook.js"/>
     <script type="application/x-javascript"
@@ -391,4 +329,6 @@
             src="chrome://gcontactsync/content/Preferences.js"/>
     <script type="application/x-javascript"
             src="chrome://gcontactsync/content/ThrottleTest.js"/>
-</prefwindow>
+    <script type="application/x-javascript"
+            src="chrome://gcontactsync/content/options.js"/>
+</dialog>

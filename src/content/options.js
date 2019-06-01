@@ -46,6 +46,13 @@ window.addEventListener("load",
   },
 false);
 
+for (let prefName in gContactSync.Preferences.mSyncPrefs) {
+    let pref = gContactSync.Preferences.mSyncPrefs[prefName];
+    Preferences.add({id: gContactSync.Preferences.mBranchName + pref.label, type: pref.type});
+}
+Preferences.add({id: "dom.max_chrome_script_run_time", type: "int"});
+Preferences.add({id: "javascript.options.showInConsole", type: "bool"});
+
 /**
  * Provides helper functions for the Preferences dialog.
  */
@@ -76,8 +83,9 @@ gContactSync.Options = {
   enableVerboseLog: function Options_enableVerboseLog() {
     var enableLogging = document.getElementById("enableLogging");
     if (!enableLogging) return false;
-    var disable = !enableLogging.value;
-    document.getElementById("verboseLog").disabled = disable;
+    // The change listener doesn't appear to work, so leave everything enabled
+    let enabled = true; //enabledLogging.getAttribute("checked") === "true";
+    document.getElementById("verboseLog").disabled = !enabled;
     return true;
   },
   /**
@@ -88,10 +96,12 @@ gContactSync.Options = {
     var intervalElem = document.getElementById("refreshIntervalBox");
     var initialElem  = document.getElementById("initialDelayMinutesBox");
     if (!disableElem) return false;
+    // The change listener doesn't appear to work, so leave everything enabled
+    let enabled = true; // disableElem.getAttribute("checked") === "true";
     if (intervalElem && intervalElem.previousSibling)
-      intervalElem.disabled = intervalElem.previousSibling.disabled = !disableElem.value;
+      intervalElem.disabled = intervalElem.previousSibling.disabled = !enabled;
     if (initialElem && initialElem.previousSibling)
-      initialElem.disabled  = initialElem.previousSibling.disabled  = !disableElem.value;
+      initialElem.disabled  = initialElem.previousSibling.disabled  = !enabled;
     return true;
   },
   /**

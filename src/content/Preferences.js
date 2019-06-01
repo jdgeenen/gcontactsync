@@ -80,7 +80,7 @@ gContactSync.Preferences = {
     /** Integer preference */
     INT:  "int",
     /** String preference */
-    CHAR: "char"
+    STRING: "string"
   },
   /** Stores whether the preference observer has been registered */
   mRegistered: false,
@@ -198,13 +198,13 @@ gContactSync.Preferences = {
     sendPhotos:               new gContactSync.Pref("sendPhotos",               "bool", true),
     addReset:                 new gContactSync.Pref("addReset",                 "bool", true),
     alertSummary:             new gContactSync.Pref("alertSummary",             "bool", true),
-    statusBarText:            new gContactSync.Pref("statusBarText",            "char", ""),
-    myContactsName:           new gContactSync.Pref("myContactsName",           "char", "Contacts"),
+    statusBarText:            new gContactSync.Pref("statusBarText",            "string", ""),
+    myContactsName:           new gContactSync.Pref("myContactsName",           "string", "Contacts"),
     lastVersionMajor:         new gContactSync.Pref("lastVersionMajor",         "int",  0),
     lastVersionMinor:         new gContactSync.Pref("lastVersionMinor",         "int",  0),
     lastVersionRelease:       new gContactSync.Pref("lastVersionRelease",       "int",  0),
-    lastVersionSuffix:        new gContactSync.Pref("lastVersionSuffix",        "char", ""),
-    Plugin:                   new gContactSync.Pref("Plugin",                   "char", "Google"),
+    lastVersionSuffix:        new gContactSync.Pref("lastVersionSuffix",        "string", ""),
+    Plugin:                   new gContactSync.Pref("Plugin",                   "string", "Google"),
     updateGoogleInConflicts:  new gContactSync.Pref("updateGoogleInConflicts",  "bool", true),
     syncAddresses:            new gContactSync.Pref("syncAddresses",            "bool", true),
     needRestart:              new gContactSync.Pref("needRestart",              "bool", false),
@@ -219,7 +219,7 @@ gContactSync.Preferences = {
     numRelations:             new gContactSync.Pref("numRelations",              "int", 6),
     numLogsInRotation:        new gContactSync.Pref("numLogsInRotation",         "int", 3),
     selectFirstCardAfterDrop: new gContactSync.Pref("selectFirstCardAfterDrop", "bool", true),
-    notesHeight:              new gContactSync.Pref("notesHeight",              "char", "")
+    notesHeight:              new gContactSync.Pref("notesHeight",              "string", "")
   },
   /**
    * Gets a preference given its branch, name, and type
@@ -237,8 +237,8 @@ gContactSync.Preferences = {
         return aBranch.getIntPref(aName);
       case this.mTypes.BOOL:
         return aBranch.getBoolPref(aName);
-      case this.mTypes.CHAR:
-        return aBranch.getCharPref(aName);
+      case this.mTypes.STRING:
+        return aBranch.getStringPref(aName);
       default:
         throw "Invalid aType parameter supplied to the getPref method" +
               gContactSync.StringBundle.getStr("pleaseReport");
@@ -261,8 +261,8 @@ gContactSync.Preferences = {
         return aBranch.setIntPref(aName, aValue);
       case this.mTypes.BOOL:
         return aBranch.setBoolPref(aName, aValue);
-      case this.mTypes.CHAR:
-        return aBranch.setCharPref(aName, aValue);
+      case this.mTypes.STRING:
+        return aBranch.setStringPref(aName, aValue);
       default:
         throw "Invalid aType parameter supplied to the setPref method" +
               gContactSync.StringBundle.getStr("pleaseReport");
@@ -309,7 +309,7 @@ gContactSync.Preferences = {
       for (var i = 1; i <= 10; i++) {
         this.mExtendedProperties.push(this.getPref(this.mSyncBranch,
                                                    "extended" + i,
-                                                   this.mTypes.CHAR));
+                                                   this.mTypes.STRING));
       }
     }
     if (!gContactSync.Preferences.mSyncPrefs.enableMenu.value &&
