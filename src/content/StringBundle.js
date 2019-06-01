@@ -45,7 +45,7 @@ var gContactSync = gContactSync || {};
  * @class
  */
 gContactSync.StringBundle = {
-  /** Stores the nsIStringBundle. */
+  /** Stores the string bundle. */
   mBundle: [],
   /** Stores whether this class has been initialized */
   mInitialized: false,
@@ -62,10 +62,7 @@ gContactSync.StringBundle = {
       return true;
     }
 
-    let stringBundleService = Components.classes["@mozilla.org/intl/stringbundle;1"]
-                                        .getService(Components.interfaces.nsIStringBundleService);
-    gContactSync.StringBundle.mBundle =
-      stringBundleService.createBundle("chrome://gContactSync/locale/gcontactsync.properties");
+    gContactSync.StringBundle.mBundle = Services.strings.createBundle("chrome://gContactSync/locale/gcontactsync.properties");
 
     // Check the user agent
     if (window.navigator.userAgent.indexOf("SeaMonkey") != -1) {
