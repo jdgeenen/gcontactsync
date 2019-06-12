@@ -471,7 +471,7 @@ gContactSync.gdata = {
       var browser = wizard.document.getElementById("browser");
       var url = gContactSync.gdata.getOAuthURL(aEmail);
       gContactSync.LOGGER.VERBOSE_LOG("Opening browser with URL: " + url);
-      browser.loadURI(url);
+      browser.setAttribute("src", url);
       gContactSync.OAuth2.init(browser,
                                    gContactSync.gdata.REDIRECT_URI,
                                    function callback(aResponse) {
