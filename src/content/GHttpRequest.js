@@ -42,23 +42,24 @@ var gContactSync = gContactSync || {};
  * After calling this constructor and setting up any additional data, call the
  * send method.
  * 
- * @param aType      {string} The type of request.  Must be one of the following
- *                            authenticate, getAll, get, update, add, delete,
- *                            getGroups
- * @param aAuth      {string} The authorization token.
- * @param aUrl       {string} The url for the request, if unique for the type of
- *                            request.  Not required for authenticate, getAll,
- *                            getGroups, and add.
- * @param aBody      {string} The body of the request.
- * @param aOther     {string} Additional parameter to use when needed.
- *                            Currently this is only used for GET requests for
- *                            obtaining contacts in a specified group (pass the
- *                            Group ID in that case)
+ * @param aType       {string} The type of request.  Must be one of the following
+ *                             authenticate, getAll, get, update, add, delete,
+ *                             getGroups
+ * @param aAuth       {string} The authorization token.
+ * @param aUrl        {string} The url for the request, if unique for the type of
+ *                             request.  Not required for authenticate, getAll,
+ *                             getGroups, and add.
+ * @param aBody       {string} The body of the request.
+ * @param aOther      {string} Additional parameter to use when needed.
+ *                             Currently this is only used for GET requests for
+ *                             obtaining contacts in a specified group (pass the
+ *                             Group ID in that case)
+ * @param aStartIndex {number} The index to start the request from.
  * @constructor
  * @class
  * @extends gContactSync.HttpRequest
  */
-gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aBody, aOther) {
+gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aBody, aOther, aStartIndex) {
   gContactSync.HttpRequest.call(this);  // call the superclass' constructor
   this.mBody = aBody;
   // all urls in gdata use SSL.  If a URL is supplied, make sure it uses SSL
@@ -103,8 +104,8 @@ gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aBody,
   case "getAll":
     this.mContentType = this.CONTENT_TYPES.ATOM;
     this.mUrl         = gContactSync.gdata.contacts.GET_ALL_URL +
-                        gContactSync.Preferences.mSyncPrefs.maxContacts
-                                                                   .value;
+                        gContactSync.Preferences.mSyncPrefs.maxContacts.value +
+                        (aStartIndex ? "&start-index=" + encodeURIComponent(aStartIndex) : "");
     this.mType        = gContactSync.gdata.contacts.requestTypes.GET_ALL;
     this.addHeaderItem("Authorization", aAuth);
     break;
@@ -112,6 +113,7 @@ gContactSync.GHttpRequest = function gCS_GHttpRequest(aType, aAuth, aUrl, aBody,
     this.mContentType = this.CONTENT_TYPES.ATOM;
     this.mUrl         = gContactSync.gdata.contacts.GET_ALL_URL +
                         gContactSync.Preferences.mSyncPrefs.maxContacts.value +
+                        (aStartIndex ? "&start-index=" + encodeURIComponent(aStartIndex) : "") +
                         "&group=" + encodeURIComponent(aOther);
     this.mType        = gContactSync.gdata.contacts.requestTypes.GET_ALL;
     this.addHeaderItem("Authorization", aAuth);
