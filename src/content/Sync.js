@@ -82,7 +82,7 @@ gContactSync.Sync = {
   mOverallSummary:   {},
   /** Commands to execute when offline during an HTTP Request */
   mOfflineFunction: function Sync_offlineFunc(httpReq) {
-    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('offlineStatusText')); 
+    gContactSync.Overlay.setStatusBarText(gContactSync.StringBundle.getStr('offlineStatusText'));
     gContactSync.Sync.finish(gContactSync.StringBundle.getStr('offlineStatusText'), false);
   },
   /** Commands to execute if a 503 is returned during an HTTP Request */
@@ -119,13 +119,13 @@ gContactSync.Sync = {
     if (gContactSync.Preferences.mSyncPrefs.synchronizing.value) {
       return;
     }
-    
+
     gContactSync.Sync.mManualSync = (aManualSync === true);
-    
+
     // Reset the overall summary
     gContactSync.Sync.mOverallSummary = new gContactSync.SyncSummaryData();
     gContactSync.Sync.mCurrentSummary = new gContactSync.SyncSummaryData();
-    
+
     gContactSync.Sync.mSyncScheduled  = false;
     gContactSync.Preferences.setSyncPref("synchronizing", true);
     gContactSync.Sync.mBackup         = false;
@@ -182,7 +182,7 @@ gContactSync.Sync = {
     // Add the current summary to the overall summary then reset the current
     // summary
     gContactSync.Sync.mCurrentSummary = new gContactSync.SyncSummaryData();
-    
+
     var obj = gContactSync.Sync.mAddressBooks[gContactSync.Sync.mIndex++];
     if (!obj) {
       gContactSync.Sync.finish("", false);
@@ -267,7 +267,7 @@ gContactSync.Sync = {
         gContactSync.Sync.getGroups();
       }
       else {
-        gContactSync.Sync.getContacts();
+        gContactSync.Sync.getContacts(0);
       }
     };
     request.mOnError = function getAccessTokenError(httpReq) {
@@ -316,61 +316,60 @@ gContactSync.Sync = {
    * Calls gContactSync.Sync.sync2 with the contact entry array if successful or
    * gContactSync.Sync.syncNextUser on errors.
    *
-   * @param aStartIndex {string} The index to start the request from.
+   * @param aStartIndex {number} The index to start the request from.
    */
   getContacts: function Sync_getContacts(aStartIndex) {
-    gContactSync.LOGGER.LOG("***Beginning Contact Synchronization***");
+    gContactSync.LOGGER.LOG("***Getting Contacts from starting index " + aStartIndex + "***");
     var httpReq;
     if (gContactSync.Sync.mContactsUrl) {
       httpReq = new gContactSync.GHttpRequest("getFromGroup",
-                                                  gContactSync.Sync.mCurrentAuthToken,
-                                                  null,
-                                                  null,
-                                                  gContactSync.Sync.mContactsUrl,
-                                                  aStartIndex);
+                                              gContactSync.Sync.mCurrentAuthToken,
+                                              null,
+                                              null,
+                                              gContactSync.Sync.mContactsUrl,
+                                              aStartIndex);
     }
     else {
       httpReq = new gContactSync.GHttpRequest("getAll",
-                                                  gContactSync.Sync.mCurrentAuthToken,
-                                                  null,
-                                                  null,
-                                                  null,
-                                                  aStartIndex);
+                                              gContactSync.Sync.mCurrentAuthToken,
+                                              null,
+                                              null,
+                                              null,
+                                              aStartIndex);
     }
     httpReq.mOnSuccess = function getContactsSuccess(httpReq) {
       // Update the contact entries
-      var newContactEntries = Array.prototype.slice.call(httpReq.responseXML.getElementsByTagName('entry'), 0);
+      var newContactEntries = Array.from(httpReq.responseXML.getElementsByTagName('entry'));
       gContactSync.Sync.mContactEntries = gContactSync.Sync.mContactEntries.concat(newContactEntries);
       // Determine whether another run is required to grab the remaining contacts
       var linkElements = httpReq.responseXML.getElementsByTagName('link');
       var nextStartIndex = null;
       for (var i = 0; i < linkElements.length; i++) {
         var link = linkElements[i];
-        if (('application/atom+xml' == link.getAttribute('type')) && ('next' == link.getAttribute('rel'))) {
+        if (('application/atom+xml' === link.getAttribute('type')) && ('next' === link.getAttribute('rel'))) {
           var x = link.getAttribute('href').match(/start-index=(\d+)/);
           if (null != x) {
-            nextStartIndex = x[1];
+            nextStartIndex = parseInt(x[1], 10);
           }
           break;
         }
+      }
+      // gContactSync.serializeFromText does not do anything if verbose
+      // logging is disabled so the serialization won't waste time
+      var backup      = gContactSync.Sync.mBackup,
+          firstBackup = gContactSync.Sync.mFirstBackup,
+          feed        = gContactSync.serializeFromText(httpReq.responseText, backup);
+      gContactSync.LOGGER.VERBOSE_LOG(feed);
+      if (backup) {
+        gContactSync.gdata.backupFeed(feed,
+                                      gContactSync.Sync.mCurrentUsername,
+                                      (firstBackup ? "init_" : "") + "start_index_" + aStartIndex + "_",
+                                      ".xml");
       }
       if (null != nextStartIndex) {
         gContactSync.Sync.getContacts(nextStartIndex);
       }
       else {
-        // gContactSync.serializeFromText does not do anything if verbose
-        // logging is disabled so the serialization won't waste time
-        var backup      = gContactSync.Sync.mBackup,
-            firstBackup = gContactSync.Sync.mFirstBackup,
-            feed        = gContactSync.serializeFromText(httpReq.responseText,
-                                                             backup);
-        gContactSync.LOGGER.VERBOSE_LOG(feed);
-        if (backup) {
-          gContactSync.gdata.backupFeed(feed,
-                                            gContactSync.Sync.mCurrentUsername,
-                                            (firstBackup ? "init_" : ""),
-                                            ".xml");
-        }
         gContactSync.Sync.sync2(gContactSync.Sync.mContactEntries);
       }
     };
@@ -387,7 +386,7 @@ gContactSync.Sync = {
    * Completes the synchronization process by writing the finish time to a file,
    * writing the sync details to a different file, scheduling another sync, and
    * writes the completion status to the status bar.
-   * 
+   *
    * @param aError     {string}   Optional.  A string containing the error message.
    * @param aStartOver {boolean} Also optional.  True if the sync should be restarted.
    */
@@ -404,14 +403,14 @@ gContactSync.Sync = {
       gContactSync.Overlay.writeTimeToStatusBar();
       gContactSync.LOGGER.LOG("Finished Synchronization at: " + Date());
     }
-    
+
     // Print a summary and alert the user if it was a manual sync and
     // alertSummary is set to true.
     gContactSync.Sync.mOverallSummary.print(
         gContactSync.Sync.mManualSync &&
         gContactSync.Preferences.mSyncPrefs.alertSummary.value,
         true);
-    
+
     // reset some variables
     gContactSync.ContactConverter.mCurrentCard = {};
     gContactSync.Preferences.setSyncPref("synchronizing", false);
@@ -425,7 +424,7 @@ gContactSync.Sync = {
       if (SetAbView !== undefined) {
         SetAbView(GetSelectedDirectory(), false);
       }
-      
+
       // select the first card, if any
       if (gAbView && gAbView.getCardFromRow(0))
         SelectFirstCard();
@@ -445,6 +444,7 @@ gContactSync.Sync = {
    * @param aContactEntries {HTMLCollection[]} The contact entries.
    */
   sync2: function Sync_sync2(aContactEntries) {
+    gContactSync.LOGGER.LOG("***Beginning Contact Synchronization***");
     // get the address book
     var ab = gContactSync.Sync.mCurrentAb,
         // get all the contacts from the feed and the cards from the address book
@@ -462,7 +462,7 @@ gContactSync.Sync = {
     }
     // mark the AB as not having been reset if it gets this far
     ab.savePref("reset", false);
-    
+
     // have to update the lists or TB 2 won't work properly
     gContactSync.Sync.mLists = ab.getAllLists();
     gContactSync.LOGGER.LOG("Last sync was at: " + lastSync +
@@ -738,7 +738,7 @@ gContactSync.Sync = {
     httpReq.send();
   },
   /**
-   * Adds all cards to Google included in the mContactsToAdd array one at a 
+   * Adds all cards to Google included in the mContactsToAdd array one at a
    * time to avoid timing conflicts.  Calls
    * gContactSync.Sync.processUpdateQueue() when finished.
    */
@@ -1052,7 +1052,7 @@ gContactSync.Sync = {
                       gContactSync.Preferences.setSyncPref("needRestart", true);
                     }
                     // Throw an error to stop the sync
-                    throw "A system group was deleted from Thunderbird";                  
+                    throw "A system group was deleted from Thunderbird";
                   }
                   else {
                     gContactSync.Sync.mGroupsToDelete.push(group);
@@ -1104,7 +1104,7 @@ gContactSync.Sync = {
               gContactSync.LOGGER.LOG("-Found new list named " + list.getName());
               gContactSync.LOGGER.VERBOSE_LOG(" * The URI is: " + list.getURI());
               if (ab.mPrefs.readOnly == "true") {
-                gContactSync.LOGGER.LOG(" * Ignoring since read-only mode is on");  
+                gContactSync.LOGGER.LOG(" * Ignoring since read-only mode is on");
               }
               else {
                 gContactSync.LOGGER.LOG(" * It will be added to Google");
@@ -1158,7 +1158,7 @@ gContactSync.Sync = {
         if (foundGroup) {
           gContactSync.LOGGER.LOG(" * Found the group to synchronize: " + id);
           gContactSync.Sync.mContactsUrl = id;
-          return gContactSync.Sync.getContacts();
+          return gContactSync.Sync.getContacts(0);
         }
         else {
           var msg = " * Could not find the group '" + groupName + "' to synchronize."
@@ -1258,7 +1258,7 @@ gContactSync.Sync = {
     var ab = gContactSync.Sync.mCurrentAb;
     if (gContactSync.Sync.mGroupsToUpdate.length == 0
         || ab.mPrefs.readOnly == "true") {
-      gContactSync.Sync.getContacts();
+      gContactSync.Sync.getContacts(0);
       return;
     }
     var group = gContactSync.Sync.mGroupsToUpdate.shift();
@@ -1294,7 +1294,7 @@ gContactSync.Sync = {
         !gContactSync.Sync.mSyncScheduled &&
         gContactSync.Preferences.mSyncPrefs.autoSync.value) {
       gContactSync.Sync.mSyncScheduled = true;
-      setTimeout(gContactSync.Sync.begin, aDelay);  
+      setTimeout(gContactSync.Sync.begin, aDelay);
       gContactSync.LOGGER.VERBOSE_LOG("Next sync in: " + aDelay + " milliseconds");
     }
   }
