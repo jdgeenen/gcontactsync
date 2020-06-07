@@ -108,6 +108,8 @@ gContactSync.Sync = {
   mAccessToken: {},
   /** The access token type */
   mTokenType: {},
+  /** The contact entries from the chain of requests */
+  mContactEntries: [],
   /**
    * Performs the first steps of the sync process.
    * @param aManualSync {boolean} Set this to true if the sync was run manually.
@@ -159,7 +161,8 @@ gContactSync.Sync = {
    * If all ABs were synchronized, then this continues with gContactSync.Sync.finish();
    */
   syncNextUser: function Sync_syncNextUser() {
-
+    // Reset the contact entries
+    gContactSync.Sync.mContactEntries = [];
     // If the sync was successful, set the previous address book's last sync date (if it exists)
     if (gContactSync.Sync.mPrevErrorCount === gContactSync.LOGGER.mErrorCount &&
         gContactSync.Sync.mCurrentAb &&
@@ -310,10 +313,12 @@ gContactSync.Sync = {
   },
   /**
    * Sends an HTTP Request to Google for a feed of all the user's contacts.
-   * Calls gContactSync.Sync.sync with the response if successful or
+   * Calls gContactSync.Sync.sync2 with the contact entry array if successful or
    * gContactSync.Sync.syncNextUser on errors.
+   *
+   * @param aStartIndex {string} The index to start the request from.
    */
-  getContacts: function Sync_getContacts() {
+  getContacts: function Sync_getContacts(aStartIndex) {
     gContactSync.LOGGER.LOG("***Beginning Contact Synchronization***");
     var httpReq;
     if (gContactSync.Sync.mContactsUrl) {
@@ -321,29 +326,53 @@ gContactSync.Sync = {
                                                   gContactSync.Sync.mCurrentAuthToken,
                                                   null,
                                                   null,
-                                                  gContactSync.Sync.mContactsUrl);
+                                                  gContactSync.Sync.mContactsUrl,
+                                                  aStartIndex);
     }
     else {
       httpReq = new gContactSync.GHttpRequest("getAll",
                                                   gContactSync.Sync.mCurrentAuthToken,
                                                   null,
-                                                  null);
+                                                  null,
+                                                  null,
+                                                  aStartIndex);
     }
     httpReq.mOnSuccess = function getContactsSuccess(httpReq) {
-      // gContactSync.serializeFromText does not do anything if verbose
-      // logging is disabled so the serialization won't waste time
-      var backup      = gContactSync.Sync.mBackup,
-          firstBackup = gContactSync.Sync.mFirstBackup,
-          feed        = gContactSync.serializeFromText(httpReq.responseText,
-                                                           backup);
-      gContactSync.LOGGER.VERBOSE_LOG(feed);
-      if (backup) {
-        gContactSync.gdata.backupFeed(feed,
-                                          gContactSync.Sync.mCurrentUsername,
-                                          (firstBackup ? "init_" : ""),
-                                          ".xml");
+      // Update the contact entries
+      var newContactEntries = Array.prototype.slice.call(httpReq.responseXML.getElementsByTagName('entry'), 0);
+      gContactSync.Sync.mContactEntries = gContactSync.Sync.mContactEntries.concat(newContactEntries);
+      // Determine whether another run is required to grab the remaining contacts
+      var linkElements = httpReq.responseXML.getElementsByTagName('link');
+      var nextStartIndex = null;
+      for (var i = 0; i < linkElements.length; i++) {
+        var link = linkElements[i];
+        if (('application/atom+xml' == link.getAttribute('type')) && ('next' == link.getAttribute('rel'))) {
+          var x = link.getAttribute('href').match(/start-index=(\d+)/);
+          if (null != x) {
+            nextStartIndex = x[1];
+          }
+          break;
+        }
       }
-      gContactSync.Sync.sync2(httpReq.responseXML);
+      if (null != nextStartIndex) {
+        gContactSync.Sync.getContacts(nextStartIndex);
+      }
+      else {
+        // gContactSync.serializeFromText does not do anything if verbose
+        // logging is disabled so the serialization won't waste time
+        var backup      = gContactSync.Sync.mBackup,
+            firstBackup = gContactSync.Sync.mFirstBackup,
+            feed        = gContactSync.serializeFromText(httpReq.responseText,
+                                                             backup);
+        gContactSync.LOGGER.VERBOSE_LOG(feed);
+        if (backup) {
+          gContactSync.gdata.backupFeed(feed,
+                                            gContactSync.Sync.mCurrentUsername,
+                                            (firstBackup ? "init_" : ""),
+                                            ".xml");
+        }
+        gContactSync.Sync.sync2(gContactSync.Sync.mContactEntries);
+      }
     };
     httpReq.mOnError   = function getContactsError(httpReq) {
       gContactSync.LOGGER.LOG_ERROR('Error while getting all contacts',
@@ -412,13 +441,14 @@ gContactSync.Sync = {
   /**
    * Does the actual synchronization of contacts and modifies the AB as it goes.
    * Initializes arrays of Google contacts to add, remove, or update.
-   * @param aAtom {XML} The ATOM/XML feed of contacts.
+   *
+   * @param aContactEntries {HTMLCollection[]} The contact entries.
    */
-  sync2: function Sync_sync2(aAtom) {
+  sync2: function Sync_sync2(aContactEntries) {
     // get the address book
     var ab = gContactSync.Sync.mCurrentAb,
         // get all the contacts from the feed and the cards from the address book
-        googleContacts = aAtom.getElementsByTagName('entry'),
+        googleContacts = aContactEntries,
         abCards = ab.getAllContacts(),
         // get and log the last sync time (milliseconds since 1970 UTC)
         lastSync = parseInt(ab.mPrefs.lastSync, 10),
@@ -437,7 +467,7 @@ gContactSync.Sync = {
     gContactSync.Sync.mLists = ab.getAllLists();
     gContactSync.LOGGER.LOG("Last sync was at: " + lastSync +
                                 " (" + new Date(lastSync) + ")");
-    if ((newMax = gContactSync.gdata.contacts.getNumberOfContacts(aAtom)) >= maxContacts.value) {
+    if ((newMax = aContactEntries.length) >= maxContacts.value) {
       gContactSync.Preferences.setPref(gContactSync.Preferences.mSyncBranch, maxContacts.label,
                                            maxContacts.type, newMax + 50);
       gContactSync.Sync.finish("Max Contacts too low...resynchronizing", true);
