@@ -161,22 +161,6 @@
                class="menuitem-iconic icon-mail16 menu-iconic"
                oncommand="gContactSync.openURL('extensions.gContactSync.googleContactsURL');"/>
        <menuseparator/>
-       <menu id="gContactSyncImport"
-             label="&Import.label;"
-             accesskey="&Import.accesskey;">
-         <menupopup>
-           <menuitem label="&Facebook.label;"
-                     oncommand="gContactSync.Import.step1('facebook');"/>
-           <!-- Not supported quite yet -->
-           <!--<menuitem label="&LinkedIn.label;"
-                     oncommand="gContactSync.Import.step1('linkedin');"/>-->
-           <menuitem label="&Twitter.label;"
-                     oncommand="gContactSync.Import.step1('twitter');"/>
-         </menupopup>
-       </menu>
-      <menuitem id="finishImport"
-                label="&FinishImport.label;"
-                oncommand="gContactSync.Import.step3();"/>
    </menupopup>
   </menu>
   <menu id="gContactSyncAppMenu"
